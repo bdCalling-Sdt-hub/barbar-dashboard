@@ -19,7 +19,6 @@ const UserInfo = ({search}) => {
   const [userData, setuserData] = useState(null);
 
   const showDrawer = (record) => {
-    console.log(record);
     setIsDrawerVisible(true);
     setuserData(record);
   };
@@ -122,10 +121,10 @@ const UserInfo = ({search}) => {
         columns={columns}
         dataSource={searchUsers?.data ? searchUsers?.data : users?.data?.data}
         pagination={{
-          pageSize,
+          pageSize: searchUsers?.per_page ? searchUsers?.per_page : users?.per_page,
           showSizeChanger: false,
-          total: users?.total,
-          current: users?.current_page,
+          total: searchUsers?.total ? searchUsers?.total :  users?.total,
+          current: searchUsers?.current_page ? searchUsers?.current_page : users?.current_page,
           onChange: handlePageChange,
         }}
       />
