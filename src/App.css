@@ -1,0 +1,249 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item {
+  margin-bottom: 10px;
+  padding: 20px 10px;
+  line-height: 20px;
+}
+
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: Montserrat !important;
+}
+
+body {
+  color: white;
+}
+
+.ant-layout-sider-children .ant-menu-item-selected {
+  color: #F66D0F !important;
+  font-weight: bold;
+}
+
+.ant-table-wrapper .ant-table-thead>tr>th,
+.ant-table-wrapper .ant-table-thead>tr>td {
+  background: #F66D0F;
+  color: white;
+  border: 0;
+}
+
+.ant-layout-sider-children {
+  background: #364153;
+}
+
+ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light.css-dev-only-do-not-override-17a39f8 {
+  background: transparent;
+}
+
+span.ant-menu-title-content {
+  color: #FFF;
+  font-family: Montserrat;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+/* INPUT */
+.ant-input-affix-wrapper {
+  background: transparent;
+  color: white;
+}
+
+/* :where(.css-dev-only-do-not-override-17a39f8).ant-input:placeholder-shown {
+  background: #364153;
+  color: #CFCFD0;
+} */
+
+input.ant-input.ant-input-lg.css-dev-only-do-not-override-17a39f8 {
+  background: transparent;
+}
+
+.ant-input-affix-wrapper>input.ant-input:focus {
+  box-shadow: none !important;
+  background: transparent;
+  color: white;
+}
+
+.ant-input-affix-wrapper>input.ant-input::placeholder {
+  color: #CFCFD0;
+}
+
+header.ant-layout-header.css-dev-only-do-not-override-17a39f8 {
+  background: #364153 !important;
+  color: white !important;
+}
+
+.ant-layout {
+  background: #0E1116;
+}
+
+main.ant-layout-content.css-dev-only-do-not-override-17a39f8 {
+  background-color: transparent !important;
+}
+.ant-menu-light .ant-menu-item-selected {
+  background: transparent !important;
+}
+
+.ant-menu-light .ant-menu-item-selected a {
+  color: #F66D0F !important;
+}
+
+.ant-menu-light .ant-menu-item-selected .ant-menu-item-icon {
+  color: #F66D0F !important;
+}
+
+.ant-menu-light {
+  background: transparent !important;
+}
+
+.ant-menu-light.ant-menu-submenu>.ant-menu {
+  background: #364153 !important;
+}
+
+ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light.css-dev-only-do-not-override-17a39f8 {
+  background: #364153 !important;
+}
+
+.ant-menu-light .ant-menu-submenu-selected>.ant-menu-submenu-title {
+  color: #F66D0F !important;
+}
+
+.ant-menu-light .ant-menu-submenu-selected>.ant-menu-submenu-title span {
+  color: #F66D0F !important;
+}
+
+.ant-table-wrapper .ant-table-thead>tr>th {
+  color: #F66D0F !important;
+  color: white !important;
+  border: 0;
+}
+
+tr.ant-table-row.ant-table-row-level-0 {
+  color: white !important;
+  background: #364153 !important;
+}
+
+.ant-table-wrapper .ant-table-tbody>tr>td.ant-table-cell-row-hover {
+  background: #364153 !important;
+  color: white !important;
+}
+
+ul.ant-pagination.ant-table-pagination.ant-table-pagination-right.css-dev-only-do-not-override-17a39f8 {
+  background: #364153 !important;
+  padding: 10px 0;
+}
+
+.ant-table-wrapper .ant-table-pagination.ant-pagination {
+  background: #364153 !important;
+  padding: 10px 0;
+  margin: 0;
+  border-bottom-left-radius: 10px;
+}
+
+/* pegenation */
+.ant-pagination .ant-pagination-item a {
+  color: white !important;
+}
+
+.ant-pagination .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis {
+  color: white !important;
+}
+
+.ant-pagination .ant-pagination-next .ant-pagination-item-link {
+  color: white !important;
+}
+
+.ant-pagination .ant-pagination-disabled .ant-pagination-item-link {
+  color: white !important;
+}
+
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  background: transparent !important;
+  color: white !important;
+  border: none !important;
+
+}
+
+/* side modal */
+
+.ant-drawer .ant-drawer-wrapper-body {
+  background: #364153;
+}
+
+.ant-drawer .ant-drawer-header {
+  background: #F66D0F !important;
+  color: white;
+}
+
+.ant-drawer .ant-drawer-header span,
+h5 {
+  color: white;
+}
+
+.ant-drawer .ant-drawer-header h5 {
+  color: white;
+}
+
+/* button.ant-btn.css-dev-only-do-not-override-17a39f8.ant-btn-default{
+  background: transparent !important;
+} */
+
+button.ant-btn.css-dev-only-do-not-override-17a39f8.ant-btn-default.ant-btn-block {
+  background: #F66D0F !important;
+}
+
+
+/* wallet */
+.ant-progress .ant-progress-inner {
+  background: #F9D6BF !important;
+}
+
+.ant-btn-default {
+  border: none !important;
+}
+
+.ant-menu-submenu-title {
+  color: white;
+}
+
+/* :where(.css-dev-only-do-not-override-17a39f8).ant-input {
+  background: transparent !important;
+  color: white !important;
+} */
+
+
+/* notification */
+.ant-dropdown .ant-dropdown-menu {
+  background: #364153 !important;
+}
+
+span.ant-dropdown-menu-title-content {
+  color: white;
+}
+.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+  color: white !important;
+}
+
+input.ant-input.ant-input-lg.css-17a39f8 {
+  background: #364153 !important;
+}
+
+main.ant-layout-content.css-17a39f8 {
+  background: #0E1116 !important;
+}
+
+header.ant-layout-header.css-17a39f8 {
+  background: #364153 !important;
+}
+.ant-input-affix-wrapper {
+  background: #364153 !important;
+  color: #fff !important;
+}
+
+.ant-pagination .ant-pagination-item a, .ant-pagination .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis, .ant-pagination .ant-pagination-next .ant-pagination-item-link, .ant-pagination .ant-pagination-disabled .ant-pagination-item-link {
+  color: black!important;
+}

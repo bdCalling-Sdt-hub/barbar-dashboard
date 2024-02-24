@@ -1,0 +1,90 @@
+.packageCard {
+    width: 320px;
+    background: #F66D0F;
+    border-radius: 10px;
+    margin-top: 50px;
+    position: relative;
+}
+
+.packageCard div>h3 {
+    padding: 20px;
+    text-align: center;
+}
+
+.packageDetails {
+    background: #364153;
+    color: white;
+    height: 280px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.packageOptionContainer {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    padding: 20px;
+}
+
+.packageOption {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.packageFeatures {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    /* justify-content: center; */
+    align-items: center;
+    padding: 5px;
+    margin-left: 15px;
+    margin-top: 5px;
+}
+
+.editBtn {
+    background: #F66D0F;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    padding: 10px 50px;
+    display: flex;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+.packagesContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.threeDot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 22px;
+    cursor: pointer;
+}
+
+.cardMenuBtn {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    gap: 5px;
+}
+
+.deleteModal{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    
+}

@@ -1,0 +1,24 @@
+.paymentTitle {
+    font-family: Montserrat;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin-bottom: 30px;
+}
+
+.ratioContainer {
+    background: #364153;
+    padding: 40px;
+    border-radius: 10px;
+}
+
+.paymentTitle2 {
+    font-family: Montserrat;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}

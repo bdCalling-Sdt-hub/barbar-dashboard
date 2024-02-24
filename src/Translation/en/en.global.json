@@ -1,0 +1,28 @@
+{
+  "header": {
+    "title": "Dashboard"
+  },
+  "dashboard": "Dashboard",
+"wallet":"Wallet",
+  "solonaList": "Solona List",
+  "barberList": "Barber List",
+  "userList": "User List",
+  "message": "Messages",
+  "appointment": {
+    "title": "Appointments",
+    "subTitle1": "- Appointment list",
+    "subTitle2": "- Appointment Req"
+  },
+  "setting": {
+    "title": "Settings"
+  },
+  "payment": {
+    "title": "Payment"
+  },
+  "earning": {
+    "title": "Earnings",
+    "subTitle1": "- Today's Earning",
+    "subTitle2": "- Weekly Earning",
+    "subTitle3": "- Monthly Earning"
+  }
+}
