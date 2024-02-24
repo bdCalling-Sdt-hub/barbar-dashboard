@@ -1,0 +1,61 @@
+.btn {
+    background: #F66D0F;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    padding: 10px 50px;
+    display: flex;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.catagoriesContainer{
+    display: grid;
+    margin-top: 50px;
+    grid-template-columns: repeat(8, 1fr);
+}
+.singleCatagories{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1555555555;
+}
+.singleCatagories p{
+    margin-top: 10px;
+}
+.singleCard{
+    position: relative;
+    cursor: pointer;
+    margin-top: 20px;
+}
+.singleCatagories img:hover{
+    filter: blur(1px)
+}
+.editIcon{
+    display: none;
+
+}
+
+.singleCatagories img:hover + .editIcon{
+    display: block;
+    position: absolute;
+    top: 10%;
+    right: 5;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 30px;
+}
+.avatarUploader{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    width: 500px !important;
+}
+
+
+.heading{
+    margin-bottom: 12px;
+}

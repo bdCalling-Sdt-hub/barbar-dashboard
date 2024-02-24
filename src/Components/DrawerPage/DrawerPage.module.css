@@ -1,0 +1,150 @@
+.appointmentMainContainer {}
+
+.appointmentMainContainer h3 {
+    margin-bottom: 10px;
+    font-family: Montserrat;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.appointmentInfo {
+    display: flex;
+    flex-direction: row;
+    width: 462px;
+    justify-content: space-between;
+}
+
+.appointmentInfo p {
+    font-family: Montserrat;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    padding: 8px 0px;
+}
+
+
+.appointmentInfoLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.appointmentInfoLeft p {
+    font-family: Montserrat;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.appointmentInfoRight {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.userContainer {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.userInfo {
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.infoUserData {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info p {
+    font-family: Montserrat;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.userInfo img {
+    width: 120px;
+    height: 120px;
+    margin-right: 20px;
+
+}
+
+.userInfoLeft {
+    padding-right: 70px;
+}
+
+.userInfoLeft p {
+    font-family: Montserrat;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    padding: 8px 0px;
+}
+.userInfoLeftUserData p {
+    font-family: Montserrat;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    padding: 5px 0px;
+}
+
+.userInfoRight {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.userInfoRight p {
+    font-family: Montserrat;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    padding: 8px 0px;
+}
+.userInfoRightUserData p {
+    text-align: right;
+    margin-left: 55px;
+    font-family: Montserrat;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    padding: 5px 0px;
+}
+.salonInfoLeftUserData p {
+    font-family: Montserrat;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    padding: 5px 0px;
+}
+.salonInfoRightUserData p {
+    margin-left:50px;
+    text-align: right;
+    font-family: Montserrat;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    padding: 5px 0px;
+}

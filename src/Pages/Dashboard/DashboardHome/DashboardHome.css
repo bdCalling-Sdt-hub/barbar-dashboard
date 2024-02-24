@@ -1,0 +1,70 @@
+.income-card {
+    background: #F66D0F;
+    padding: 8px 0;
+    color: white;
+    text-align: center;
+    border-radius: 15px;
+
+    padding-top: 30px;
+    cursor: pointer;
+    transition: .5s;
+
+}
+
+.income-card:hover {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;
+    color: black;
+    background-color: white;
+}
+
+.rent-status {
+    border: 3px solid #b0b3dd;
+    border-radius: 15px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 50px;
+    cursor: pointer;
+    transition: .5s;
+}
+
+.rent-status:hover {
+    box-shadow: rgba(75, 28, 204, 0.1) 0px 10px 50px;
+}
+
+.single-status {
+    margin-left: 30px;
+    padding: 20px 0px;
+
+}
+
+.dashboardContainer {
+    color: white;
+}
+
+.ant-row.css-dev-only-do-not-override-17a39f8 {
+    display: flex;
+    flex-direction: row;
+}
+
+@media only screen and (max-width: 1550px) {
+
+    .rent-status {
+        display: block;
+        text-align: center;
+        padding: 20px 0px;
+    }
+
+    .single-status {
+        margin-left: 0px;
+        padding: 20px 5px;
+
+    }
+}
+
+/* mobile screen responsive */
+@media only screen and (max-width: 768px) {
+    .ant-row.css-dev-only-do-not-override-17a39f8 {
+        flex-direction: column;
+    }
+}

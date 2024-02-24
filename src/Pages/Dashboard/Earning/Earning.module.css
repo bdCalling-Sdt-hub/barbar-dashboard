@@ -1,0 +1,26 @@
+.card {
+  /* background: #F66D0F; */
+  background: #364153;
+  color: white;
+  height: 210px;
+  border-radius: 10px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardTitle {
+  margin-bottom: 20px;
+  font-family: Montserrat;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.statusTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

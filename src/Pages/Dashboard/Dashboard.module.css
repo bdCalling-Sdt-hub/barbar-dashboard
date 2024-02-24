@@ -1,0 +1,22 @@
+.notification {
+  background-color: green;
+}
+
+.profile {
+  width: 100px;
+
+  text-align: center;
+}
+.profile img {
+  background-color: #d9cffb;
+  padding: 2px;
+  border-radius: 100%;
+}
+
+/* .logo img {
+  width: 120px;
+  height: 152px;
+} */
+
+
+
