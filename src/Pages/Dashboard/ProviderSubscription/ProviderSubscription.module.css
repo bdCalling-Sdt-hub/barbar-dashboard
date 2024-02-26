@@ -1,5 +1,5 @@
 .packageCard {
-    width: 320px;
+    width: 400px;
     background: #F66D0F;
     border-radius: 10px;
     margin-top: 50px;
@@ -59,14 +59,14 @@
 
 .packagesContainer {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 24px;
 }
 
 .threeDot {
     position: absolute;
-    top: 0;
-    right: 0;
-    margin: 22px;
+    top: 15px;
+    right: 20px;
     cursor: pointer;
 }
 

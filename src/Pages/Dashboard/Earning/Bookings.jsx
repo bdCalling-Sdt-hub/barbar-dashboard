@@ -1,13 +1,28 @@
 import { Col, Row } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import { LiaHandHoldingUsdSolid } from "react-icons/lia";
 import style from "./Earning.module.css";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import BookingsHistoryTable from "./BookingsHistoryTable";
+import { baseURL } from "../../../Config";
 
 function Bookings() {
-  const location = useLocation();
+  const [data, setData] = useState();
+
+  useEffect(()=>{
+    async function getAPi(){
+      const response = await baseURL.get('/booking-complete',{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      setData(response?.data);
+    }
+    getAPi();
+  }, []);
+  
 
   return (
     <div style={{ padding: "0px 50px" }}>
@@ -29,7 +44,7 @@ function Bookings() {
             className={style.card}
           >
             <div>
-              <h2 className={style.cardTitle}> 110</h2>
+              <h2 className={style.cardTitle}>{data?.total_booking}</h2>
               <div className={style.statusTitle}>
                 <svg
                   width="28"
@@ -93,7 +108,7 @@ function Bookings() {
             className={style.card}
           >
             <div>
-              <h2 className={style.cardTitle}>260</h2>
+              <h2 className={style.cardTitle}>{data?.booking_completed}</h2>
               <div className={style.statusTitle}>
                 <svg
                   width="26"
@@ -133,7 +148,7 @@ function Bookings() {
             className={style.card}
           >
             <div>
-              <h2 className={style.cardTitle}>1120</h2>
+              <h2 className={style.cardTitle}>{data?.booking_cancel}</h2>
               <div className={style.statusTitle}>
                 <svg
                   width="28"

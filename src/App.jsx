@@ -33,15 +33,7 @@ function App() {
       <div className="maincontainer">
         {/* <Router> */}
           <Routes>
-            <Route
-              exact
-              path="/"
-              element={
-                <PrivateRoute>
-                  <Dashboard/>
-                </PrivateRoute>
-              }
-            >
+            <Route exact path="/" element={<PrivateRoute> <Dashboard/> </PrivateRoute> } >
               <Route path="/" element={<DashboardHome />} />
               <Route path="/earning/booking" element={<Bookings />} />
               <Route path="/earning/subscription" element={<Subscription />} />

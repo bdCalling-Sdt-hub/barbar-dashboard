@@ -12,8 +12,7 @@ const token = localStorage.getItem('access_token');
 const UserInfo = ({search}) => {
   const [users, setUsers] = useState();
   const [searchUsers, setSearchUsers] = useState([])
-  const [page, setPage] = useState(1); // Current page number
-  const pageSize = 12;
+  const [page, setPage] = useState(1);
 
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [userData, setuserData] = useState(null);

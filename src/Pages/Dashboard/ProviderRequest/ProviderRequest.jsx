@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Col,
@@ -15,6 +15,12 @@ import styles from "./ProviderRequest.module.css";
 import ProviderRequestInfo from "./ProviderRequestInfo";
 
 function ProviderRequest() {
+  const [search, setSearch] = useState('');
+  const [keyword, setKeyword] = useState('');
+  
+  const handleSearch=()=>{
+    setSearch(keyword);
+  }
   return (
     <div>
       {" "}
@@ -26,9 +32,11 @@ function ProviderRequest() {
               className={styles.searchMessageInput}
               size="large"
               placeholder="search by name & ID"
+              onChange={(e)=>setKeyword(e.target.value)}
               prefix={<SearchOutlined style={{ color: "#CFCFD0" }} />}
             />
             <Button
+              onClick={handleSearch}
               className={styles.searchMessageInput}
               style={{
                 height: "50px",
@@ -43,7 +51,7 @@ function ProviderRequest() {
           </div>
         </Col>
       </Row>
-      <ProviderRequestInfo />
+      <ProviderRequestInfo search={keyword} />
     </div>
   );
 }

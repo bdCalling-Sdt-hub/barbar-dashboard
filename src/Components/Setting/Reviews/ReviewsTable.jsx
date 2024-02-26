@@ -1,8 +1,9 @@
 import { Button, Drawer, Space, Table, Typography } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineEye, AiOutlinePrinter } from "react-icons/ai";
 import { CloseOutlined } from "@ant-design/icons";
 import DrawerPage from "../../DrawerPage/DrawerPage";
+import { baseURL } from "../../../Config";
 
 
 const { Title, Text } = Typography;
@@ -51,6 +52,8 @@ const data = [
 ];
 
 function ReviewsTable() {
+  const [data, setData] = useState()
+  const [page, setPage] = useState()
     const [isDrawerVisible, setIsDrawerVisible] = useState(false);
     const [reviewsData, setReviewsData] = useState(null);
   
@@ -150,6 +153,26 @@ function ReviewsTable() {
       ),
     },
   ];
+  // data retraive for all Appointmensts
+  useEffect(()=>{
+    async function getAPi(){
+      const response = await baseURL.get(`/appointment-list?page=${page}`,{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      // console.log(response?.data?.data);
+      setData(response?.data?.data);
+    }
+    getAPi();
+  }, [page]);
+  
+  const handleChange=(page)=>{
+    setPage(page);
+  }
+
+
   return (
     <div>
       <Table columns={columns} dataSource={data} />

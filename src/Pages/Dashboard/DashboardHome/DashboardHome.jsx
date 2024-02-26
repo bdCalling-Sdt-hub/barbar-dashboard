@@ -1,13 +1,26 @@
 import { Col, Row } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./DashboardHome.css";
 import InvoiceTable from "./InvoiceTable";
 import styles from "./Dashboard.module.css";
+import { baseURL } from "../../../Config";
 
 function DashboardHome() {
-  const onChange = (pageNumber) => {
-    console.log("Page: ", pageNumber);
-  };
+  const [data, setData] = useState();
+
+  useEffect(()=>{
+    async function getAPi(){
+      const response = await baseURL.get(`/booking-complete`,{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      console.log(response.data);
+      setData(response.data);
+    }
+    getAPi();
+  }, []);
 
   return (
     <div className="dashboardContainer">
@@ -26,7 +39,7 @@ function DashboardHome() {
       <div className={styles.statusContainer}>
         <div className={styles.completed}>
           <div className={styles.statusBox}>
-            <h2>110</h2>
+            <h2>{data?.booking_completed}</h2>
             <div className={styles.icon}>
               <svg
                 width="28"
@@ -57,7 +70,7 @@ function DashboardHome() {
         </div>
         <div className={styles.pending}>
           <div className={styles.statusBox}>
-            <h2>60</h2>
+            <h2>{data?.booking_pending}</h2>
             <div className={styles.icon}>
               <svg
                 width="28"
@@ -101,7 +114,7 @@ function DashboardHome() {
         </div>
         <div className={styles.cancelled}>
           <div className={styles.statusBox}>
-            <h2>20</h2>
+            <h2>{data?.booking_cancel}</h2>
             <div className={styles.icon}>
               <svg
                 width="28"

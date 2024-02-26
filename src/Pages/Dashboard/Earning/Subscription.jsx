@@ -1,11 +1,26 @@
 import { Col, Row } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import style from "./Earning.module.css";
 import { useLocation } from "react-router-dom";
 import SubscriptionHistoryTable from "./SubscriptionHistoryTable";
+import { baseURL } from "../../../Config";
 
 function Subscription() {
-  const location = useLocation();
+  const [data, setData] = useState();
+
+  useEffect(()=>{
+    async function getAPi(){
+      const response = await baseURL.get(`/payment-history-provider`,{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      // console.log(response.data.package_count);
+      setData(response.data.package_count);
+    }
+    getAPi();
+  }, []);
 
   return (
     <div style={{ padding: "0px 50px" }}>
@@ -29,7 +44,7 @@ function Subscription() {
             className={style.card}
           >
             <div>
-              <h2 className={style.cardTitle}>110</h2>
+              <h2 className={style.cardTitle}>{data?.gold_count}</h2>
               <div className={style.statusTitle}>
                 <svg
                   width="28"
@@ -75,7 +90,7 @@ function Subscription() {
             className={style.card}
           >
             <div>
-              <h2 className={style.cardTitle}>260</h2>
+              <h2 className={style.cardTitle}>{data?.diamond_count}</h2>
               <div className={style.statusTitle}>
                 <svg
                   width="28"
@@ -113,6 +128,7 @@ function Subscription() {
             </div>
           </div>
         </Col>
+
         <Col className="gutter-row" span={8}>
           <div
             style={{
@@ -121,7 +137,7 @@ function Subscription() {
             className={style.card}
           >
             <div>
-              <h2 className={style.cardTitle}>1120</h2>
+              <h2 className={style.cardTitle}>{data?.platinum_count}</h2>
               <div className={style.statusTitle}>
                 <svg
                   width="28"

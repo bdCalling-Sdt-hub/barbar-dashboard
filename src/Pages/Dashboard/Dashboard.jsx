@@ -252,20 +252,13 @@ const Dashboard = () => {
             <Menu.Item key="31">
               <Link to="/earning/booking">- Bookings</Link>
             </Menu.Item>
+            
             <Menu.Item key="32">
               <Link to="/earning/subscription">- Subscription</Link>
             </Menu.Item>
           </SubMenu>
-          {/* 
-          <Menu.Item
-            key="3"
-            icon={<MdPayment style={{ fontSize: "14px", color: "white" }} />}
-          >
-            <Link to="/payment" style={{ fontSize: "16px" }}>
-              {t("payment.title")}
-            </Link>
-          </Menu.Item> */}
-          <Menu.Item
+          
+          {/* <Menu.Item
             key="4"
             icon={
               <IoWalletOutline style={{ fontSize: "14px", color: "white" }} />
@@ -274,24 +267,10 @@ const Dashboard = () => {
             <Link to="/wallet" style={{ fontSize: "16px" }}>
               Wallet
             </Link>
-          </Menu.Item>
+          </Menu.Item> */}
+
           <Divider />
 
-          {/* <SubMenu
-            style={{ fontSize: "16px" }}
-            key="5"
-            icon={
-              <TbCalendarCheck style={{ fontSize: "14px", color: "white" }} />
-            }
-            title={t("appointment.title")}
-          >
-            <Menu.Item key="39">
-              <Link to="/appointmentlist">{t("appointment.subTitle1")}</Link>
-            </Menu.Item>
-            <Menu.Item key="40">
-              <Link to="/appointmentreq">{t("appointment.subTitle2")}</Link>
-            </Menu.Item>
-          </SubMenu> */}
           <Menu.Item
             key="64"
             icon={
@@ -333,6 +312,7 @@ const Dashboard = () => {
               Provider Request
             </Link>
           </Menu.Item>
+
           <Menu.Item
             key="57"
             icon={<GiChessQueen style={{ fontSize: "14px", color: "white" }} />}
@@ -376,6 +356,7 @@ const Dashboard = () => {
               {t("setting.title")}
             </Link>
           </Menu.Item>
+
         </Menu>
       </Sider>
       <Layout>
@@ -481,7 +462,7 @@ const Dashboard = () => {
             marginLeft: collapsed ? "130px" : "360px",
             marginRight: "60px",
             background: "#e6e7f4",
-            padding: 50,
+            // padding: 50,
             minHeight: 280,
             overflow: "auto",
           }}

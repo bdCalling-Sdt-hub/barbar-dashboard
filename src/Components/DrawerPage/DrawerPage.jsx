@@ -16,12 +16,15 @@ import cardImg from "../../Images/Cards.png";
 import img from "../../Images/image 1.png";
 import styles from "./DrawerPage.module.css";
 import { IoStar } from "react-icons/io5";
+import moment from "moment";
+import { baseURL, url } from "../../Config";
 
 /* const { Title } = Typography;
 
 const { Option } = Select; */
 
 const DrawerPage = (props) => {
+  const { handleApprove, handleCancel } = props;
   const style = {
     cardType: {
       height: "150px",
@@ -337,10 +340,10 @@ const DrawerPage = (props) => {
                     <p>Payment Amount :</p>
                   </div>
                   <div className={styles.appointmentInfoRight}>
-                    <p>12:00 PM</p>
-                    <p>31 aug 2023</p>
-                    <p>Debit Card</p>
-                    <p>$ 200</p>
+                    <p>{props.bookingData?.name}</p>
+                    <p>{moment(props.bookingData?.created_at).format('LL')}</p>
+                    <p>{props.bookingData?.payment_type}</p>
+                    <p>$ {props.bookingData?.amount}</p>
                   </div>
                 </div>
               </div>
@@ -363,9 +366,9 @@ const DrawerPage = (props) => {
                         <p>Address :</p>
                       </div>
                       <div className={styles.userInfoRight}>
-                        <p>Brooklyn Simmons</p>
-                        <p>(319) 555-0115</p>
-                        <p> Elgin St. Celina</p>
+                        <p>$ {props.bookingData?.user?.address}</p>
+                        <p>$ {props.bookingData?.user?.phone_number}</p>
+                        <p>$ {props.bookingData?.user?.name}</p>
                       </div>
                     </div>
                   </div>
@@ -423,9 +426,9 @@ const DrawerPage = (props) => {
                   </div>
                   <div className={styles.appointmentInfoRight}>
                     <p>Hair Force Salon</p>
-                    <p>Jane Cooper</p>
-                    <p>12:00 PM</p>
-                    <p>31 aug 2023</p>
+                    <p>{props.providerRequestData?.name}</p>
+                    <p>{moment(props?.providerRequestData?.created_at).format('LT')}</p>
+                    <p>{moment(props?.providerRequestData?.created_at).format('L')}</p>
                   </div>
                 </div>
               </div>
@@ -442,8 +445,9 @@ const DrawerPage = (props) => {
             <Button
               block
               style={{
-                background: "#F66D0F",
+                border: "1px solid #F66D0F",
                 color: "white",
+                backgroundColor: "transparent",
                 height: 50,
                 width: "220px",
               }}
@@ -452,6 +456,7 @@ const DrawerPage = (props) => {
             </Button>
             <Button
               block
+              onClick={()=>handleApprove(props.providerRequestData?.id)}
               style={{
                 background: "#F66D0F",
                 color: "white",
@@ -480,10 +485,10 @@ const DrawerPage = (props) => {
                     <p>Payment Amount :</p>
                   </div>
                   <div className={styles.appointmentInfoRight}>
-                    <p>12:00 PM</p>
-                    <p>31 aug 2023</p>
-                    <p>Debit Card</p>
-                    <p>$ 200</p>
+                    <p>{moment(props.subscriptionData?.created_at).format('L')}</p>
+                    <p>{moment(props.subscriptionData?.created_at).format('LT')}</p>
+                    <p>{props.subscriptionData?.payment_type}</p>
+                    <p>${props.subscriptionData?.amount}</p>
                   </div>
                 </div>
               </div>
@@ -506,9 +511,9 @@ const DrawerPage = (props) => {
                         <p>Address :</p>
                       </div>
                       <div className={styles.userInfoRight}>
-                        <p>Brooklyn Simmons</p>
-                        <p>(319) 555-0115</p>
-                        <p> Elgin St. Celina</p>
+                        <p>{props.subscriptionData?.user?.name}</p>
+                        <p>{props.subscriptionData?.user?.phone_number}</p>
+                        <p>{props.subscriptionData?.user?.address}</p>
                       </div>
                     </div>
                   </div>
@@ -657,10 +662,14 @@ const DrawerPage = (props) => {
                     <p>Payment Amount :</p>
                   </div>
                   <div className={styles.appointmentInfoRight}>
-                    <p>Completed</p>
-                    <p>06 Sep, 2023- 4:30 PM</p>
-                    <p>Debit Card</p>
-                    <p>$ 200</p>
+                    <p>
+                      {props.invoiceData?.status === 0 && "Pending"}
+                      {props.invoiceData?.status === 2 && "Complete"}
+                      {props.invoiceData?.status === 4 && "Cancel"}
+                    </p>
+                    <p>{moment(props.invoiceData?.created_at).format('LLL')}</p>
+                    <p> {props?.invoiceData?.payment_type}</p>
+                    <p>$ {props?.invoiceData?.price}</p>
                   </div>
                 </div>
               </div>
@@ -683,9 +692,9 @@ const DrawerPage = (props) => {
                         <p>Address :</p>
                       </div>
                       <div className={styles.userInfoRight}>
-                        <p>Brooklyn Simmons</p>
-                        <p>(319) 555-0115</p>
-                        <p>6391 Elgin St. Celina</p>
+                        <p>{props?.invoiceData?.user?.name}</p>
+                        <p>{props?.invoiceData?.user?.phone_number}</p>
+                        <p>{props?.invoiceData?.user?.address}</p>
                       </div>
                     </div>
                   </div>
@@ -710,9 +719,9 @@ const DrawerPage = (props) => {
                         <p>Address :</p>
                       </div>
                       <div className={styles.userInfoRight}>
-                        <p>Robert Fox</p>
-                        <p>(205) 555-0100</p>
-                        <p>New Jersey 45463</p>
+                        <p>{props?.invoiceData?.provider?.business_name}</p>
+                        <p>{props?.invoiceData?.provider?.phone_number}</p>
+                        <p>{props?.invoiceData?.provider?.address}</p>
                       </div>
                     </div>
                   </div>
@@ -771,12 +780,12 @@ const DrawerPage = (props) => {
                     <p>Payment Amount :</p>
                   </div>
                   <div className={styles.appointmentInfoRight}>
-                    <p>Hair Force Salon</p>
+                    <p>{props?.appointmentList?.provider?.business_name}</p>
                     <p>Haircut, Shaving</p>
-                    <p>12:00 PM</p>
-                    <p>31 aug 2023</p>
-                    <p>Debit Card</p>
-                    <p>$ 200</p>
+                    <p>{props?.appointmentList?.time}</p>
+                    <p>{moment(props?.appointmentList?.date).format('ll')}</p>
+                    <p> {props?.appointmentList?.payment_type ? props?.appointmentList?.payment_type : "Not Found"}</p>
+                    <p>$ {props?.appointmentList?.price}</p>
                   </div>
                 </div>
               </div>
@@ -799,9 +808,9 @@ const DrawerPage = (props) => {
                         <p>Address :</p>
                       </div>
                       <div className={styles.userInfoRight}>
-                        <p>Brooklyn Simmons</p>
-                        <p>(319) 555-0115</p>
-                        <p>6391 Elgin St. Celina</p>
+                        <p>{props?.appointmentList?.user?.name}</p>
+                        <p>{props?.appointmentList?.user?.phone_number}</p>
+                        <p>{props?.appointmentList?.user?.address}</p>
                       </div>
                     </div>
                   </div>
@@ -826,9 +835,9 @@ const DrawerPage = (props) => {
                         <p>Address :</p>
                       </div>
                       <div className={styles.userInfoRight}>
-                        <p>Robert Fox</p>
-                        <p>(205) 555-0100</p>
-                        <p>New Jersey 45463</p>
+                        <p>{props?.appointmentList?.provider?.business_name}</p>
+                        <p>{props?.appointmentList?.provider?.phone_number ? props?.appointmentList?.provider?.phone_number : "(205) 555-0100"}</p>
+                        <p>{props?.appointmentList?.provider?.address}</p>
                       </div>
                     </div>
                   </div>
@@ -846,6 +855,7 @@ const DrawerPage = (props) => {
           >
             <Button
               block
+              onClick={()=>handleCancel(props?.appointmentList?.id)}
               style={{
                 background: "#F66D0F",
                 color: "white",
@@ -873,12 +883,12 @@ const DrawerPage = (props) => {
       {props.userData && (
         <div className={styles.userContainer}>
           <div>
-            <h3>User Info</h3>
+            <h3 >User Info</h3>
             <div
               className={styles.userInfo}
-              style={{ display: "flex", justifyContent: "space-between" }}
+              style={{ display: "flex", justifyContent: "space-between", }}
             >
-              <div>
+              <div style={{marginTop : "30px" }}>
                 {" "}
                 <img src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png" alt="" />
               </div>
@@ -900,6 +910,8 @@ const DrawerPage = (props) => {
           </div>
         </div>
       )}
+
+
       {props.salonData && (
         <div className={styles.userContainer}>
           <div>
@@ -917,16 +929,44 @@ const DrawerPage = (props) => {
                   <p>Services :</p>
                 </div>
                 <div className={styles.salonInfoRightUserData}>
-                  <p>Apple Green</p>
-                  <p>(+880) 1711 145865</p>
-                  <p>6391 Elgin St. Celina</p>
-                  <p>Haircut, shaving</p>
+                  <p>{props?.salonData?.business_name}</p>
+                  <p> {props?.salonData?.contact_number ? props?.salonData?.contact_number : "(+880) 1711 145865"}</p>
+                  <p>{props?.salonData?.address}</p>
+                  <p>{props?.salonData?.service ? props?.salonData?.service : "Haircut, shaving"}</p>
                 </div>
               </div>
             </div>
           </div>
+          <div style={{
+            width : "90%",
+            position : "absolute",
+            bottom : 0,
+            left : 0,
+            margin : "20px",
+            display : "flex",
+            gap: "20px"
+          }}>
+            <button style={{
+              width : "100%",
+              height: "56px",
+              backgroundColor : "transparent",
+              color : "white",
+              border : "1px solid #F66D0F",
+              borderRadius : "8px"
+
+            }}>Download</button>
+            <button style={{
+              width : "100%",
+              height: "56px",
+              backgroundColor : "#F66D0F",
+              color : "white",
+              border : "none",
+              borderRadius : "8px"
+            }}>Print</button>
+          </div>
         </div>
       )}
+
       {props.providerData && (
         <div className={styles.userContainer}>
           <div style={{ marginBottom: "30px" }}>
@@ -934,19 +974,19 @@ const DrawerPage = (props) => {
             <div className={styles.userInfo} style={{ display: "flex" }}>
               <div>
                 {" "}
-                <img src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png" alt="" />
+                <img src={`${url}/${props.providerData?.image}`} alt="" />
               </div>
               <div className={styles.infoUserData}>
                 <div className={styles.salonInfoLeftUserData}>
                   <p>Provider name :</p>
+                  <p>Salon name :</p>
                   <p>Contact no :</p>
                   <p>Address :</p>
-                  <p>Services :</p>
                 </div>
                 <div className={styles.salonInfoRightUserData}>
-                  <p>Apple Green</p>
-                  <p>(+880) 1711 145865</p>
-                  <p>6391 Elgin St. Celina</p>
+                  <p>{props.providerData?.name}</p>
+                  <p>{props.providerData?.phone_number}</p>
+                  <p>{props.providerData?.address}</p>
                   <p>Haircut, shaving</p>
                 </div>
               </div>
@@ -1041,6 +1081,7 @@ const DrawerPage = (props) => {
           </div>
         </div>
       )}
+
       {props.reviewsData && (
         <div className={styles.userContainer}>
           <div style={{ marginBottom: "30px" }}>

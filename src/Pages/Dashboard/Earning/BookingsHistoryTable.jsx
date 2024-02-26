@@ -1,13 +1,18 @@
 import { Button, Drawer, Table, Typography } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlinePrinter } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
 import { BsDownload } from "react-icons/bs";
 import { LiaSaveSolid } from "react-icons/lia";
 import DrawerPage from "../../../Components/DrawerPage/DrawerPage";
+import { baseURL } from "../../../Config";
+import moment from "moment";
 const { Title, Text } = Typography;
 
 const BookingsHistoryTable = () => {
+  const [bookings, setBookings] = useState();
+  const [searchSalons, setSearchSalons] = useState([])
+  const [page, setPage] = useState(1);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [bookingData, setBookingData] = useState(null);
 
@@ -21,71 +26,33 @@ const BookingsHistoryTable = () => {
     setBookingData(null);
   };
 
-  const data = [
-    {
-      key: "1",
-      transactionID: "1373700510",
-      date: "18 Jul, 2023  4:30pm",
-      client: "Sahinur Islam",
-      amount: "$850.00",
-      action: "Button",
-    },
-    {
-      key: "1",
-      transactionID: "1373700510",
-      date: "18 Jul, 2023  4:30pm",
-      client: "Sahinur Islam",
-      amount: "$850.00",
-      action: "Button",
-    },
-    {
-      key: "1",
-      transactionID: "1373700510",
-      date: "18 Jul, 2023  4:30pm",
-      client: "Sahinur Islam",
-      amount: "$850.00",
-      action: "Button",
-    },
-    {
-      key: "1",
-      transactionID: "1373700510",
-      date: "18 Jul, 2023  4:30pm",
-      client: "Sahinur Islam",
-      amount: "$850.00",
-      action: "Button",
-    },
-    {
-      key: "1",
-      transactionID: "1373700510",
-      date: "18 Jul, 2023  4:30pm",
-      client: "Sahinur Islam",
-      amount: "$850.00",
-      action: "Button",
-    },
-  ];
   const columns = [
     {
       title: "TRANSACTION ID",
       dataIndex: "transactionID",
       key: "transactionID",
+      render: (_,record) => <p>{record?.tx_ref}</p>
     },
     {
       title: "DATE",
       dataIndex: "date",
       key: "date",
       responsive: ["md"],
+      render: (_,record) => <p>{moment(record?.created_at).format('lll')}</p>
     },
     {
       title: "Client",
       dataIndex: "client",
       key: "client",
       responsive: ["lg"],
+      render: (_,record) => <p>{record?.user?.name}</p>
     },
     {
       title: "AMOUNT",
       dataIndex: "amount",
       key: "amount",
       responsive: ["md"],
+      render: (_,record) => <p>{record?.amount}</p>
     },
     {
       title: "ACTION",
@@ -111,9 +78,39 @@ const BookingsHistoryTable = () => {
     },
   ];
 
+  const handlePageChange = (page) => {
+    setPage(page);
+  };
+
+  // data retraive for all bookings
+  useEffect(()=>{
+    async function getAPi(){
+      const response = await baseURL.get(`/payment-history-user?page=${page}`,{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      console.log(response.data.data);
+      setBookings(response?.data?.data);
+    }
+    getAPi();
+  }, [page]);
+
   return (
     <div>
-      <Table columns={columns} dataSource={data} />
+      <Table 
+        columns={columns} 
+        dataSource={bookings?.data}
+        pagination={{
+          pageSize: bookings?.per_page,
+          showSizeChanger: false,
+          total: bookings?.total,
+          current:  bookings?.current_page,
+          onChange: handlePageChange,
+        }}
+      />
+
       <Drawer
         title={
           <div
@@ -143,6 +140,7 @@ const BookingsHistoryTable = () => {
       >
         {bookingData && <DrawerPage bookingData={bookingData} />}
       </Drawer>
+
     </div>
   );
 };

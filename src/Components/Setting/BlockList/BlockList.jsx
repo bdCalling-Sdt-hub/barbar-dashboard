@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./BlockList.module.css";
 import { Button, Drawer, Space, Table, Typography, Pagination } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import DrawerPage from "../../DrawerPage/DrawerPage";
+import { baseURL } from "../../../Config";
 const { Title, Text } = Typography;
 
 function BlockList() {
+  const [data, setData] = useState()
+  const [page, setPage] = useState()
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [providerRequestData, setProviderRequestData] = useState(null);
 
@@ -18,6 +21,26 @@ function BlockList() {
     setIsDrawerVisible(false);
     setProviderRequestData(null);
   };
+  // data retraive for all Appointmensts
+  useEffect(()=>{
+    async function getAPi(){
+      const response = await baseURL.get(`/appointment-list?page=${page}`,{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      // console.log(response?.data?.data);
+      setData(response?.data?.data);
+    }
+    getAPi();
+  }, [page]);
+
+  
+  const handleChange=(page)=>{
+    setPage(page);
+  }
+
   return (
     <>
       <div className={styles.providerContainer}>

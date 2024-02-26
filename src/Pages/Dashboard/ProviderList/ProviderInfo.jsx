@@ -5,67 +5,15 @@ import { LiaSaveSolid } from "react-icons/lia";
 import DrawerPage from "../../../Components/DrawerPage/DrawerPage";
 const { Title, Text } = Typography;
 import { CloseOutlined } from "@ant-design/icons";
+import { baseURL } from "../../../Config";
+import moment from 'moment';
 
-const data = [
-  {
-    key: "1",
-    providerName: "Robert Fox",
-    email: "example@gmail.com",
-    joiningDate: "18 Jul, 2023  4:30pm",
-    contact: "01711 145865",
-    address: "Dhaka, Bangladesh",
-  },
-  {
-    key: "1",
-    providerName: "Robert Fox",
-    email: "example@gmail.com",
-    joiningDate: "18 Jul, 2023  4:30pm",
-    contact: "01711 145865",
-    address: "Dhaka, Bangladesh",
-  },
-  {
-    key: "1",
-    providerName: "Robert Fox",
-    email: "example@gmail.com",
-    joiningDate: "18 Jul, 2023  4:30pm",
-    contact: "01711 145865",
-    address: "Dhaka, Bangladesh",
-  },
-  {
-    key: "1",
-    providerName: "Robert Fox",
-    email: "example@gmail.com",
-    joiningDate: "18 Jul, 2023  4:30pm",
-    contact: "01711 145865",
-    address: "Dhaka, Bangladesh",
-  },
-  {
-    key: "1",
-    providerName: "Robert Fox",
-    email: "example@gmail.com",
-    joiningDate: "18 Jul, 2023  4:30pm",
-    contact: "01711 145865",
-    address: "Dhaka, Bangladesh",
-  },
-  {
-    key: "1",
-    providerName: "Robert Fox",
-    email: "example@gmail.com",
-    joiningDate: "18 Jul, 2023  4:30pm",
-    contact: "01711 145865",
-    address: "Dhaka, Bangladesh",
-  },
-];
-
-const ProviderInfo = () => {
-  const [rentData, setRentData] = useState([]); // Data fetched from the server
-  const [totalItems, setTotalItems] = useState(0); // Total number of items
-  const [currentPage, setCurrentPage] = useState(1); // Current page number
-  const pageSize = 12;
+const ProviderInfo = ({search}) => {
+  const [providers, setProviders] = useState();
+  const [page, setPage] = useState(1);
 
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [providerData, setProviderData] = useState(null);
-
   const showDrawer = (record) => {
     setIsDrawerVisible(true);
     setProviderData(record);
@@ -81,24 +29,36 @@ const ProviderInfo = () => {
       title: "PROVIDER NAME",
       dataIndex: "providerName",
       key: "providerName",
+      render: (_, record) => (
+        <p>{record?.name}</p>
+      )
     },
     {
       title: "EMAIL",
       dataIndex: "email",
       key: "email",
       responsive: ["md"],
+      render: (_, record) => (
+        <p>{record?.email}</p>
+      )
     },
     {
       title: "CONTACT",
       dataIndex: "contact",
       key: "contact",
       responsive: ["md"],
+      render: (_, record) => (
+        <p>{record?.phone_number}</p>
+      )
     },
     {
       title: "JOINING DATE",
       dataIndex: "joiningDate",
       key: "joiningDate",
       responsive: ["md"],
+      render: (_, record) => (
+        <p>{moment(record?.created_at).format('ll')}</p>
+      )
     },
     {
       title: "ACTIONS",
@@ -125,41 +85,38 @@ const ProviderInfo = () => {
     },
   ];
 
-  useEffect(() => {
-    // Fetch data from the server when the current page changes
-    fetchData();
-  }, [currentPage]);
 
-  const fetchData = async () => {
-    // Replace this with your actual API request to fetch data based on pagination
-    try {
-      const response = await fetch(
-        `/api/data?page=${currentPage}&pageSize=${pageSize}`
-      );
-      const result = await response.json();
 
-      setData(result.data);
-      setTotalItems(result.totalItems);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+   // data retraive for all providers
+   useEffect(()=>{
+    async function getAPi(){
+     
+      const response = await baseURL.get(`/provider-list?search=${search}&page=${page}`,{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      setProviders(response?.data?.data);
     }
-  };
+    getAPi();
+  }, [page, search]);
 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
-    console.log(currentPage);
+    setPage(page);
   };
 
   return (
     <>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={providers?.data}
+        // dataSource={searchProviders?.data ? searchProviders?.data : providers?.data}
         pagination={{
-          pageSize,
+          pageSize: providers?.per_page,
           showSizeChanger: false,
-          total: 5000,
-          current: currentPage,
+          total: providers?.total,
+          current:  providers?.current_page,
           onChange: handlePageChange,
         }}
       />
@@ -168,7 +125,7 @@ const ProviderInfo = () => {
           <div>
             <Typography>
               <Title level={5} strong>
-                Provider name: Robert fox {providerData?.username}
+                Provider name: {providerData?.name}
               </Title>
               <Text>See all details about this provider</Text>
             </Typography>

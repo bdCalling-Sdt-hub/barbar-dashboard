@@ -5,43 +5,13 @@ import { LiaSaveSolid } from "react-icons/lia";
 import DrawerPage from "../../../Components/DrawerPage/DrawerPage";
 const { Title, Text } = Typography;
 import { CloseOutlined } from "@ant-design/icons";
+import { baseURL } from "../../../Config";
+import moment from "moment";
 
-const data = [
-  {
-    key: "1",
-    username: "Green Apple Salon",
-    joiningDate: "18 Jul, 2023  4:30pm",
-    contact: "01711 145865",
-    address: "Dhaka, Bangladesh",
-  },
-  {
-    key: "2",
-    username: "Green Apple Salon",
-    joiningDate: "18 Jul, 2023  4:30pm",
-    contact: "01711 145865",
-    address: "Dhaka, Bangladesh",
-  },
-  {
-    key: "3",
-    username: "Green Apple Salon",
-    joiningDate: "18 Jul, 2023  4:30pm",
-    contact: "01711 145865",
-    address: "Dhaka, Bangladesh",
-  },
-  {
-    key: "4",
-    username: "Green Apple Salon",
-    joiningDate: "18 Jul, 2023  4:30pm",
-    contact: "01711 145865",
-    address: "Dhaka, Bangladesh",
-  },
-];
-
-const SalonInfo = () => {
-  const [rentData, setRentData] = useState([]); // Data fetched from the server
-  const [totalItems, setTotalItems] = useState(0); // Total number of items
-  const [currentPage, setCurrentPage] = useState(1); // Current page number
-  const pageSize = 12;
+const SalonInfo = ({search}) => {
+  console.log(search);
+  const [salons, setSalons] = useState();
+  const [page, setPage] = useState(1);
 
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [salonData, setSalonData] = useState(null);
@@ -59,14 +29,20 @@ const SalonInfo = () => {
   const columns = [
     {
       title: "SALON NAME",
-      dataIndex: "username",
-      key: "username",
+      dataIndex: "business_name",
+      key: "business_name",
+      render: (_, record) => (
+        <p>{record?.business_name}</p>
+      )
     },
     {
       title: "ADDRESS",
       dataIndex: "address",
       key: "address",
       responsive: ["md"],
+      render: (_, record) => (
+        <p>{record?.address}</p>
+      )
     },
     {
       title: "CONTACT",
@@ -79,6 +55,9 @@ const SalonInfo = () => {
       dataIndex: "joiningDate",
       key: "joiningDate",
       responsive: ["md"],
+      render: (_, record) => (
+        <p>{moment(record?.created_at).format('L')}</p>
+      )
     },
     {
       title: "ACTIONS",
@@ -105,41 +84,51 @@ const SalonInfo = () => {
     },
   ];
 
-  useEffect(() => {
-    // Fetch data from the server when the current page changes
-    fetchData();
-  }, [currentPage]);
-
-  const fetchData = async () => {
-    // Replace this with your actual API request to fetch data based on pagination
-    try {
-      const response = await fetch(
-        `/api/data?page=${currentPage}&pageSize=${pageSize}`
-      );
-      const result = await response.json();
-
-      setData(result.data);
-      setTotalItems(result.totalItems);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   const handlePageChange = (page) => {
-    setCurrentPage(page);
-    console.log(currentPage);
+    setPage(page);
   };
+
+  // data retraive for all salons
+  useEffect(()=>{
+    async function getAPi(){
+      const response = await baseURL.get(`/get-salon-list?page=${page}`,{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      setSalons(response?.data?.data);
+    }
+    getAPi();
+  }, [page, search === ""]);
+
+
+  // data retraive for search salons
+  useEffect(()=>{
+    async function getAPi(){
+      if(search){
+        const response = await baseURL.get(`/salon-search/${search}`,{
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          }
+        });
+        setSearchsetSalonsSalons(response?.data);
+      }
+    }
+    getAPi();
+  }, [search]);
 
   return (
     <>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={salons?.data}
         pagination={{
-          pageSize,
+          pageSize: salons?.per_page,
           showSizeChanger: false,
-          total: 5000,
-          current: currentPage,
+          total: salons?.total,
+          current:  salons?.current_page,
           onChange: handlePageChange,
         }}
       />
@@ -148,7 +137,7 @@ const SalonInfo = () => {
           <div>
             <Typography>
               <Title level={5} strong>
-                Salon Name: {salonData?.username}
+                Salon Name: {salonData?.business_name}
               </Title>
               <Text>See all information about the salon</Text>
             </Typography>

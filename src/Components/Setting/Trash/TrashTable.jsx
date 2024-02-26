@@ -1,5 +1,6 @@
 import { Table } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { baseURL } from "../../../Config";
 
 const data = [
   {
@@ -45,6 +46,8 @@ const data = [
 ];
 
 function TrashTable() {
+  const [data, setData] = useState()
+  const [page, setPage] = useState()
   let token = localStorage.getItem("token");
 
   function formatDateString(inputDateString) {
@@ -133,6 +136,25 @@ function TrashTable() {
       ),
     },
   ];
+
+   // data retraive for all Appointmensts
+   useEffect(()=>{
+    async function getAPi(){
+      const response = await baseURL.get(`/appointment-list?page=${page}`,{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      // console.log(response?.data?.data);
+      setData(response?.data?.data);
+    }
+    getAPi();
+  }, [page]);
+  const handleChange=(page)=>{
+    setPage(page);
+  }
+  
   return (
     <div>
       <Table columns={columns} dataSource={data} />
