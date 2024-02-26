@@ -10,7 +10,6 @@ const About = () => {
   const editor = useRef(null)
   const [content, setContent] = useState("");
   const [refreash, setRefreash] = useState('')
-  console.log(content)
   const handleUpdate = async() => {
     const response = await baseURL.post(`/update-website-pages/5`, {page_description:content}, {
       headers: {
@@ -31,6 +30,7 @@ const About = () => {
     }
 
   }
+  
   useEffect(()=>{
     async function getAPi(){
       const response = await baseURL.get(`/show-single-pages/5`,{
