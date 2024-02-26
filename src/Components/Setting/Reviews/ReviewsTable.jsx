@@ -51,7 +51,7 @@ const data = [
   },
 ];
 
-function ReviewsTable() {
+function ReviewsTable({search}) {
   const [data, setData] = useState()
   const [page, setPage] = useState()
     const [isDrawerVisible, setIsDrawerVisible] = useState(false);
@@ -66,58 +66,24 @@ function ReviewsTable() {
       setIsDrawerVisible(false);
       setReviewsData(null);
     };
-  let token = localStorage.getItem("token");
-
-  function formatDateString(inputDateString) {
-    const inputDate = new Date(inputDateString);
-
-    if (isNaN(inputDate)) {
-      return "Invalid Date";
-    }
-
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    const day = inputDate.getDate();
-    const month = months[inputDate.getMonth()];
-    const year = inputDate.getFullYear();
-
-    let hours = inputDate.getHours();
-    const minutes = inputDate.getMinutes();
-    const ampm = hours >= 12 ? "pm" : "am";
-
-    if (hours > 12) {
-      hours -= 12;
-    }
-
-    return `${day} ${month}, ${year}-${hours}:${
-      minutes < 10 ? "0" : ""
-    }${minutes}${ampm}`;
-  }
 
   const columns = [
     {
-      title: "USER NAME",
-      dataIndex: "userName",
-      key: "userName",
+      title: "PROVIDER NAME",
+      dataIndex: "business_name",
+      key: "business_name",
+      render: (_, record) => (
+        <p>{record?.salon?.business_name}</p>
+      )
     },
     {
       title: "EMAIL",
       dataIndex: "email",
       key: "email",
       responsive: ["md"],
+      render: (_, record) => (
+        <p>{record?.business_name}</p>
+      )
     },
     {
       title: "CONTACT",
@@ -156,17 +122,17 @@ function ReviewsTable() {
   // data retraive for all Appointmensts
   useEffect(()=>{
     async function getAPi(){
-      const response = await baseURL.get(`/appointment-list?page=${page}`,{
+      const response = await baseURL.get(`/review?search=${search}&page=${page}`,{
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      // console.log(response?.data?.data);
-      setData(response?.data?.data);
+      console.log(response);
+      setData(response?.data);
     }
     getAPi();
-  }, [page]);
+  }, [page, search]);
   
   const handlePageChange=(page)=>{
     setPage(page);
@@ -177,7 +143,7 @@ function ReviewsTable() {
     <div>
       <Table 
         columns={columns} 
-        dataSource={data?.data}
+        dataSource={data?.providers_data}
         pagination={{
           pageSize: data?.per_page,
           showSizeChanger: false,

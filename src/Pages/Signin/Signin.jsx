@@ -39,6 +39,7 @@ const onFinish = (values) => {
       const token = response.data.access_token;
       
       localStorage.setItem('userId', response.data.user_id);
+      localStorage.setItem('user', response.data);
       localStorage.setItem('access_token', token);
     }
   })

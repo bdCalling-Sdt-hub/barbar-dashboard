@@ -49,7 +49,7 @@ span.ant-menu-title-content {
 
 /* INPUT */
 .ant-input-affix-wrapper {
-  background: transparent;
+  background: white !important;
   color: white;
 }
 
@@ -61,11 +61,16 @@ span.ant-menu-title-content {
 input.ant-input.ant-input-lg.css-dev-only-do-not-override-17a39f8 {
   background: transparent;
 }
-
+.ant-form-item-control-input{
+  background: transparent !important;
+}
 .ant-input-affix-wrapper>input.ant-input:focus {
   box-shadow: none !important;
   background: transparent;
   color: white;
+}
+.ant-input-affix-wrapper, .ant-input-password{
+  background: transparent !important;
 }
 
 .ant-input-affix-wrapper>input.ant-input::placeholder {

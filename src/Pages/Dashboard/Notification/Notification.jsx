@@ -1,8 +1,23 @@
 import { Col, Divider, Pagination, Row } from "antd";
-import React from "react";
+import React, {useState, useEffect} from "react";
 import "./Notification.css";
+import { baseURL } from "../../../Config";
 
 function Notification() {
+  const [data, setData] = useState(null);
+  // data retraive for all salons
+  useEffect(()=>{
+    async function getAPi(){
+      const response = await baseURL.get(`/get-salon-list?page=${page}`,{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      setData(response?.data?.data);
+    }
+    getAPi();
+  }, []);
   return (
     <div>
       <Row>
