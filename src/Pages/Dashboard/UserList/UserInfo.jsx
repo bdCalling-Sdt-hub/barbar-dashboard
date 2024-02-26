@@ -89,7 +89,7 @@ const UserInfo = ({search}) => {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      setUsers(response?.data);
+      setUsers(response?.data?.data);
     }
     getAPi();
   }, [page]);
@@ -103,8 +103,7 @@ const UserInfo = ({search}) => {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      console.log(response?.data?.data);
-      setSearchUsers(response?.data);
+      setSearchUsers(response?.data?.data);
     }
     getAPi();
   }, [search]);
@@ -118,7 +117,7 @@ const UserInfo = ({search}) => {
     <>
       <Table
         columns={columns}
-        dataSource={searchUsers?.data ? searchUsers?.data : users?.data?.data}
+        dataSource={searchUsers?.data ? searchUsers?.data : users?.data}
         pagination={{
           pageSize: searchUsers?.per_page ? searchUsers?.per_page : users?.per_page,
           showSizeChanger: false,

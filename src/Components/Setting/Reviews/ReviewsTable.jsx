@@ -168,14 +168,24 @@ function ReviewsTable() {
     getAPi();
   }, [page]);
   
-  const handleChange=(page)=>{
+  const handlePageChange=(page)=>{
     setPage(page);
   }
 
 
   return (
     <div>
-      <Table columns={columns} dataSource={data} />
+      <Table 
+        columns={columns} 
+        dataSource={data?.data}
+        pagination={{
+          pageSize: data?.per_page,
+          showSizeChanger: false,
+          total: data?.total,
+          current:  data?.current_page,
+          onChange: handlePageChange,
+        }} 
+      />
 
       <Drawer
         title={
