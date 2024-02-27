@@ -8,7 +8,7 @@ function Notification() {
   // data retraive for all salons
   useEffect(()=>{
     async function getAPi(){
-      const response = await baseURL.get(`/get-salon-list?page=${page}`,{
+      const response = await baseURL.get(`/notification`,{
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${localStorage.getItem('access_token')}`,

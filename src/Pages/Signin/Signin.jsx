@@ -1,62 +1,44 @@
-import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import React from "react";
 import { useNavigate } from "react-router";
 import logo from "../../Images/Logo.png";
 import style from "./Signin.module.css";
-import {useRef, useEffect, useState} from 'react';
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const Signin = () => {
-const userRef = useRef();
-const errRef = useRef();
-
-const [user, setUser] = useState('');
-const [pwd, setPwd] = useState('');
-const [errMsg, setErroMsg] = useState();
-// const [success, setSuccess] = useState(false);
-
-// useEffect(()=>{
-//   userRef.current.focus();
-
-// },[])
-
-// useEffect(()=>{
-//   setErroMsg('');
-
-// }, user, pwd)
-
-const onFinish = (values) => {
-  const email = values.email;
-  const password = values.password;
-  axios.post('http://192.168.10.121:8000/api/login', {
-    email,
-    password
-  })
-  .then((response) => {
-    console.log(response);
-    if (response.status >= 200 && response.status < 300) {
-      const token = response.data.access_token;
-      
-      localStorage.setItem('userId', response.data.user_id);
-      localStorage.setItem('user', response.data);
-      localStorage.setItem('access_token', token);
-    }
-  })
-  .catch((error) => {
-    console.log(error);
-    // Handle login error
-  });
-};
-
-
   const navigate = useNavigate();
+  const onFinish = (values) => {
+    const email = values.email;
+    const password = values.password;
+    axios.post('http://192.168.10.121:8000/api/login', {
+      email,
+      password
+    })
+    .then((response) => {
+      console.log(response);
+      if (response.status >= 200 && response.status < 300) {
+        const token = response.data.access_token;
+        
+        localStorage.setItem('userId', response.data.user_id);
+        localStorage.setItem('user', response.data);
+        localStorage.setItem('access_token', token);
 
-  const handleForget = () => {
-    navigate("/forget-password");
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Sign In Successfully",
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          navigate("/");
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   };
-
-
 
   return (
     <div className={style.signContainer}>
@@ -122,14 +104,12 @@ const onFinish = (values) => {
           {/* <label style={{ color: "red" }}>{err}</label> */}
           <div className={style.rememberAndPass}>
             <div></div>
-            <a
-              className="login-form-forgot"
-              style={{ color: "#F66D0F", fontWeight: "600" }}
-              href=""
-              onClick={handleForget}
+            <p
+              style={{ color: "#F66D0F", fontWeight: "600", cursor: "pointer" }}
+              onClick={()=>navigate("/forget-password")}
             >
               Forgot password?
-            </a>
+            </p>
           </div>
 
           <Form.Item>

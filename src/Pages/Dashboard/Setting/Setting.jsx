@@ -555,7 +555,7 @@ const Setting = () => {
           </div>
         </Modal>
 
-        {/* Verify Password */}
+        {/* Verify OTP */}
         <Modal
           title={
             <Title

@@ -4,13 +4,32 @@ import logo from "../../Images/Logo.png";
 import style from "./Email.module.css";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { baseURL } from "../../Config";
 
 const { Title, Paragraph, Text, Link } = Typography;
 
 const Email = () => {
   const navigate = useNavigate();
-  const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+  const onFinish = async(values) => {
+    localStorage.setItem('email', values.email);
+    const response = await baseURL.post(`/resendOtp`, {email: values.email}, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      }
+    });
+    if(response?.status === 200){
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Send Otp Successfully",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(()=>{
+        navigate("/otp")
+      })
+    }
   };
   return (
     <div className={style.emailContainer}>
@@ -36,14 +55,14 @@ const Email = () => {
           Please enter your email address for recover your password.
         </Paragraph>
 
-        <Form>
+        <Form onFinish={onFinish}>
           <div className={style.formImage}>
             <img src="https://i.ibb.co/D7s0Tdr/Icon.png" alt="" />
           </div>
           <div>
-            <label htmlFor="email" className={style.label}>
-              Email
-            </label>
+            <div style={{marginBottom: "12px"}}>
+              <label htmlFor="email" className={style.label}>Email</label>
+            </div>
             <Form.Item
               name="email"
               id="email"
@@ -65,7 +84,7 @@ const Email = () => {
             <Button
               type="primary"
               htmlType="submit"
-              onClick={() => navigate("/otp")}
+              // onClick={() => navigate("/otp")}
               block
               style={{
                 height: "45px",
