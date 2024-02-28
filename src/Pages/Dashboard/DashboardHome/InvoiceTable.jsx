@@ -194,7 +194,7 @@ const InvoiceTable = () => {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      setData(response?.data.data);
+      setData(response?.data);
     }
     getAPi();
   }, [page]);
@@ -209,6 +209,16 @@ const InvoiceTable = () => {
           showSizeChanger: false,
           total: data?.total,
           current:  data?.current_page,
+          showTotal: (total, range) => (
+            <span style={{
+              color:"#F66D0F",
+              fontSize: "18px",
+              fontWeight: "600",
+              textAlign: "left"
+            }}>
+              {`SHOWING ${range[0]}-${range[1]} of ${total} items`}
+            </span>
+          ),
           onChange: handlePageChange,
         }}
       />

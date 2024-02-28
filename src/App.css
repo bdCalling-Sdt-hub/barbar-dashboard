@@ -252,3 +252,8 @@ header.ant-layout-header.css-17a39f8 {
 .ant-pagination .ant-pagination-item a, .ant-pagination .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis, .ant-pagination .ant-pagination-next .ant-pagination-item-link, .ant-pagination .ant-pagination-disabled .ant-pagination-item-link {
   color: black!important;
 }
+
+.ant-pagination .ant-pagination-total-text{
+  position: absolute;
+  left: 15px;
+}

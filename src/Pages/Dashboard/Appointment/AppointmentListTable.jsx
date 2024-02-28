@@ -1,12 +1,10 @@
 import { Button, Drawer, Space, Table, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { AiOutlinePrinter, AiOutlineEye } from "react-icons/ai";
-import { LiaSaveSolid } from "react-icons/lia";
 const { Title, Text } = Typography;
 import { CloseOutlined } from "@ant-design/icons";
 import DrawerPage from "../../../Components/DrawerPage/DrawerPage";
 import { baseURL } from "../../../Config";
-import moment from "moment";
 import Swal from "sweetalert2";
 
 function AppointmentListTable({search}) {
@@ -36,11 +34,10 @@ function AppointmentListTable({search}) {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      // console.log(response?.data?.data);
-      setAppointmensts(response?.data?.data);
+      setAppointmensts(response?.data);
     }
     getAPi();
-  }, [page, refresh !== ""]);
+  }, [page]);
 
   // data retraive for search Appointmensts
   useEffect(()=>{
@@ -52,8 +49,8 @@ function AppointmentListTable({search}) {
             authorization: `Bearer ${localStorage.getItem('access_token')}`,
           }
         });
-        setAppointmensts(response?.data?.data);
-        // setSearchAppointmensts(response?.data);
+        // setAppointmensts(response?.data);
+        console.log(response)
       }
     }
     getAPi();
@@ -226,7 +223,8 @@ function AppointmentListTable({search}) {
     }
     
   }
-
+  const total = appointmensts?.total;
+  console.log(total)
   return (
     <>
       <Table
@@ -237,6 +235,16 @@ function AppointmentListTable({search}) {
           showSizeChanger: false,
           total: appointmensts?.total,
           current:  appointmensts?.current_page,
+          showTotal: (total, range) => (
+            <span style={{
+              color:"#F66D0F",
+              fontSize: "18px",
+              fontWeight: "600",
+              textAlign: "left"
+            }}>
+              {`SHOWING ${range[0]}-${range[1]} of ${total} items`}
+            </span>
+          ),
           onChange: handlePageChange,
         }}
       />

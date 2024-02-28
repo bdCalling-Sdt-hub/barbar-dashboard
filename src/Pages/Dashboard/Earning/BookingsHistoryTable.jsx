@@ -107,6 +107,16 @@ const BookingsHistoryTable = () => {
           showSizeChanger: false,
           total: bookings?.total,
           current:  bookings?.current_page,
+          showTotal: (total, range) => (
+            <span style={{
+              color:"#F66D0F",
+              fontSize: "18px",
+              fontWeight: "600",
+              textAlign: "left"
+            }}>
+              {`SHOWING ${range[0]}-${range[1]} of ${total} items`}
+            </span>
+          ),
           onChange: handlePageChange,
         }}
       />
