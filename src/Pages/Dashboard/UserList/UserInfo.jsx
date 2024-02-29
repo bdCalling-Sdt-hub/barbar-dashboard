@@ -1,5 +1,5 @@
 import { Button, Drawer, Space, Table, Typography } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AiOutlinePrinter, AiOutlineEye } from "react-icons/ai";
 import { LiaSaveSolid } from "react-icons/lia";
 import DrawerPage from "../../../Components/DrawerPage/DrawerPage";
@@ -8,11 +8,13 @@ import { CloseOutlined } from "@ant-design/icons";
 import { baseURL } from "../../../Config";
 import moment from "moment";
 const token = localStorage.getItem('access_token');
+import { useReactToPrint } from "react-to-print";
 
 const UserInfo = ({search}) => {
   const [users, setUsers] = useState();
   const [searchUsers, setSearchUsers] = useState([])
   const [page, setPage] = useState(1);
+  const componentRef= useRef();
 
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [userData, setuserData] = useState(null);
@@ -20,6 +22,7 @@ const UserInfo = ({search}) => {
   const showDrawer = (record) => {
     setIsDrawerVisible(true);
     setuserData(record);
+    console.log(record)
   };
 
   const closeDrawer = () => {
@@ -61,13 +64,6 @@ const UserInfo = ({search}) => {
       key: "printView",
       responsive: ["lg"],
       render: (_, record) => (
-        <div style={{}}>
-          <Button
-            type="text"
-            style={{ marginRight: "10px", paddingBottom: "35px" }}
-          >
-            <AiOutlinePrinter style={{ fontSize: "30px", color: "white" }} />
-          </Button>
           <Button
             onClick={() => showDrawer(record)}
             type="text"
@@ -75,7 +71,6 @@ const UserInfo = ({search}) => {
           >
             <AiOutlineEye style={{ fontSize: "30px", color: "white" }} />
           </Button>
-        </div>
       ),
     },
   ];
@@ -112,6 +107,18 @@ const UserInfo = ({search}) => {
   const handlePageChange = (page) => {
     setPage(page);
   };
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    pageStyle: `
+    @media print {
+      body {
+        font-size: 12px;
+        display: "flex",
+      }
+    }
+  `
+  });
 
   return (
     <>
@@ -172,7 +179,7 @@ const UserInfo = ({search}) => {
           </Space>
         }
       >
-        {userData && <DrawerPage userData={userData} />}
+        {userData && <DrawerPage handlePrint={handlePrint} componentRef={componentRef} userData={userData} />}
       </Drawer>
     </>
   );

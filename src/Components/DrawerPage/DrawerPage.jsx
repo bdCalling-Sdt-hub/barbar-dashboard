@@ -268,7 +268,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png"
+                        src={`${url}/${props?.bookingData?.user?.image}`}
                         alt=""
                       />
                     </div>
@@ -881,7 +881,7 @@ const DrawerPage = (props) => {
             >
               <div style={{marginTop : "30px" }}>
                 {" "}
-                <img src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png" alt="" />
+                <img src={`${url}/${props?.userData?.image}`} alt="" />
               </div>
               <div className={styles.infoUserData}>
                 <div className={styles.userInfoLeftUserData}>
@@ -898,6 +898,51 @@ const DrawerPage = (props) => {
                 </div>
               </div>
             </div>
+          </div>
+
+          <div
+            style={{
+              width: "100%",
+              position: "absolute",
+              bottom: 30,
+              left: 0,
+              paddingLeft: "20px",
+              paddingRight: "20px",
+              display: "flex",
+              alignItems: "center",
+              gap: "30px"
+            }}
+          >
+
+            <button
+              style={{
+                width: "100%",
+                background: "transparent",
+                border: "1px solid #F66D0F",
+                color: "white",
+                height: 50,
+                cursor: "pointer",
+                borderRadius:"8px"
+              }}
+            >
+              Block
+            </button>
+
+
+            <button
+              onClick={handlePrint}
+              style={{
+                width: "100%",
+                background: "#F66D0F",
+                color: "white",
+                height: 50,
+                cursor: "pointer",
+                border: "none",
+                borderRadius:"8px"
+              }}
+            >
+              Print
+            </button>
           </div>
         </div>
       )}
