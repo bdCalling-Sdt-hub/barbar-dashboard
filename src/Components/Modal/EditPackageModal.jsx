@@ -1,46 +1,49 @@
 import React, { useState } from 'react'
-import { Button, Upload, Modal} from "antd";
-import { CiCamera, CiLight } from "react-icons/ci";
+import {  Modal, Form, Input, } from "antd";
 import { baseURL } from '../../Config';
+import Swal from "sweetalert2"
 
 const EditPackageModal = ({
     packeageUpdateModel, 
     setPackeageUpdateModel,
-    packageData
+    setRefresh
 }) => {
-    const [imageUrl, setImageUrl] = useState();
-    const [pakageName, setPackeName] = useState(packageData?.package_name);
-    const [packageDuration, setPackageDuration] = useState(packageData?.package_duration);
-    const [packageFeautes, setPackageFeatures] = useState(packageData?.package_features);
-    const [newFeatures, setNewFeatures] = useState([])
-    console.log(newFeatures);
-    const onChange = ({ fileList }) => {
-        setImageUrl(fileList[0].originFileObj);
-    };
-    const handleSubmit= async(e)=>{
-        e.preventDefault();
-
+    const packageData = JSON.parse(localStorage.getItem('package'));
+    
+    const handleUpdate= async(values)=>{
         const value={
-            package_name : pakageName ? pakageName : packageData?.package_name,
-            package_duration: packageDuration ? packageDuration : packageData?.package_duration,
-            price: packageData?.price,
-            package_features: packageData.package_features
+            package_name : values?.package_name,
+            package_duration: values?.package_duration,
+            price: values?.price,
+            package_features: JSON.stringify(values?.package_features)
         }
         const response = await baseURL.post(`/update-package/${packageData?.id}`, value, {
             headers: {
                 authorization: `Bearer ${localStorage.getItem('access_token')}`
             }
         });
-        console.log(response);
         if(response?.status === 200){
-            setPackeageUpdateModel(false);
-            setRefresh('done')
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: response?.data?.message,
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => {
+                setPackeageUpdateModel(false);
+                setRefresh('done');
+              })
+            
         }
     }
 
-    const handleChange=(e)=>{
-        setNewFeatures((prev)=> [...prev, e])
-    }
+    const initialFormValues = {
+        package_name: packageData?.package_name,
+        package_duration: packageData?.package_duration,
+        package_features: packageData?.package_features,
+        price: packageData?.price
+    };
+    
     return (
         <Modal
             centered
@@ -51,64 +54,17 @@ const EditPackageModal = ({
         >
             <div>
                 <h1 style={{marginBottom: "12px"}}>Edit Category</h1>
-                <form onSubmit={handleSubmit}>
-                    <div style={{marginBottom : "20px"}}>
-                        <label >Package name</label>
-                        <div style={{
-                            marginTop: "10px",
-                            marginBottom: "10px"                            
-                        }}>
-                            <input 
-                                style={{
-                                    width: "100%",
-                                    height: "52px",
-                                    border: "1px solid #535770",
-                                    borderRadius: "8px",
-                                    padding : "16px",
-                                    color: "black",
-                                    outline: "none",
-                                    backgroundColor: "#E9EAEC",
-
-                                }}
-                                type="text" 
-                                placeholder="Enter Category name" 
-                                value={pakageName} 
-                                name="category_name"
-                                onChange={(e)=>setPackeName(e.target.value)}
-                            />
-                        </div>
-                    </div>
-
-                    <div style={{marginBottom : "20px"}}>
-                        <div style={{marginBottom : "12px"}}>
-                            <label >Package Duration</label>
-                        </div>
-                        <input 
-                            style={{
-                                width: "100%",
-                                height: "52px",
-                                border: "1px solid #535770",
-                                borderRadius: "8px",
-                                padding : "16px",
-                                color: "black",
-                                outline: "none",
-                                backgroundColor: "#E9EAEC",
-                            }}
-                            type="text" 
-                            placeholder="Enter Category name" 
-                            value={packageDuration} 
-                            name="category_name"
-                            onChange={(e)=>setPackageDuration(e.target.value)}
-                        />
-                    </div>
-
-                    <div style={{marginBottom : "34px"}}>
-                        <div style={{marginBottom : "12px"}}>
-                            <label >Package features</label>
-                        </div>
-                        {
-                            packageFeautes?.map((item, index)=>
-                                <input 
+                <Form
+                    name="normal_login"
+                    className="login-form"
+                    initialValues={initialFormValues}
+                    onFinish={handleUpdate}
+                >
+                    <Form.Item  
+                                name="package_name"
+                            >
+                                <Input
+                                    size="large"
                                     style={{
                                         width: "100%",
                                         height: "52px",
@@ -118,38 +74,80 @@ const EditPackageModal = ({
                                         color: "black",
                                         outline: "none",
                                         backgroundColor: "#E9EAEC",
-                                        marginBottom : "20px"
                                     }}
-                                    type="text" 
-                                    placeholder="Enter Category name" 
-                                    value={item} 
-                                    name="featues_name"
-                                    onChange={(e)=>handleChange(e.target.value)}
                                 />
-                                
-                            )
-                        }
-                        
-                    </div>
+                    </Form.Item>   
 
+                    <Form.Item
+                                name="package_duration"
+                            >
+                                <Input
+                                    size="package_duration"
+                                    style={{
+                                        width: "100%",
+                                        height: "52px",
+                                        border: "1px solid #535770",
+                                        borderRadius: "8px",
+                                        padding : "16px",
+                                        color: "black",
+                                        outline: "none",
+                                        backgroundColor: "#E9EAEC",
+                                    }}
+                                />
+                    </Form.Item>
 
-                    <div>
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            block
+                    <Form.Item 
+                                name="price"
+                            >  
+                                <Input
+                                    size="large"
+                                    style={{
+                                        width: "100%",
+                                        height: "52px",
+                                        border: "1px solid #535770",
+                                        borderRadius: "8px",
+                                        padding : "16px",
+                                        color: "black",
+                                        outline: "none",
+                                        backgroundColor: "#E9EAEC",
+                                    }}
+                                />
+                    </Form.Item>
+
+                    <Form.Item
+                                name="package_features"
+                            >    
+                                <Input.TextArea
+                                    size="large"
+                                    style={{
+                                        width: "100%",
+                                        height: "170px",
+                                        border: "1px solid #535770",
+                                        borderRadius: "8px",
+                                        padding : "16px",
+                                        color: "black",
+                                        outline: "none",
+                                        backgroundColor: "#E9EAEC",
+                                    }}
+                                />
+                    </Form.Item>
+                    <Form.Item>
+                        <button 
+                            type="submit"
+                             
                             style={{
-                                width : "100%",
-                                height: "45px",
-                                fontWeight: "400px",
-                                fontSize: "18px",
-                                background: "#F66D0F",
-                            }}
+                                width: "100%",
+                                height: "56px",
+                                backgroundColor: "#F66D0F",
+                                color: "white",
+                                border: "none",
+                                borderRadius: "8px"
+                            }} 
                         >
                             Save
-                        </Button>
-                    </div>
-                </form>
+                        </button>
+                    </Form.Item>
+                </Form>  
             </div>
         </Modal>
     )

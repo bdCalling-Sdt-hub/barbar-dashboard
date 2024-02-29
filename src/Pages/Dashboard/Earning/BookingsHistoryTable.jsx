@@ -1,20 +1,18 @@
 import { Button, Drawer, Table, Typography } from "antd";
-import React, { useEffect, useState } from "react";
-import { AiOutlinePrinter } from "react-icons/ai";
+import React, { useEffect, useState, useRef } from "react";
 import { IoMdClose } from "react-icons/io";
-import { BsDownload } from "react-icons/bs";
-import { LiaSaveSolid } from "react-icons/lia";
 import DrawerPage from "../../../Components/DrawerPage/DrawerPage";
 import { baseURL } from "../../../Config";
 import moment from "moment";
 const { Title, Text } = Typography;
-
+import {AiOutlineEye } from "react-icons/ai";
+import { useReactToPrint } from "react-to-print";
 const BookingsHistoryTable = () => {
   const [bookings, setBookings] = useState();
-  const [searchSalons, setSearchSalons] = useState([])
   const [page, setPage] = useState(1);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [bookingData, setBookingData] = useState(null);
+  const componentRef = useRef();
 
   const showDrawer = (record) => {
     setIsDrawerVisible(true);
@@ -63,17 +61,12 @@ const BookingsHistoryTable = () => {
         _,
         record // Use the second parameter 'record'
       ) => (
-        <div style={{ textAlign: "center" }}>
-          <Button type="text" style={{ marginRight: "10px" }}>
-            <AiOutlinePrinter style={{ fontSize: "30px", color: "white" }} />
-          </Button>
-          <Button onClick={() => showDrawer(record)} type="text">
-            <BsDownload
+        <Button onClick={() => showDrawer(record)} type="text">
+            <AiOutlineEye
               size={25}
               style={{ fontSize: "30px", color: "white" }}
             />
           </Button>
-        </div>
       ),
     },
   ];
@@ -91,11 +84,22 @@ const BookingsHistoryTable = () => {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      console.log(response.data.data);
       setBookings(response?.data?.data);
     }
     getAPi();
   }, [page]);
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    pageStyle: `
+    @media print {
+      body {
+        font-size: 12px;
+        display: "flex",
+      }
+    }
+  `
+  });
 
   return (
     <div>
@@ -148,7 +152,7 @@ const BookingsHistoryTable = () => {
         open={isDrawerVisible}
         width={500}
       >
-        {bookingData && <DrawerPage bookingData={bookingData} />}
+        {bookingData && <DrawerPage componentRef={componentRef} handlePrint={handlePrint} bookingData={bookingData} />}
       </Drawer>
 
     </div>

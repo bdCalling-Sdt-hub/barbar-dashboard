@@ -1,12 +1,12 @@
 import { Button, Drawer, Space, Table, Typography } from "antd";
-import React, { useEffect, useState } from "react";
-import { AiOutlinePrinter, AiOutlineEye } from "react-icons/ai";
-import { LiaSaveSolid } from "react-icons/lia";
+import React, { useEffect, useState, useRef } from "react";
+import { AiOutlineEye } from "react-icons/ai";
 import DrawerPage from "../../../Components/DrawerPage/DrawerPage";
 const { Title, Text } = Typography;
 import { CloseOutlined } from "@ant-design/icons";
 import { baseURL } from "../../../Config";
 import moment from 'moment';
+import { useReactToPrint } from "react-to-print";
 
 const ProviderInfo = ({search}) => {
   const [providers, setProviders] = useState();
@@ -14,9 +14,25 @@ const ProviderInfo = ({search}) => {
 
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [providerData, setProviderData] = useState(null);
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+      content: () => componentRef.current,
+    pageStyle: `
+    @media print {
+      body {
+        font-size: 12px;
+        display: "flex",
+      }
+    }
+  `
+  });
+
+
+
   const showDrawer = (record) => {
     setIsDrawerVisible(true);
     setProviderData(record);
+    console.log(record)
   };
 
   const closeDrawer = () => {
@@ -66,13 +82,7 @@ const ProviderInfo = ({search}) => {
       key: "printView",
       responsive: ["lg"],
       render: (_, record) => (
-        <div style={{}}>
-          <Button
-            type="text"
-            style={{ marginRight: "10px", paddingBottom: "35px" }}
-          >
-            <AiOutlinePrinter style={{ fontSize: "30px", color: "white" }} />
-          </Button>
+        
           <Button
             onClick={() => showDrawer(record)}
             type="text"
@@ -80,7 +90,6 @@ const ProviderInfo = ({search}) => {
           >
             <AiOutlineEye style={{ fontSize: "30px", color: "white" }} />
           </Button>
-        </div>
       ),
     },
   ];
@@ -97,6 +106,7 @@ const ProviderInfo = ({search}) => {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
+      console.log(response)
       setProviders(response?.data?.data);
     }
     getAPi();
@@ -165,7 +175,7 @@ const ProviderInfo = ({search}) => {
           </Space>
         }
       >
-        {providerData && <DrawerPage providerData={providerData} />}
+        {providerData && <DrawerPage handlePrint={handlePrint} componentRef={componentRef} providerData={providerData} />}
       </Drawer>
     </>
   );

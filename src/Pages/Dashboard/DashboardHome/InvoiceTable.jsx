@@ -1,74 +1,23 @@
 import { Button, Drawer, Space, Table, Typography } from "antd";
-import React, { useEffect, useState } from "react";
-import { AiOutlinePrinter, AiOutlineEye } from "react-icons/ai";
-import { LiaSaveSolid } from "react-icons/lia";
+import React, { useEffect, useState, useRef } from "react";
+import { AiOutlineEye } from "react-icons/ai";
 import DrawerPage from "../../../Components/DrawerPage/DrawerPage";
 const { Title, Text } = Typography;
 import { CloseOutlined } from "@ant-design/icons";
 import { baseURL } from "../../../Config";
 import moment from "moment";
-
-const data = [
-  {
-    key: "1",
-    invoiceNo: "1370510",
-    time: "18 Jul, 2023  4:30pm",
-    clientname: "Mr ululu",
-    providername: "Sahinur Islam",
-    amount: "$850.00",
-    status: "complete",
-    printView: "Button",
-  },
-  {
-    key: "1",
-    invoiceNo: "1370510",
-    time: "18 Jul, 2023  4:30pm",
-    clientname: "Mr ululu",
-    providername: "Sahinur Islam",
-    amount: "$850.00",
-    status: "complete",
-    printView: "Button",
-  },
-  {
-    key: "1",
-    invoiceNo: "1370510",
-    time: "18 Jul, 2023  4:30pm",
-    clientname: "Mr ululu",
-    providername: "Sahinur Islam",
-    amount: "$850.00",
-    status: "complete",
-    printView: "Button",
-  },
-  {
-    key: "1",
-    invoiceNo: "1370510",
-    time: "18 Jul, 2023  4:30pm",
-    clientname: "Mr ululu",
-    providername: "Sahinur Islam",
-    amount: "$850.00",
-    status: "complete",
-    printView: "Button",
-  },
-  {
-    key: "1",
-    invoiceNo: "1370510",
-    time: "18 Jul, 2023  4:30pm",
-    clientname: "Mr ululu",
-    providername: "Sahinur Islam",
-    amount: "$850.00",
-    status: "complete",
-    printView: "Button",
-  },
-];
+import { useReactToPrint } from "react-to-print";
 
 const InvoiceTable = () => {
   const [page, setPage] = useState(1);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [invoiceData, setInvoiceData] = useState(null);
+  const componentRef = useRef();
 
   const showDrawer = (record) => {
     setIsDrawerVisible(true);
     setInvoiceData(record);
+    console.log(record)
   };
 
   const closeDrawer = () => {
@@ -161,21 +110,13 @@ const InvoiceTable = () => {
       key: "printView",
       responsive: ["lg"],
       render: (_, record) => (
-        <div style={{}}>
-          <Button
-            type="text"
-            style={{ marginRight: "10px", paddingBottom: "35px" }}
-          >
-            <AiOutlinePrinter style={{ fontSize: "30px", color: "white" }} />
-          </Button>
-          <Button
+        <Button
             onClick={() => showDrawer(record)}
             type="text"
             style={{ paddingBottom: "35px" }}
           >
             <AiOutlineEye style={{ fontSize: "30px", color: "white" }} />
           </Button>
-        </div>
       ),
     },
   ];
@@ -194,10 +135,23 @@ const InvoiceTable = () => {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
+      
       setData(response?.data);
     }
     getAPi();
   }, [page]);
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    pageStyle: `
+    @media print {
+      body {
+        font-size: 12px;
+        display: "flex",
+      }
+    }
+  `
+  });
 
   return (
     <>
@@ -259,7 +213,7 @@ const InvoiceTable = () => {
           </Space>
         }
       >
-        {invoiceData && <DrawerPage invoiceData={invoiceData} />}
+        {invoiceData && <DrawerPage componentRef={componentRef} handlePrint={handlePrint} invoiceData={invoiceData} />}
       </Drawer>
     </>
   );

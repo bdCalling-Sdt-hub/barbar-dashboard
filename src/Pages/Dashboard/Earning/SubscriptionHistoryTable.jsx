@@ -1,18 +1,20 @@
 import { Button, Drawer, Table, Typography } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { AiOutlinePrinter } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
 import { BsDownload } from "react-icons/bs";
-import { LiaSaveSolid } from "react-icons/lia";
+import { AiOutlineEye } from "react-icons/ai";
 import DrawerPage from "../../../Components/DrawerPage/DrawerPage";
 import { baseURL } from "../../../Config";
 import moment from "moment";
+import { useReactToPrint } from "react-to-print";
 const { Title, Text } = Typography;
 
 const SubscriptionHistoryTable = () => {
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [subscriptionData, setSubscriptionData] = useState(null);
   const [page, setPage] = useState(1);
+  const componentRef = useRef();
 
   const showDrawer = (record) => {
     setIsDrawerVisible(true);
@@ -38,7 +40,6 @@ const SubscriptionHistoryTable = () => {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      console.log(response.data.data);
       setData(response?.data.data);
     }
     getAPi();
@@ -99,22 +100,28 @@ const SubscriptionHistoryTable = () => {
         _,
         record // Use the second parameter 'record'
       ) => (
-        <div style={{ textAlign: "center" }}>
-          <Button type="text" style={{ marginRight: "10px" }}>
-            <AiOutlinePrinter style={{ fontSize: "30px", color: "white" }} />
-          </Button>
+        
           <Button onClick={() => showDrawer(record)} type="text">
-            <BsDownload
+            <AiOutlineEye
               size={25}
               style={{ fontSize: "30px", color: "white" }}
             />
           </Button>
-        </div>
       ),
     },
   ];
 
-
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    pageStyle: `
+    @media print {
+      body {
+        font-size: 12px;
+        display: "flex",
+      }
+    }
+  `
+  });
 
   return (
     <div>
@@ -167,7 +174,7 @@ const SubscriptionHistoryTable = () => {
         open={isDrawerVisible}
         width={550}
       >
-        {subscriptionData && <DrawerPage subscriptionData={subscriptionData} />}
+        {subscriptionData && <DrawerPage handlePrint={handlePrint} componentRef={componentRef} subscriptionData={subscriptionData} />}
       </Drawer>
     </div>
   );

@@ -19,12 +19,8 @@ import { IoStar } from "react-icons/io5";
 import moment from "moment";
 import { baseURL, url } from "../../Config";
 
-/* const { Title } = Typography;
-
-const { Option } = Select; */
-
 const DrawerPage = (props) => {
-  const { handleApprove, handleCancel } = props;
+  const { handleApprove, handleCancel, handlePrint } = props;
   const style = {
     cardType: {
       height: "150px",
@@ -50,6 +46,7 @@ const DrawerPage = (props) => {
       height: "45px",
     },
   };
+
 
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
@@ -244,7 +241,7 @@ const DrawerPage = (props) => {
 
       {props.earningData && (
         <div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div ref={props?.componentRef} style={{ display: "flex", gap: "15px" }}>
             <div className={styles.appointmentMainContainer}>
               <div>
                 <h3>Appointment Info</h3>
@@ -328,7 +325,7 @@ const DrawerPage = (props) => {
 
       {props.bookingData && (
         <div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div ref={props?.componentRef} style={{ display: "flex", gap: "15px" }}>
             <div className={styles.appointmentMainContainer}>
               <div>
                 <h3>Transaction Information</h3>
@@ -355,7 +352,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png"
+                        src={`${url}/${props?.bookingData?.user?.image}`}
                         alt=""
                       />
                     </div>
@@ -378,34 +375,28 @@ const DrawerPage = (props) => {
           </div>
           <div
             style={{
-              display: "flex",
-              gap: 20,
+              width: "100%",
               position: "absolute",
-              bottom: 10,
+              bottom: 30,
+              left: 0,
+              paddingLeft: "20px",
+              paddingRight: "20px"
             }}
           >
-            <Button
-              block
+            <button
+              onClick={handlePrint}
               style={{
+                width: "100%",
                 background: "#F66D0F",
                 color: "white",
                 height: 50,
-                width: "220px",
-              }}
-            >
-              Download
-            </Button>
-            <Button
-              block
-              style={{
-                background: "#F66D0F",
-                color: "white",
-                height: 50,
-                width: "220px",
+                cursor: "pointer",
+                border: "none",
+                borderRadius:"8px"
               }}
             >
               Print
-            </Button>
+            </button>
           </div>
         </div>
       )}
@@ -413,7 +404,7 @@ const DrawerPage = (props) => {
 
       {props.providerRequestData && (
         <div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div ref={props?.componentRef} style={{ display: "flex", gap: "15px" }}>
             <div className={styles.appointmentMainContainer}>
               <div>
                 <h3>Provider Information</h3>
@@ -473,7 +464,7 @@ const DrawerPage = (props) => {
 
       {props.subscriptionData && (
         <div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div ref={props?.componentRef} style={{ display: "flex", gap: "15px" }}>
             <div className={styles.appointmentMainContainer}>
               <div>
                 <h3>Transaction Information</h3>
@@ -500,7 +491,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png"
+                        src={`${url}/${props?.subscriptionData?.user?.image}`}
                         alt=""
                       />
                     </div>
@@ -523,34 +514,28 @@ const DrawerPage = (props) => {
           </div>
           <div
             style={{
-              display: "flex",
-              gap: 20,
+              width: "100%",
               position: "absolute",
-              bottom: 10,
+              bottom: 30,
+              left: 0,
+              paddingLeft: "20px",
+              paddingRight: "20px"
             }}
           >
-            <Button
-              block
+            <button
+              onClick={handlePrint}
               style={{
+                width: "100%",
                 background: "#F66D0F",
                 color: "white",
                 height: 50,
-                width: "220px",
-              }}
-            >
-              Download
-            </Button>
-            <Button
-              block
-              style={{
-                background: "#F66D0F",
-                color: "white",
-                height: 50,
-                width: "220px",
+                cursor: "pointer",
+                border: "none",
+                borderRadius:"8px"
               }}
             >
               Print
-            </Button>
+            </button>
           </div>
         </div>
       )}
@@ -649,8 +634,8 @@ const DrawerPage = (props) => {
       )}
 
       {props.invoiceData && (
-        <div>
-          <div style={{ display: "flex", gap: "15px" }}>
+        <div >
+          <div ref={props?.componentRef} style={{ display: "flex", gap: "15px" }}>
             <div className={styles.appointmentMainContainer}>
               <div>
                 <h3>Appointment Info</h3>
@@ -681,7 +666,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png"
+                        src={`${url}/${props?.invoiceData?.user?.image}`}
                         alt=""
                       />
                     </div>
@@ -708,7 +693,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src="https://i.ibb.co/9h5XjNp/Rectangle-2519-1.png"
+                        src={`${url}${props?.invoiceData?.provider?.cover_photo}`}
                         alt=""
                       />
                     </div>
@@ -731,34 +716,28 @@ const DrawerPage = (props) => {
           </div>
           <div
             style={{
-              display: "flex",
-              gap: 20,
+              width: "100%",
               position: "absolute",
-              bottom: 10,
+              bottom: 30,
+              left: 0,
+              paddingLeft: "20px",
+              paddingRight: "20px"
             }}
           >
-            <Button
-              block
+            <button
+              onClick={handlePrint}
               style={{
+                width: "100%",
                 background: "#F66D0F",
                 color: "white",
                 height: 50,
-                width: "220px",
-              }}
-            >
-              Download
-            </Button>
-            <Button
-              block
-              style={{
-                background: "#F66D0F",
-                color: "white",
-                height: 50,
-                width: "220px",
+                
+                border: "none",
+                borderRadius:"8px"
               }}
             >
               Print
-            </Button>
+            </button>
           </div>
         </div>
       )}
@@ -766,7 +745,7 @@ const DrawerPage = (props) => {
 
       {props.appointmentList && (
         <div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div  ref={props?.componentRef} style={{ display: "flex", gap: "15px" }}>
             <div className={styles.appointmentMainContainer}>
               <div>
                 <h3>Appointment Information</h3>
@@ -797,7 +776,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png"
+                        src={`${url}/${props?.appointmentList?.user?.image}`}
                         alt=""
                       />
                     </div>
@@ -824,7 +803,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src="https://i.ibb.co/9h5XjNp/Rectangle-2519-1.png"
+                        src={`${url}/images/${props?.appointmentList?.provider?.cover_photo}`}
                         alt=""
                       />
                     </div>
@@ -845,44 +824,56 @@ const DrawerPage = (props) => {
               </div>
             </div>
           </div>
+
           <div
             style={{
+              width: "100%",
+              position: "absolute",
+              bottom: 30,
               display: "flex",
               gap: 20,
-              position: "absolute",
-              bottom: 10,
+              left: 0,
+              paddingLeft: "20px",
+              paddingRight: "20px"
             }}
           >
-            <Button
-              block
+            <button
               onClick={()=>handleCancel(props?.appointmentList?.id)}
               style={{
-                background: "#F66D0F",
+                width: "100%",
+                background: "transparent",
                 color: "white",
                 height: 50,
-                width: "220px",
+                cursor: "pointer",
+                border: "none",
+                borderRadius:"8px",
+                border: "1px solid #F66D0F"
               }}
             >
-              Cancel Appointment
-            </Button>
-            <Button
-              block
+              Cancel Appoinments
+            </button>
+
+            <button
+              onClick={handlePrint}
               style={{
+                width: "100%",
                 background: "#F66D0F",
                 color: "white",
                 height: 50,
-                width: "220px",
+                cursor: "pointer",
+                border: "none",
+                borderRadius:"8px"
               }}
             >
               Print
-            </Button>
+            </button>
           </div>
         </div>
       )}
 
       {props.userData && (
         <div className={styles.userContainer}>
-          <div>
+          <div ref={props?.componentRef}>
             <h3 >User Info</h3>
             <div
               className={styles.userInfo}
@@ -914,12 +905,15 @@ const DrawerPage = (props) => {
 
       {props.salonData && (
         <div className={styles.userContainer}>
-          <div>
-            <h3>Salon Info</h3>
-            <div className={styles.userInfo} style={{ display: "flex" }}>
+          <div ref={props?.componentRef}>
+            <h3 >Salon Info</h3>
+            <div className={styles.userInfo} style={{ display: "flex", marginTop: "12px" }}>
               <div>
                 {" "}
-                <img src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png" alt="" />
+                <img 
+                  src={`${url}/images/${props?.salonData?.cover_photo}`}
+                  alt="" 
+                />
               </div>
               <div className={styles.infoUserData}>
                 <div className={styles.salonInfoLeftUserData}>
@@ -937,39 +931,39 @@ const DrawerPage = (props) => {
               </div>
             </div>
           </div>
-          <div style={{
-            width : "90%",
-            position : "absolute",
-            bottom : 0,
-            left : 0,
-            margin : "20px",
-            display : "flex",
-            gap: "20px"
-          }}>
-            <button style={{
-              width : "100%",
-              height: "56px",
-              backgroundColor : "transparent",
-              color : "white",
-              border : "1px solid #F66D0F",
-              borderRadius : "8px"
 
-            }}>Download</button>
-            <button style={{
-              width : "100%",
-              height: "56px",
-              backgroundColor : "#F66D0F",
-              color : "white",
-              border : "none",
-              borderRadius : "8px"
-            }}>Print</button>
+          <div
+            style={{
+              width: "100%",
+              position: "absolute",
+              bottom: 30,
+              left: 0,
+              paddingLeft: "20px",
+              paddingRight: "20px"
+            }}
+          >
+            <button
+              onClick={handlePrint}
+              style={{
+                width: "100%",
+                background: "#F66D0F",
+                color: "white",
+                height: 50,
+                cursor: "pointer",
+                border: "none",
+                borderRadius:"8px"
+              }}
+            >
+              Print
+            </button>
           </div>
+
         </div>
       )}
 
       {props.providerData && (
         <div className={styles.userContainer}>
-          <div style={{ marginBottom: "30px" }}>
+          <div ref={props?.componentRef} style={{ marginBottom: "30px" }}>
             <h3>Provider Info</h3>
             <div className={styles.userInfo} style={{ display: "flex" }}>
               <div>
@@ -1084,7 +1078,7 @@ const DrawerPage = (props) => {
 
       {props.reviewsData && (
         <div className={styles.userContainer}>
-          <div style={{ marginBottom: "30px" }}>
+          <div ref={props?.componentRef} style={{ marginBottom: "30px" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
                 <div

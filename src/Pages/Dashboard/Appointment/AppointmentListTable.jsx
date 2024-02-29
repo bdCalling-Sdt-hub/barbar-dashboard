@@ -1,11 +1,12 @@
 import { Button, Drawer, Space, Table, Typography } from "antd";
-import React, { useEffect, useState } from "react";
-import { AiOutlinePrinter, AiOutlineEye } from "react-icons/ai";
+import React, { useEffect, useState, useRef } from "react";
 const { Title, Text } = Typography;
 import { CloseOutlined } from "@ant-design/icons";
 import DrawerPage from "../../../Components/DrawerPage/DrawerPage";
 import { baseURL } from "../../../Config";
 import Swal from "sweetalert2";
+import { useReactToPrint } from "react-to-print";
+import { AiOutlineEye } from "react-icons/ai";
 
 function AppointmentListTable({search}) {
   const [appointmensts, setAppointmensts] = useState();
@@ -14,6 +15,19 @@ function AppointmentListTable({search}) {
 
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [appointmentList, setAppointmentList] = useState(null);
+
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+      content: () => componentRef.current,
+      pageStyle: `
+      @media print {
+        body {
+          font-size: 12px;
+          display: "flex",
+        }
+      }
+    `
+    });
 
   const showDrawer = (record) => {
     setIsDrawerVisible(true);
@@ -160,13 +174,7 @@ function AppointmentListTable({search}) {
       key: "printView",
       responsive: ["lg"],
       render: (_, record) => (
-        <div style={{}}>
-          <Button
-            type="text"
-            style={{ marginRight: "10px", paddingBottom: "35px" }}
-          >
-            <AiOutlinePrinter style={{ fontSize: "30px", color: "white" }} />
-          </Button>
+        
           <Button
             onClick={() => showDrawer(record)}
             type="text"
@@ -174,7 +182,6 @@ function AppointmentListTable({search}) {
           >
             <AiOutlineEye style={{ fontSize: "30px", color: "white" }} />
           </Button>
-        </div>
       ),
     },
   ];
@@ -223,8 +230,7 @@ function AppointmentListTable({search}) {
     }
     
   }
-  const total = appointmensts?.total;
-  console.log(total)
+  
   return (
     <>
       <Table
@@ -283,7 +289,7 @@ function AppointmentListTable({search}) {
           </Space>
         }
       >
-        {appointmentList && <DrawerPage handleCancel={handleCancel} appointmentList={appointmentList} />}
+        {appointmentList && <DrawerPage handlePrint={handlePrint} componentRef={componentRef} handleCancel={handleCancel} appointmentList={appointmentList} />}
       </Drawer>
     </>
   );
