@@ -54,6 +54,11 @@ function Categories() {
     }
   },[userId]);
 
+  if(refresh){
+    setTimeout(()=>{
+      setRefresh("")
+    }, [1500])
+  }
     
     useEffect(()=>{
       async function getAPi(){
@@ -70,7 +75,7 @@ function Categories() {
 
   const handleEdit=(value)=>{
     setCategory(value);
-    setOpenEditModel(true)
+    setOpenEditModel(true);
   }
 
   return (
@@ -111,7 +116,7 @@ function Categories() {
 
       {/* edit category Modal */}
       {
-        openEditModel  && <EditModal setRefresh={setRefresh} setOpenDeleteModal={setOpenDeleteModal} category_name={category?.category_name} id={category.id} openEditModel={openEditModel} setOpenEditModel={setOpenEditModel}/>
+        openEditModel  && <EditModal setRefresh={setRefresh} setOpenDeleteModal={setOpenDeleteModal} category={category} category_name={category?.category_name} id={category.id} openEditModel={openEditModel} setOpenEditModel={setOpenEditModel}/>
       }
       
 

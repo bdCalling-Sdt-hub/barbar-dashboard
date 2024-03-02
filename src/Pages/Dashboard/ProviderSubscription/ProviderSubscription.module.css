@@ -1,20 +1,21 @@
 .packageCard {
     width: 400px;
-    background: #F66D0F;
     border-radius: 10px;
     margin-top: 50px;
     position: relative;
+    overflow-y: auto;
+    background: #364153;
 }
 
 .packageCard div>h3 {
     padding: 20px;
     text-align: center;
+    background: #F66D0F; 
 }
 
 .packageDetails {
     background: #364153;
     color: white;
-    height: 280px;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
 }
@@ -37,7 +38,6 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
-    /* justify-content: center; */
     align-items: center;
     padding: 5px;
     margin-left: 15px;
@@ -45,21 +45,23 @@
 }
 
 .editBtn {
+    width: 88%;
+    height: 52px;
     background: #F66D0F;
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 10px;
     cursor: pointer;
-    padding: 10px 50px;
-    display: flex;
-    margin: 0 auto;
-    margin-top: 10px;
+    padding: 10px 0;
+    margin: 20px;
+    text-align: center;
 }
 
 .packagesContainer {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    /* grid-template-columns: repeat(3, 1fr); */
     margin-bottom: 24px;
 }
 

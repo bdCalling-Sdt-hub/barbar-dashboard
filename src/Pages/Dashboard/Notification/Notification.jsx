@@ -5,16 +5,18 @@ import { baseURL } from "../../../Config";
 
 function Notification() {
   const [data, setData] = useState(null);
+  console.log(data?.data)
   // data retraive for all salons
   useEffect(()=>{
     async function getAPi(){
-      const response = await baseURL.get(`/notification`,{
+      const response = await baseURL.get(`/admin-notification`,{
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      setData(response?.data?.data);
+      console.log(response.data.aapoinment_notification);
+      setData(response.data.aapoinment_notification);
     }
     getAPi();
   }, []);
@@ -25,7 +27,7 @@ function Notification() {
           All Notifications
         </h2>
 
-        {[...Array(5).keys()].map((_, index) => {
+        {data?.data?.map((notification, index) => {
           return (
             <Col lg={{ span: 24 }}>
               <div
@@ -51,7 +53,7 @@ function Notification() {
                 </div>
                 <div className="">
                   <p>
-                    <span>Sanchez haro manuel</span> start a new trip at 5pm.
+                    <span>{notification?.user?.name}</span> {notification?.message}
                     Trip No.56. Trip started from Mexico city.....
                   </p>
                   <p style={{ color: "gray", marginTop: "10px" }}>1hr ago</p>

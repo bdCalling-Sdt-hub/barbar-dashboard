@@ -10,13 +10,21 @@ const About = () => {
   const editor = useRef(null)
   const [content, setContent] = useState("");
   const [refreash, setRefreash] = useState('')
+
+  if(refreash){
+    setTimeout(()=>{
+      setRefreash("")
+    },[1500])
+  }
+
   const handleUpdate = async() => {
-    const response = await baseURL.post(`/update-website-pages/5`, {page_description:content}, {
+    const response = await baseURL.post(`/update-website-pages/3`, {page_description:content}, {
       headers: {
         "Content-Type": "application/json",
         authorization: `Bearer ${localStorage.getItem('access_token')}`,
       }
     });
+    console.log(response);
     if(response?.status=== 200){
       Swal.fire({
         position: "center",
@@ -33,7 +41,7 @@ const About = () => {
   
   useEffect(()=>{
     async function getAPi(){
-      const response = await baseURL.get(`/show-single-pages/5`,{
+      const response = await baseURL.get(`/show-single-pages/3`,{
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -44,13 +52,16 @@ const About = () => {
     getAPi();
   }, [refreash !== ""]);
   
+
   useEffect(()=>{
     setContent(data?.page_description);
   }, [data]);
 
   const config = {
+    autofocus : true ,
+    cursorAfterAutofocus: 'end',
     style: {
-      color: 'black', // Set initial font color to red
+      color: 'black'
     },
   };
   return (

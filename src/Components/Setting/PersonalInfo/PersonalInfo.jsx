@@ -11,8 +11,6 @@ const PersonalInfo = () => {
   const profile = JSON.parse(localStorage.getItem('userInfo'));
   const [image, setImage] = useState(profile?.image ? `${url}/${profile?.image}` : person);
   const [imgURL, setImgURL] = useState(image);
-  console.log(imgURL)
-
   if(data){
     localStorage.setItem('userInfo', JSON.stringify(data))
   }

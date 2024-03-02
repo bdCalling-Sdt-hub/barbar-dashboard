@@ -8,6 +8,7 @@ function TrashTable({search}) {
   const [data, setData] = useState();
   const [page, setPage] = useState();
   const [refresh, setRefresh] = useState("");
+
   const handleRestore=async(id)=>{
     console.log(id);
     if(id){
@@ -18,6 +19,7 @@ function TrashTable({search}) {
         }
       }); 
 
+      console.log(response);
       if(response?.status === 200){    
             Swal.fire({
               position: "center",
@@ -90,16 +92,23 @@ function TrashTable({search}) {
    // data retraive for all Appointmensts
    useEffect(()=>{
     async function getAPi(){
-      const response = await baseURL.get(`/trash-user?search=${search}&page=${page}`,{
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        }
-      });
-      console.log(response?.data?.data);
-      setData(response?.data?.data);
-      
-      
+      if(search){
+        const response = await baseURL.get(`/trash-user?search=${search}&page=${page}`,{
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          }
+        });
+        setData(response?.data?.data);
+      } else{
+        const response = await baseURL.get(`/trash-user?page=${page}`,{
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          }
+        });
+        setData(response?.data?.data);
+      }
       
     }
     getAPi();

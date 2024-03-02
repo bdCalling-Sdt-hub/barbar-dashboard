@@ -9,7 +9,8 @@ const { Title, Text } = Typography;
 import { SearchOutlined } from '@ant-design/icons';
 
 function BlockList() {
-  const [data, setData] = useState()
+  const [data, setData] = useState();
+  console.log(data?.data)
   const [page, setPage] = useState()
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [providerRequestData, setProviderRequestData] = useState(null);
@@ -30,6 +31,7 @@ function BlockList() {
     setIsDrawerVisible(false);
     setProviderRequestData(null);
   };
+
   // data retraive for all Appointmensts
   useEffect(()=>{
     async function getAPi(){
@@ -39,7 +41,6 @@ function BlockList() {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      console.log(response?.data?.data);
       setData(response?.data?.data);
     }
     getAPi();
@@ -49,6 +50,7 @@ function BlockList() {
   const handlePageChange=(page)=>{
     setPage(page);
   }
+
   const handleApprove =async(id)=>{
     const response = await baseURL.get(`/unblock-provider/${id}`,{
       headers: {
@@ -56,7 +58,6 @@ function BlockList() {
         authorization: `Bearer ${localStorage.getItem('access_token')}`,
       }
     });
-    console.log(response)
     if(response.status === 200){
       Swal.fire({
         position: "center",
@@ -71,7 +72,7 @@ function BlockList() {
       
     }
   }
-  
+
   
   const handleSearch=()=>{
     setSearch(keyword);
@@ -98,13 +99,13 @@ function BlockList() {
                 width={100}
                 height={100}
                 style={{ borderRadius: "100%" }}
-                src={`${url}/${item?.user?.image}`}
+                src={`${url}/images/${item?.cover_photo}`}
                 alt=""
               />
             </div>
             <div>
               <div className={styles.info}>
-                <h3 style={{ color: "#F66D0F" }}>{item?.user?.name}</h3>
+                <h3 style={{ color: "#F66D0F" }}>{item?.business_name}</h3>
                 <p>{item?.user?.email}</p>
               </div>
               <div style={{width : "100%"}} className={styles.buttonContainer}>

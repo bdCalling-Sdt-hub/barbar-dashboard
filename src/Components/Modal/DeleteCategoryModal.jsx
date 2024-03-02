@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button, Modal} from "antd";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { baseURL } from '../../Config';
+import Swal from "sweetalert2"
 const token = localStorage.getItem('access_token');
 
 const EditModal = ({
@@ -18,8 +19,17 @@ const EditModal = ({
             }
         });
         if(response?.status === 200){
-            setOpenDeleteModal(false);
-            setRefresh('done')
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Category Delete Successfully",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(()=>{
+                setOpenDeleteModal(false);
+                setRefresh('done')
+            })
+            
         }
     }
     return (

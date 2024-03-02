@@ -11,12 +11,14 @@ const EditPackageModal = ({
     const packageData = JSON.parse(localStorage.getItem('package'));
     
     const handleUpdate= async(values)=>{
+        const array = values?.package_features.substring(1, values?.package_features?.length - 1).split(',').map(item => item.trim());
         const value={
             package_name : values?.package_name,
             package_duration: values?.package_duration,
             price: values?.price,
-            package_features: JSON.stringify(values?.package_features)
+            package_features: JSON.stringify(array)
         }
+        console.log(value)
         const response = await baseURL.post(`/update-package/${packageData?.id}`, value, {
             headers: {
                 authorization: `Bearer ${localStorage.getItem('access_token')}`

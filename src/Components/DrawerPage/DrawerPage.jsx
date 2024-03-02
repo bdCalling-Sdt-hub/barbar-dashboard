@@ -9,8 +9,9 @@ import {
   Select,
   Typography,
   Rate,
+  Modal
 } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import { AiFillStar } from "react-icons/ai";
 import cardImg from "../../Images/Cards.png";
 import img from "../../Images/image 1.png";
@@ -18,9 +19,13 @@ import styles from "./DrawerPage.module.css";
 import { IoStar } from "react-icons/io5";
 import moment from "moment";
 import { baseURL, url } from "../../Config";
+import { HiTrash } from "react-icons/hi2";
+import Swal from "sweetalert2"
 
 const DrawerPage = (props) => {
-  const { handleApprove, handleCancel, handlePrint } = props;
+  const [open, setOpen] = useState(false);
+  const [id, setID] = useState(false);
+  const { handleApprove, handleCancel, handlePrint, setRefresh } = props;
   const style = {
     cardType: {
       height: "150px",
@@ -52,6 +57,32 @@ const DrawerPage = (props) => {
     console.log("Received values of form: ", values);
   };
 
+  const handleReviewDelete=(id)=>{
+    setOpen(true);
+    setID(id);
+    console.log(id);
+  }
+
+  const handleDelete=async()=>{
+    const response = await baseURL.get(`/deleteRating/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      }
+    });
+    if(response?.status === 200){
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Delete Review Successfully",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(()=>{
+        setRefresh("done")
+        setOpen(false)
+      })
+    }
+  }
   return (
     <>
 
@@ -653,7 +684,7 @@ const DrawerPage = (props) => {
                       {props.invoiceData?.status === 4 && "Cancel"}
                     </p>
                     <p>{moment(props.invoiceData?.created_at).format('LLL')}</p>
-                    <p> {props?.invoiceData?.payment_type}</p>
+                    <p> {props?.invoiceData?.payment_type ? props?.invoiceData?.payment_type : "Not Found"}</p>
                     <p>$ {props?.invoiceData?.price}</p>
                   </div>
                 </div>
@@ -693,7 +724,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src={`${url}${props?.invoiceData?.provider?.cover_photo}`}
+                        src={`${url}/images/${props?.invoiceData?.provider?.cover_photo}`}
                         alt=""
                       />
                     </div>
@@ -705,8 +736,8 @@ const DrawerPage = (props) => {
                       </div>
                       <div className={styles.userInfoRight}>
                         <p>{props?.invoiceData?.provider?.business_name}</p>
-                        <p>{props?.invoiceData?.provider?.phone_number}</p>
-                        <p>{props?.invoiceData?.provider?.address}</p>
+                        <p>{props?.invoiceData?.provider?.phone_number ? props?.invoiceData?.provider?.phone_number : "Not Found"}</p>
+                        <p>{props?.invoiceData?.provider?.address ? props?.invoiceData?.provider?.address : "Not Found"}</p>
                       </div>
                     </div>
                   </div>
@@ -845,7 +876,6 @@ const DrawerPage = (props) => {
                 color: "white",
                 height: 50,
                 cursor: "pointer",
-                border: "none",
                 borderRadius:"8px",
                 border: "1px solid #F66D0F"
               }}
@@ -1013,7 +1043,7 @@ const DrawerPage = (props) => {
             <div className={styles.userInfo} style={{ display: "flex" }}>
               <div>
                 {" "}
-                <img src={`${url}/${props.providerData?.image}`} alt="" />
+                <img src={`${url}/images/${props.providerData?.cover_photo}`} alt="" />
               </div>
               <div className={styles.infoUserData}>
                 <div className={styles.salonInfoLeftUserData}>
@@ -1023,10 +1053,10 @@ const DrawerPage = (props) => {
                   <p>Address :</p>
                 </div>
                 <div className={styles.salonInfoRightUserData}>
-                  <p>{props.providerData?.name}</p>
-                  <p>{props.providerData?.phone_number}</p>
+                  <p>{props.providerData?.user?.name}</p>
+                  <p>{props.providerData?.business_name}</p>
+                  <p>{props.providerData?.user?.phone_number ? props.providerData?.user?.phone_number : "Not Found"}</p>
                   <p>{props.providerData?.address}</p>
-                  <p>Haircut, shaving</p>
                 </div>
               </div>
             </div>
@@ -1039,7 +1069,7 @@ const DrawerPage = (props) => {
                 marginTop: "50x",
               }}
             >
-              <h3>Current package:</h3> <h3>Gold</h3>
+              <h3>Current package:</h3> <h3>{props.providerData?.package[0]?.package?.package_name}</h3>
             </div>
           </div>
           <div>
@@ -1050,8 +1080,8 @@ const DrawerPage = (props) => {
                 gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
               }}
             >
-              {[1, 2, 3, 4, 5].map((item, index) => (
-                <div key={index}>
+              {props?.providerData?.service?.map((item, index) => (
+                <div key={index} >
                   <div
                     style={{
                       padding: "10px",
@@ -1065,8 +1095,8 @@ const DrawerPage = (props) => {
                     }}
                   >
                     <img
-                      style={{ width: "155px" }}
-                      src="https://i.ibb.co/xz27ZPN/Rectangle-2059.png"
+                      style={{ width: "155px", height:"105px" }}
+                      src={`${url}/images/${item?.gallary_photo[0]}`}
                       alt=""
                     />
                     <p
@@ -1076,7 +1106,7 @@ const DrawerPage = (props) => {
                         color: "#F66D0F",
                       }}
                     >
-                      Spa
+                      {item?.service_name}
                     </p>
                   </div>
                 </div>
@@ -1095,17 +1125,20 @@ const DrawerPage = (props) => {
               bottom: 10,
             }}
           >
-            <Button
+            <button
               block
               style={{
-                background: "#F66D0F",
+                background: "transparent",
                 color: "white",
                 height: 50,
                 width: "370px",
+                border: "1px solid #F66D0F",
+                borderRadius: "8px",
+                fontWeight: 600
               }}
             >
-              Cancel Appointment
-            </Button>
+              Block
+            </button>
             <Button
               block
               style={{
@@ -1139,6 +1172,7 @@ const DrawerPage = (props) => {
                     strokeColor={"#F66D0F"}
                   />
                 </div>
+
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "5px" }}
                 >
@@ -1152,7 +1186,9 @@ const DrawerPage = (props) => {
                     strokeColor={"#F66D0F"}
                   />
                 </div>
+
                 <div
+
                   style={{ display: "flex", alignItems: "center", gap: "5px" }}
                 >
                   <p>3</p>
@@ -1165,6 +1201,7 @@ const DrawerPage = (props) => {
                     strokeColor={"#F66D0F"}
                   />
                 </div>
+
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "5px" }}
                 >
@@ -1178,6 +1215,7 @@ const DrawerPage = (props) => {
                     strokeColor={"#F66D0F"}
                   />
                 </div>
+
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "5px" }}
                 >
@@ -1192,12 +1230,13 @@ const DrawerPage = (props) => {
                   />
                 </div>
               </div>
+
               <div style={{ marginTop: "50px" }}>
-                <h1 style={{ fontSize: "36px", textAlign: "right" }}>4.2</h1>
+                <h1 style={{ fontSize: "36px", textAlign: "right" }}>{props.reviewsData?.average_rating.toFixed(2)}</h1>
                 <Rate
                   style={{ color: "#F66D0F" }}
                   disabled
-                  defaultValue={4.5}
+                  defaultValue={props.reviewsData?.total_review}
                 />
                 <p
                   style={{
@@ -1206,144 +1245,125 @@ const DrawerPage = (props) => {
                     marginTop: "5px",
                   }}
                 >
-                  52 Reviews
+                  {props.reviewsData?.total_review} Reviews
                 </p>
               </div>
             </div>
+
             <div>
-              <div style={{ marginTop: "50px" }}>
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <img
-                    style={{ borderRadius: "100%" }}
-                    src="https://i.ibb.co/dLsxtGJ/logo-3.png"
-                    alt=""
-                  />
-                  <div>
-                    <p>Courtney Henry</p>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "5px",
-                      }}
-                    >
-                      <Rate
-                        style={{ color: "#F66D0F" }}
-                        disabled
-                        defaultValue={4.5}
+              {
+                props?.reviewsData?.service_details_with_user?.map((review)=>
+                
+                  <div style={{ marginTop: "50px",  }}>
+                    <div style={{ display: "flex", gap: "10px" }}>
+                      <img
+                        style={{ borderRadius: "100%", borderRadius: "100%", width:"50px", height:"50px" }}
+                        src={`${url}/${review?.user?.image}`}
+                        alt=""
                       />
-                      <p>2 mins ago</p>
+                      <div>
+                        <p>{review?.user?.name}</p>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "5px",
+                          }}
+                        >
+                          <Rate
+                            style={{ color: "#F66D0F" }}
+                            disabled
+                            defaultValue={4.5}
+                          />
+                          <p>{moment(review?.created_at).startOf('hour').fromNow()}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <p style={{ padding: "20px 0px" }}>
+                        {review?.review}
+                      </p>
+                      <p
+                        onClick={()=>(handleReviewDelete(review?.id)) }
+                        style={{
+                          color: "#FC4400",
+                          cursor: "pointer",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        Delete Review
+                      </p>
                     </div>
                   </div>
-                </div>
-                <div>
-                  <p style={{ padding: "20px 0px" }}>
-                    Consequat velit qui adipisicing sunt do rependerit ad
-                    laborum tempor ullamco exercitation. Ullamco tempor
-                    adipisicing et voluptate duis sit esse aliqua
-                  </p>
-                  <p
-                    style={{
-                      color: "#FC4400",
-                      cursor: "pointer",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    Delete Review
-                  </p>
-                </div>
-              </div>
-              <hr />
-              <div style={{ marginTop: "50px" }}>
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <img
-                    style={{ borderRadius: "100%" }}
-                    src="https://i.ibb.co/dLsxtGJ/logo-3.png"
-                    alt=""
-                  />
-                  <div>
-                    <p>Courtney Henry</p>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "5px",
-                      }}
-                    >
-                      <Rate
-                        style={{ color: "#F66D0F" }}
-                        disabled
-                        defaultValue={4.5}
-                      />
-                      <p>2 mins ago</p>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <p style={{ padding: "20px 0px" }}>
-                    Consequat velit qui adipisicing sunt do rependerit ad
-                    laborum tempor ullamco exercitation. Ullamco tempor
-                    adipisicing et voluptate duis sit esse aliqua
-                  </p>
-                  <p
-                    style={{
-                      color: "#FC4400",
-                      cursor: "pointer",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    Delete Review
-                  </p>
-                </div>
-              </div>
-              <hr />
-              <div style={{ marginTop: "50px" }}>
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <img
-                    style={{ borderRadius: "100%" }}
-                    src="https://i.ibb.co/dLsxtGJ/logo-3.png"
-                    alt=""
-                  />
-                  <div>
-                    <p>Courtney Henry</p>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "5px",
-                      }}
-                    >
-                      <Rate
-                        style={{ color: "#F66D0F" }}
-                        disabled
-                        defaultValue={4.5}
-                      />
-                      <p>2 mins ago</p>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <p style={{ padding: "20px 0px" }}>
-                    Consequat velit qui adipisicing sunt do rependerit ad
-                    laborum tempor ullamco exercitation. Ullamco tempor
-                    adipisicing et voluptate duis sit esse aliqua
-                  </p>
-                  <p
-                    style={{
-                      color: "#FC4400",
-                      cursor: "pointer",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    Delete Review
-                  </p>
-                </div>
-              </div>
+                )
+
+
+
+              }
+              
         
             </div>
           </div>
         </div>
       )}
+
+      {
+        <Modal
+          title={false}
+          centered
+          open={open}
+          onCancel={() => setOpen(false)}
+          width={510}
+          footer={[]}
+          
+        >
+          <div style={{
+            backgroundColor : "#FC4400",
+            width:"135px",
+            height:"135px",
+            borderRadius:"100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent:"center",
+            margin: "auto"
+          }}>
+            <HiTrash size={68} color="#FFFFFF" />
+          </div>
+          <h4 style={{marginBottom: "30px", fontSize:"24px", marginTop: "30px"}}>You sure want to delete this review?</h4>
+          <div style={{display: "flex", gap: "20px"}}>
+            <button 
+              onClick={handleDelete}
+              style={{
+                width: "100%",
+                height: "52px",
+                backgroundColor: "#F66D0F",
+                color: "white",
+                fontSize: "18px",
+                fontWeight: 600,
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer",
+
+              }}
+            >Yes</button>
+            <button 
+              onClick={()=>setOpen(false)}
+              style={{
+                width: "100%",
+                height: "52px",
+                cursor: "pointer",
+                backgroundColor: "transparent",
+                color: "#F66D0F",
+                fontSize: "18px",
+                fontWeight: 600,
+                borderRadius: "8px",
+                border: "1px solid #F66D0F"
+              }}
+            >No</button>
+          </div>
+        </Modal>
+      }
     </>
   );
 };

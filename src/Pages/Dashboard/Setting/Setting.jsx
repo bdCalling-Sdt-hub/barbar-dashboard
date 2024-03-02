@@ -17,6 +17,7 @@ const Setting = () => {
   const [openForgotPasswordModal, setOpenForgotPasswordModal] = useState(false);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
+  const [percent, setPercent] = useState();
   const style = {
     formContainer: {
       // background: "white",
@@ -117,38 +118,6 @@ const Setting = () => {
 
   const [err, setErr] = useState("");
 
-  const handleUpdated = (values) => {
-    const { password, confirmPassword } = values;
-
-    if (password.length < 8) {
-      setErr("Password must be 8 character");
-      return;
-    }
-    if (password !== confirmPassword) {
-      setErr("Please enter the same password!");
-      return;
-    }
-    if (!password || !confirmPassword) {
-      setErr("Please give your changes password");
-      return;
-    }
-    if (!/(?=.*[!@#$&*])/.test(password)) {
-      setErr("Ensure string has one special case letter.");
-      return;
-    }
-    if (!/(?=.*[A-Z].*[A-Z])/.test(password)) {
-      setErr("Ensure string has two uppercase letters.");
-      return;
-    }
-    if (!/(?=.*[a-z].*[a-z].*[a-z])/.test(password)) {
-      setErr("Ensure string has three lowercase letters.");
-      return;
-    }
-    if (!/(?=.*[0-9].*[0-9])/.test(password)) {
-      setErr("Ensure string has two digits");
-      return;
-    }
-  };
 
   const handleNavigate = (value) => {
     if (value == "booking-percentage") {
@@ -161,16 +130,10 @@ const Setting = () => {
   };
 
   const handleNotification = (e) => {
-    console.log(e);
   };
   const handleSubscription = (e) => {
-    console.log(e);
   };
 
-  const setPercentage = () => {
-    alert("sahinur");
-    setOpenModal(false);
-  };
 
   const handleChangePassword = async(values) => {
     const formData = new FormData();
@@ -286,6 +249,37 @@ const Setting = () => {
       })
     }
   }
+
+  const handleBookingPercentage=async()=>{
+    if(percent){
+      const response = await baseURL.post(`/booking-percentage-set`, {percentage: percent}, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      if(response?.status === 200){
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Set Booking Percentage Successfully",
+          showConfirmButton: false,
+          timer: 1500
+        }).then(()=>{
+          setOpenModal(false);
+        })
+      }
+    }else{
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Input Percentage Required",
+        showConfirmButton: false,
+        timer: 1500
+      })
+    }
+    
+  }
   return (
     <div>
       <h2 style={{ marginBottom: "20px", fontWeight: "normal" }}>Settings</h2>
@@ -328,27 +322,21 @@ const Setting = () => {
           width={500}
           footer={[]}
         >
-          <Form
-            name="normal_login"
-            className="login-form"
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={handleChangePassword}
-          >
+          <Form>
             <p>Set your percentage from clients booking.</p>
-            <div style={{background:"#F66D0F",display:"flex",margin:"0 auto", padding:"10px",justifyContent:"center",height:"100px", width:"100px",borderRadius:"100%"}} >
+            <div style={{background:"#F66D0F", marginTop: "20px", display:"flex",margin:"0 auto", padding:"20px",justifyContent:"center",height:"100px", width:"100px",borderRadius:"100%"}} >
               <img   src="https://i.ibb.co/ZzSj8rj/percent-1-traced.png" alt="" />
             </div>
 
             <div>
-              <label htmlFor="" className={style.label}>
+              <label style={{display: "block", marginBottom: "12px"}} htmlFor="" className={style.label}>
                 Set your percentage
               </label>
-              <Form.Item name="currentPassword">
+              <Form.Item style={{marginBottom: "0"}} name="currentPassword">
                 <Input
                   placeholder="Enter Percentage"
                   type="Text"
+                  onChange={(e)=>setPercent(e.target.value)}
                   style={style.input}
                 />
               </Form.Item>
@@ -356,6 +344,7 @@ const Setting = () => {
 
             <Form.Item>
               <Button
+                onClick={handleBookingPercentage}
                 type="primary"
                 htmlType="submit"
                 className="login-form-button"
@@ -365,7 +354,7 @@ const Setting = () => {
                   fontWeight: "400px",
                   fontSize: "18px",
                   background: "#F66D0F",
-                  marginTop: "60px",
+                  marginTop: "30px",
                 }}
               >
                 Set

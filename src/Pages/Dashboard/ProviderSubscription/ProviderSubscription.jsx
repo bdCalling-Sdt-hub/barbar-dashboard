@@ -41,6 +41,7 @@ function ProviderSubscription() {
     setPackageData(value);
     setPackeageUpdateModel(!packeageUpdateModel);
   }
+  
   const handleAddPackage=async()=>{
     const array = category?.package_features.substring(1, category?.package_features?.length - 1).split(',').map(item => item.trim());
     const value= {
@@ -74,13 +75,13 @@ function ProviderSubscription() {
     }
   }
   return (
-    <div>
+    <div >
       <h2>Packages</h2>
-      <div className={styles.packagesContainer}>
+      <div className={styles.packagesContainer} >
 
         {
           packages?.map((item, index)=>
-            <div key={index} className={styles.packageCard}>
+            <div style={{height: "405px"}} key={index} className={styles.packageCard} >
               <div >
                 <h3>{item?.package_name}</h3>
               </div>
@@ -99,7 +100,7 @@ function ProviderSubscription() {
                 <hr style={{ color: "#535770" }} />
                 <div>
                   {
-                    item?.package_features?.map((item, index)=> 
+                   item?.package_features?.map((item, index)=> 
                       <div key={index} className={styles.packageFeatures}>
                         <FaCheck size={24} color="white" />
                         <span>{item}</span>

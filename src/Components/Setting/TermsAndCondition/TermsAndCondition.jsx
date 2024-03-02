@@ -10,8 +10,10 @@ const TermsAndCondition = () => {
   const [content, setContent] = useState("");
 
   const [refreash, setRefreash] = useState('')
+
+
   const handleUpdate = async() => {
-    const response = await baseURL.post(`/update-website-pages/3`, {page_description:content}, {
+    const response = await baseURL.post(`/update-website-pages/1`, {page_description:content}, {
       headers: {
         "Content-Type": "application/json",
         authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -31,9 +33,15 @@ const TermsAndCondition = () => {
 
   }
   
+  if(refreash){
+    setTimeout(()=>{
+      setRefreash("")
+    },[1500])
+  }
+
   useEffect(()=>{
     async function getAPi(){
-      const response = await baseURL.get(`/show-single-pages/3`,{
+      const response = await baseURL.get(`/show-single-pages/1`,{
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -49,6 +57,8 @@ const TermsAndCondition = () => {
   }, [data]);
 
   const config = {
+    autofocus : true ,
+    cursorAfterAutofocus: 'end',
     style: {
       color: 'black', // Set initial font color to red
     },

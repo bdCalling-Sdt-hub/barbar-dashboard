@@ -1,13 +1,15 @@
 import { Button, Form, Input } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import logo from "../../Images/Logo.png";
 import style from "./Signin.module.css";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { baseURL } from "../../Config";
 
 const Signin = () => {
   const navigate = useNavigate();
+
   const onFinish = (values) => {
     const email = values.email;
     const password = values.password;
@@ -21,9 +23,8 @@ const Signin = () => {
         const token = response.data.access_token;
         
         localStorage.setItem('userId', response.data.user_id);
-        localStorage.setItem('user', response.data);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
         localStorage.setItem('access_token', token);
-
         Swal.fire({
           position: "center",
           icon: "success",
@@ -31,7 +32,8 @@ const Signin = () => {
           showConfirmButton: false,
           timer: 1500
         }).then(() => {
-          navigate("/");
+            navigate("/");
+            window.location.reload();
         });
       }
     })
@@ -40,6 +42,7 @@ const Signin = () => {
     });
   };
 
+  
   return (
     <div className={style.signContainer}>
       <div>

@@ -26,6 +26,7 @@ import ProviderList from "./Pages/Dashboard/ProviderList/ProviderList";
 import ProviderRequest from "./Pages/Dashboard/ProviderRequest/ProviderRequest";
 import ProviderSubscription from "./Pages/Dashboard/ProviderSubscription/ProviderSubscription";
 import Categories from "./Pages/Dashboard/Categories/Categories";
+import AdminRoute from "./Pages/AdminRoute";
 
 function App() {
   return (
@@ -33,32 +34,32 @@ function App() {
       <div className="maincontainer">
         {/* <Router> */}
           <Routes>
-            <Route exact path="/" element={<PrivateRoute> <Dashboard/> </PrivateRoute> } >
-              <Route path="/" element={<DashboardHome />} />
-              <Route path="/earning/booking" element={<Bookings />} />
-              <Route path="/earning/subscription" element={<Subscription />} />
+            <Route exact path="/" element={<AdminRoute> <Dashboard/> </AdminRoute> } >
+              <Route path="/" element={<AdminRoute><DashboardHome /> </AdminRoute> } />
+              <Route path="/earning/booking" element={<AdminRoute><Bookings /></AdminRoute> } />
+              <Route path="/earning/subscription" element={<AdminRoute><Subscription /></AdminRoute> } />
               {/* <Route path="/payment" element={<Payment />} /> */}
               <Route path="/wallet" element={<Wallet />} />
-              <Route path="/appointmentlist" element={<AppointmentList />} />
+              <Route path="/appointmentlist" element={<AdminRoute><AppointmentList /></AdminRoute> } />
               {/* <Route path="/appointmentreq" element={<AppointmentReq />} /> */}
-              <Route path="/salonlist" element={<SalonList />} />
-              <Route path="/providerList" element={<ProviderList />} />
-              <Route path="/provider-request" element={<ProviderRequest />} />
-              <Route path="/provider-subscription" element={<ProviderSubscription />} />
-              <Route path="/categories" element={<Categories />} />
-              <Route path="/userlist" element={<UserList />} />
-              <Route path="/barbarlist" element={<BarbarList />} />
-              <Route path="/message" element={<Message />} />
-              <Route path="/message/:id" element={<PersonalMessage />} />
-              <Route path="/setting" element={<Setting />} />
-              <Route path="/setting/:dynamic" element={<SettingPage />} />
-              <Route path="/notification" element={<Notification />} />
+              <Route path="/salonlist" element={<AdminRoute><SalonList /></AdminRoute> } />
+              <Route path="/providerList" element={<AdminRoute><ProviderList /></AdminRoute> } />
+              <Route path="/provider-request" element={<AdminRoute><ProviderRequest /></AdminRoute> } />
+              <Route path="/provider-subscription" element={<AdminRoute><ProviderSubscription /></AdminRoute> } />
+              <Route path="/categories" element={<AdminRoute><Categories /></AdminRoute> } />
+              <Route path="/userlist" element={<AdminRoute><UserList /></AdminRoute> } />
+              <Route path="/barbarlist" element={<AdminRoute><BarbarList /></AdminRoute> } />
+              <Route path="/message" element={<AdminRoute><Message /></AdminRoute> } />
+              <Route path="/message/:id" element={<AdminRoute><PersonalMessage /></AdminRoute> } />
+              <Route path="/setting" element={<AdminRoute><Setting /></AdminRoute> } />
+              <Route path="/setting/:dynamic" element={<AdminRoute><SettingPage /></AdminRoute> } />
+              <Route path="/notification" element={<AdminRoute><Notification /></AdminRoute> } />
             </Route>
 
             <Route path="/signin" element={<Signin />} />
-            <Route path="/otp" element={<Otp />} />
-            <Route path="/forget-password" element={<Email />} />
-            <Route path="/update-password" element={<UpdatePass />} />
+            <Route path="/otp" element={<AdminRoute><Otp /></AdminRoute> } />
+            <Route path="/forget-password" element={<AdminRoute><Email /></AdminRoute> } />
+            <Route path="/update-password" element={<AdminRoute><UpdatePass /></AdminRoute> } />
             <Route path="*" element={<NotFound />} />
           </Routes>
         {/* </Router> */}

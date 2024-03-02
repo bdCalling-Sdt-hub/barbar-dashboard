@@ -6,9 +6,8 @@ import { GiChessQueen, GiReceiveMoney } from "react-icons/gi";
 import { MdOutlineGroupAdd, MdPayment } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
 import { FaListUl, FaUsers } from "react-icons/fa";
-import { IoWalletOutline, IoCutOutline } from "react-icons/io5";
+import { IoCutOutline } from "react-icons/io5";
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { TbCalendarCheck, TbMessageCircle2Filled } from "react-icons/tb";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Outlet } from "react-router-dom";
@@ -16,11 +15,12 @@ import rentiLogo from "../../Images/renti-logo.png";
 import Styles from "./Dashboard.module.css";
 import { BsFillBookmarkCheckFill } from "react-icons/bs";
 import {useNavigate} from "react-router-dom"
+import { baseURL, url } from "../../Config";
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
-const { Option } = Select;
-
-
+import { HiLogout } from "react-icons/hi";
+import { FaRegBell } from "react-icons/fa";
+import { AiOutlineUser } from "react-icons/ai";
 
 const items = [...Array(5).keys()].map((item, index) => {
   return {
@@ -56,12 +56,17 @@ const items = [...Array(5).keys()].map((item, index) => {
 });
 
 const Dashboard = () => {
+  const {image} = JSON.parse(localStorage.getItem('user'))
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(localStorage.lang);
+  
   const handleLogout=()=>{
     localStorage.removeItem('userId');
     localStorage.removeItem('user');
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('package');
+    localStorage.removeItem('email');
     localStorage.removeItem('access_token');
     navigate('signin')
   }
@@ -137,15 +142,9 @@ const Dashboard = () => {
         >
           <div
             className={Styles.everyNotify}
-            style={{ display: "flex", alignItems: "center" }}
+            style={{ display: "flex", alignItems: "center", gap:"10px" }}
           >
-            <img
-              style={{ marginRight: "20px" }}
-              width="30"
-              height="30"
-              src="https://img.icons8.com/windows/32/gender-neutral-user.png"
-              alt="gender-neutral-user"
-            />
+            <AiOutlineUser size={25} color="#ffffff" />
             <div className="" style={{ marginTop: "" }}>
               <p>Profile</p>
             </div>
@@ -153,21 +152,16 @@ const Dashboard = () => {
         </Link>
       ),
     },
+
     {
       key: 2,
       label: (
         <Link to="/notification" style={{}} rel="noreferrer">
           <div
             className={Styles.everyNotify}
-            style={{ display: "flex", alignItems: "center" }}
+            style={{ display: "flex", alignItems: "center" , gap:"10px"}}
           >
-            <img
-              style={{ marginRight: "20px" }}
-              width="30"
-              height="30"
-              src="https://img.icons8.com/ios/50/appointment-reminders--v1.png"
-              alt="appointment-reminders--v1"
-            />
+            <FaRegBell size={25} />
             <div className="" style={{ marginTop: "" }}>
               <p>Notification</p>
             </div>
@@ -175,6 +169,7 @@ const Dashboard = () => {
         </Link>
       ),
     },
+
     {
       key: 3,
       label: (
@@ -184,15 +179,9 @@ const Dashboard = () => {
         >
           <div
             className={Styles.everyNotify}
-            style={{ display: "flex", alignItems: "center" }}
+            style={{ display: "flex", alignItems: "center", gap: "10px" }}
           >
-            <img
-              style={{ marginRight: "20px" }}
-              width="25"
-              height="25"
-              src="https://img.icons8.com/ios/50/exit--v1.png"
-              alt="exit--v1"
-            />
+            <HiLogout size={25} color="#FFFFFF" />
             <div onClick={handleLogout}> <p>Logout</p> </div>
           </div>
         </div>
@@ -440,8 +429,10 @@ const Dashboard = () => {
                 />
               </Dropdown>
             </div>
+
             <div className={Styles.profile}>
               <Dropdown
+                
                 menu={{
                   items: profileItems,
                 }}
@@ -454,7 +445,7 @@ const Dashboard = () => {
                   style={{ cursor: "pointer" }}
                   width="40"
                   height="40"
-                  src="https://img.icons8.com/3d-fluency/94/person-male--v2.png"
+                  src={`${url}/${image}`}
                   alt="person-male--v2"
                 />
               </Dropdown>

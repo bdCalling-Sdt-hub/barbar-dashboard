@@ -4,8 +4,7 @@ import { AiOutlineEye, AiOutlinePrinter } from "react-icons/ai";
 import { CloseOutlined } from "@ant-design/icons";
 import DrawerPage from "../../DrawerPage/DrawerPage";
 import { baseURL } from "../../../Config";
-
-
+import moment from "moment"
 const { Title, Text } = Typography;
 
 const data = [
@@ -54,6 +53,7 @@ const data = [
 function ReviewsTable({search}) {
   const [data, setData] = useState()
   const [page, setPage] = useState()
+  const [reFresh, setRefresh] = useState("")
     const [isDrawerVisible, setIsDrawerVisible] = useState(false);
     const [reviewsData, setReviewsData] = useState(null);
   
@@ -61,7 +61,11 @@ function ReviewsTable({search}) {
       setIsDrawerVisible(true);
       setReviewsData(record);
     };
-  
+  if(reFresh){
+    setTimeout(()=>{
+      setRefresh("")
+    }, [1500])
+  }
     const closeDrawer = () => {
       setIsDrawerVisible(false);
       setReviewsData(null);
@@ -82,18 +86,24 @@ function ReviewsTable({search}) {
       key: "email",
       responsive: ["md"],
       render: (_, record) => (
-        <p>{record?.business_name}</p>
+        <p>{record?.salon?.user?.email}</p>
       )
     },
     {
       title: "CONTACT",
       dataIndex: "contact",
       key: "contact",
+      render: (_, record) => (
+        <p>{record?.salon?.user?.phone_number}</p>
+      )
     },
     {
       title: "DATE",
       dataIndex: "date",
       key: "date",
+      render: (_, record) => (
+        <p>{moment(record?.salon?.user?.created_at).format('L')}</p>
+      )
     },
     {
       title: "ACTIONS",
@@ -101,13 +111,6 @@ function ReviewsTable({search}) {
       key: "actions",
       responsive: ["lg"],
       render: (_, record) => (
-        <div style={{}}>
-          <Button
-            type="text"
-            style={{ marginRight: "10px", paddingBottom: "35px" }}
-          >
-            <AiOutlinePrinter style={{ fontSize: "30px", color: "white" }} />
-          </Button>
           <Button
               onClick={() => showDrawer(record)}
             type="text"
@@ -115,24 +118,23 @@ function ReviewsTable({search}) {
           >
             <AiOutlineEye style={{ fontSize: "30px", color: "white" }} />
           </Button>
-        </div>
       ),
     },
   ];
+
   // data retraive for all Appointmensts
   useEffect(()=>{
     async function getAPi(){
-      const response = await baseURL.get(`/review?search=${search}&page=${page}`,{
+      const response = await baseURL.get(`/review?name=${search}&page=${page}`,{
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      console.log(response);
       setData(response?.data);
     }
     getAPi();
-  }, [page, search]);
+  }, [page, search, reFresh !== ""]);
   
   const handlePageChange=(page)=>{
     setPage(page);
@@ -168,7 +170,7 @@ function ReviewsTable({search}) {
           <div>
             <Typography>
               <Title level={5} strong>
-              Provider name- Jane Cooper
+              Provider name- {reviewsData?.salon?.business_name}
               </Title>
               <Text>See all reviews of this provider</Text>
             </Typography>
@@ -198,7 +200,7 @@ function ReviewsTable({search}) {
           </Space>
         }
       >
-        {reviewsData && <DrawerPage reviewsData={reviewsData} />}
+        {reviewsData && <DrawerPage setRefresh={setRefresh} reviewsData={reviewsData} />}
       </Drawer>
     </div>
   );

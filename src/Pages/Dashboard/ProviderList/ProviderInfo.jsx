@@ -46,7 +46,7 @@ const ProviderInfo = ({search}) => {
       dataIndex: "providerName",
       key: "providerName",
       render: (_, record) => (
-        <p>{record?.name}</p>
+        <p>{record?.business_name}</p>
       )
     },
     {
@@ -55,7 +55,7 @@ const ProviderInfo = ({search}) => {
       key: "email",
       responsive: ["md"],
       render: (_, record) => (
-        <p>{record?.email}</p>
+        <p>{record?.user?.email}</p>
       )
     },
     {
@@ -64,7 +64,7 @@ const ProviderInfo = ({search}) => {
       key: "contact",
       responsive: ["md"],
       render: (_, record) => (
-        <p>{record?.phone_number}</p>
+        <p>{record?.user?.phone_number}</p>
       )
     },
     {
@@ -107,7 +107,7 @@ const ProviderInfo = ({search}) => {
         }
       });
       console.log(response)
-      setProviders(response?.data?.data);
+      setProviders(response?.data);
     }
     getAPi();
   }, [page, search]);
@@ -121,12 +121,11 @@ const ProviderInfo = ({search}) => {
       <Table
         columns={columns}
         dataSource={providers?.data}
-        // dataSource={searchProviders?.data ? searchProviders?.data : providers?.data}
         pagination={{
-          pageSize: providers?.per_page,
+          pageSize: providers?.pagination?.per_page,
           showSizeChanger: false,
-          total: providers?.total,
-          current:  providers?.current_page,
+          total: providers?.pagination?.total,
+          current:  providers?.pagination?.current_page,
           showTotal: (total, range) => (
             <span style={{
               color:"#F66D0F",
@@ -145,7 +144,7 @@ const ProviderInfo = ({search}) => {
           <div>
             <Typography>
               <Title level={5} strong>
-                Provider name: {providerData?.name}
+                Provider name: {providerData?.user?.name}
               </Title>
               <Text>See all details about this provider</Text>
             </Typography>

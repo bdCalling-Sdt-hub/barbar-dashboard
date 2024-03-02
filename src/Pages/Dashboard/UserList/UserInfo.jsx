@@ -22,7 +22,6 @@ const UserInfo = ({search}) => {
   const showDrawer = (record) => {
     setIsDrawerVisible(true);
     setuserData(record);
-    console.log(record)
   };
 
   const closeDrawer = () => {
@@ -98,7 +97,7 @@ const UserInfo = ({search}) => {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      setSearchUsers(response?.data?.data);
+      setUsers(response?.data?.data);
     }
     getAPi();
   }, [search]);
