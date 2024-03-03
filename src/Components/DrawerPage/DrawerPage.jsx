@@ -1258,7 +1258,7 @@ const DrawerPage = (props) => {
                   <div style={{ marginTop: "50px",  }}>
                     <div style={{ display: "flex", gap: "10px" }}>
                       <img
-                        style={{ borderRadius: "100%", borderRadius: "100%", width:"50px", height:"50px" }}
+                        style={{ borderRadius: "100%", width:"50px", height:"50px" }}
                         src={`${url}/${review?.user?.image}`}
                         alt=""
                       />

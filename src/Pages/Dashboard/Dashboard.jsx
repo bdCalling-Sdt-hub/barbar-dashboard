@@ -285,7 +285,7 @@ const Dashboard = () => {
 
           <Menu.Item
             key="6"
-            icon={<IoCutOutline style={{ fontSize: "14px", color: "white", color: `${pathName === 'salonlist' ? "#F66D0F" : "white"}` }} />}
+            icon={<IoCutOutline style={{ fontSize: "14px",  color: `${pathName === 'salonlist' ? "#F66D0F" : "white"}` }} />}
           >
             <Link to="/salonlist" style={{ fontSize: "16px", color: `${pathName === 'salonlist' ? "#F66D0F" : "white"}` }}>
             Salon List
