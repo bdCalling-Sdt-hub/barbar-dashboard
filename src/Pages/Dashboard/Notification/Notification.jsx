@@ -4,12 +4,13 @@ import "./Notification.css";
 import { baseURL, url } from "../../../Config";
 import { IoIosArrowBack } from "react-icons/io";
 import moment from "moment";
+import { useNavigate } from "react-router-dom"
 
 function Notification() {
   const [data, setData] = useState(null);
   const [page, setPage] = useState(1);
   const [reFresh, setRefresh] = useState("");
-
+  const navigate = useNavigate();
   if(reFresh){
     setTimeout(()=>{
       setRefresh('')
@@ -46,7 +47,7 @@ function Notification() {
   return (
     <div>
       <Row>
-        <h2 style={{ fontSize: "30px", marginBottom: "30px", display: "flex", alignItems: "center", gap: "30px" }}>
+        <h2 onClick={()=>navigate("/")} style={{ width: "fit", cursor:"pointer",  fontSize: "30px", marginBottom: "30px", display: "flex", alignItems: "center", gap: "30px" }}>
          <IoIosArrowBack size={24} color="white"  /> Notification
         </h2>
 

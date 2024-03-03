@@ -62,7 +62,6 @@ const Dashboard = () => {
   const [selectedLanguage, setSelectedLanguage] = useState(localStorage.lang);
   const [data, setData] = useState(null);
   const count= data?.filter((item)=> item?.read_at === null) || 0;
-  console.log(count?.length)
 
   useEffect(()=>{
     async function getAPi(){
