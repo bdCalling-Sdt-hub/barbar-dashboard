@@ -57,3 +57,31 @@ body {
 .swal2-cancel {
   background-color: #ff0000 !important;
 }
+
+
+.ant-pagination-prev, .ant-pagination-next {
+  /* background-color: #1890ff; */
+  color: white !important;
+  border-color: transparent !important;
+}
+
+/* Optionally, you can customize the size of the arrows */
+.ant-pagination-prev-icon, .ant-pagination-next-icon {
+  font-size: 18px; /* Arrow size */
+}
+.ant-pagination .ant-pagination-next .ant-pagination-item-link, .ant-pagination .ant-pagination-disabled .ant-pagination-item-link{
+  color: white !important;
+  border-color: none !important;
+}
+.ant-pagination .ant-pagination-item a{
+  background-color: #F66D0F  !important; /* Background color */
+  color: white !important;
+  border-radius: 8px !important;
+}
+.ant-pagination .ant-pagination-item-active {
+  border-color: transparent !important; /* Remove border color */
+}
+
+.ant-pagination .ant-pagination-item-active{
+  border-color: none !important;
+}

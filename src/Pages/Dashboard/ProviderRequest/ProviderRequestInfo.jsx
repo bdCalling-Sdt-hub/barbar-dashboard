@@ -38,7 +38,6 @@ function ProviderRequestInfo({search}) {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      console.log(response);
       setProviderRequest(response?.data?.data);
     }
     getAPi();
@@ -56,7 +55,6 @@ function ProviderRequestInfo({search}) {
             authorization: `Bearer ${localStorage.getItem('access_token')}`,
           }
         });
-        console.log(response);
         setSearchProviderRequest(response?.data);
       }
     }

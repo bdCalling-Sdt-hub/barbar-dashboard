@@ -116,7 +116,7 @@ const SalonInfo = ({search}) => {
             authorization: `Bearer ${localStorage.getItem('access_token')}`,
           }
         });
-        setSearchsetSalonsSalons(response?.data);
+        setSalons(response?.data);
       }
     }
     getAPi();

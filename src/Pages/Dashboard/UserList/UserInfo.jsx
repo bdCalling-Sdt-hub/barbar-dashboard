@@ -162,12 +162,12 @@ const UserInfo = ({search}) => {
     <>
       <Table
         columns={columns}
-        dataSource={searchUsers?.data ? searchUsers?.data : users?.data}
+        dataSource={users?.data}
         pagination={{
-          pageSize: searchUsers?.per_page ? searchUsers?.per_page : users?.per_page,
+          pageSize: users?.per_page,
           showSizeChanger: false,
-          total: searchUsers?.total ? searchUsers?.total :  users?.total,
-          current: searchUsers?.current_page ? searchUsers?.current_page : users?.current_page,
+          total: users?.total,
+          current: users?.current_page,
           showTotal: (total, range) => (
             <span style={{
               color:"#F66D0F",

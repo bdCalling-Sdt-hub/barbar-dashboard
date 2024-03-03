@@ -17,7 +17,6 @@ const InvoiceTable = () => {
   const showDrawer = (record) => {
     setIsDrawerVisible(true);
     setInvoiceData(record);
-    console.log(record)
   };
 
   const closeDrawer = () => {

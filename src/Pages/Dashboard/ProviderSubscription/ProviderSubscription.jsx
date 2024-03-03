@@ -23,7 +23,11 @@ function ProviderSubscription() {
     setCategory(prev=>({...prev, [e.target.name]:e.target.value}))
   }
 
-  
+  if(refresh){
+    setTimeout(()=>{
+      setRefresh("")
+    }, [1500])
+  }
   useEffect(()=>{
     async function getAPi(){
       const response = await baseURL.get(`show-package`,{

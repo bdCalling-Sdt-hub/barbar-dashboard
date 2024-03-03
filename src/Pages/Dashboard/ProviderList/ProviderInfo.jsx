@@ -7,14 +7,21 @@ import { CloseOutlined } from "@ant-design/icons";
 import { baseURL } from "../../../Config";
 import moment from 'moment';
 import { useReactToPrint } from "react-to-print";
-
+import Swal from "sweetalert2";
 const ProviderInfo = ({search}) => {
   const [providers, setProviders] = useState();
   const [page, setPage] = useState(1);
 
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [providerData, setProviderData] = useState(null);
+  const [reFresh, setRefresh] = useState(null);
   const componentRef = useRef();
+
+  if(reFresh){
+    setTimeout(()=>{
+      setRefresh('')
+    }, [1500])
+  }
   const handlePrint = useReactToPrint({
       content: () => componentRef.current,
     pageStyle: `
@@ -46,7 +53,7 @@ const ProviderInfo = ({search}) => {
       dataIndex: "providerName",
       key: "providerName",
       render: (_, record) => (
-        <p>{record?.business_name}</p>
+        <p>{record?.user?.name}</p>
       )
     },
     {
@@ -106,16 +113,48 @@ const ProviderInfo = ({search}) => {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      console.log(response)
       setProviders(response?.data);
     }
     getAPi();
-  }, [page, search]);
+  }, [page, search, reFresh !== ""]);
 
   const handlePageChange = (page) => {
     setPage(page);
   };
 
+  const handleBlockProvider=async(id)=>{
+    
+    Swal.fire({
+      title: "Do you want to Block this Provider?",
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Yes",
+      denyButtonText: `No`,
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+        const response = await baseURL.get(`/block-provider?id=${id}`,{
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          }
+        });
+        console.log(response)
+        if(response?.status === 200){    
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: response?.data?.message,
+            showConfirmButton: false,
+            timer: 1500
+          }).then((result) => {
+            setIsDrawerVisible(false);
+            setProviderData(null);
+            setRefresh('done')
+          });
+        }
+      }
+    });
+  }
   return (
     <>
       <Table
@@ -174,7 +213,7 @@ const ProviderInfo = ({search}) => {
           </Space>
         }
       >
-        {providerData && <DrawerPage handlePrint={handlePrint} componentRef={componentRef} providerData={providerData} />}
+        {providerData && <DrawerPage handleBlockProvider={handleBlockProvider} handlePrint={handlePrint} componentRef={componentRef} providerData={providerData} />}
       </Drawer>
     </>
   );

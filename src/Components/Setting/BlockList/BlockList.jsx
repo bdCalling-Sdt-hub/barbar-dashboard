@@ -10,7 +10,6 @@ import { SearchOutlined } from '@ant-design/icons';
 
 function BlockList() {
   const [data, setData] = useState();
-  console.log(data?.data)
   const [page, setPage] = useState()
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [providerRequestData, setProviderRequestData] = useState(null);

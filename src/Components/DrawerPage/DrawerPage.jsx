@@ -25,7 +25,7 @@ import Swal from "sweetalert2"
 const DrawerPage = (props) => {
   const [open, setOpen] = useState(false);
   const [id, setID] = useState(false);
-  const { handleApprove, handleCancel, handlePrint, setRefresh, handleBlock } = props;
+  const { handleApprove, handleCancel, handlePrint, setRefresh, handleBlock, handleBlockProvider } = props;
   const style = {
     cardType: {
       height: "150px",
@@ -1126,7 +1126,7 @@ const DrawerPage = (props) => {
             }}
           >
             <button
-              block
+              onClick={()=>handleBlockProvider(props?.providerData?.user_id)}
               style={{
                 background: "transparent",
                 color: "white",
@@ -1134,7 +1134,8 @@ const DrawerPage = (props) => {
                 width: "370px",
                 border: "1px solid #F66D0F",
                 borderRadius: "8px",
-                fontWeight: 600
+                fontWeight: 600,
+                cursor: "pointer"
               }}
             >
               Block

@@ -9,7 +9,7 @@ const AdminRoute= ({ children }) => {
   if (token && user?.email && user?.user_type === "admin") {
     return children;
   }
-  return <Navigate to="/auth/login" state={{ from: location }} />;
+  return <Navigate to="/signin" state={{ from: location }} />;
 };
 
 export default AdminRoute;

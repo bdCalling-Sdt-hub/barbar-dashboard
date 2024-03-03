@@ -35,7 +35,7 @@ function SalonList() {
           </div>
         </Col>
       </Row>
-      <SalonInfo search={keyword} />
+      <SalonInfo search={search} />
     </div>
   );
 }

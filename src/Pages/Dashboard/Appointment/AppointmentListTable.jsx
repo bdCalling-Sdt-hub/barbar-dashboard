@@ -63,8 +63,7 @@ function AppointmentListTable({search}) {
             authorization: `Bearer ${localStorage.getItem('access_token')}`,
           }
         });
-        // setAppointmensts(response?.data);
-        console.log(response)
+        setAppointmensts(response?.data);
       }
     }
     getAPi();

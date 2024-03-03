@@ -32,8 +32,6 @@ const SettingPage = () => {
   //don't delete this it's a important for navigation(those are mandatory)
   const textSplit = params.dynamic.split("-");
   const text = textSplit.join(" ");
-
-  console.log(text);
   return (
     <>
       <Link to="/setting" style={style.btn}>
