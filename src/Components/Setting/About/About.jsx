@@ -24,7 +24,6 @@ const About = () => {
         authorization: `Bearer ${localStorage.getItem('access_token')}`,
       }
     });
-    console.log(response);
     if(response?.status=== 200){
       Swal.fire({
         position: "center",

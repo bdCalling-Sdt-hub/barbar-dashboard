@@ -1,19 +1,19 @@
 import { Button, Drawer, Space, Table, Typography } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { AiOutlinePrinter, AiOutlineEye } from "react-icons/ai";
-import { LiaSaveSolid } from "react-icons/lia";
+import { AiOutlineEye } from "react-icons/ai";
 import DrawerPage from "../../../Components/DrawerPage/DrawerPage";
 const { Title, Text } = Typography;
 import { CloseOutlined } from "@ant-design/icons";
 import { baseURL } from "../../../Config";
 import moment from "moment";
-const token = localStorage.getItem('access_token');
+import Swal from "sweetalert2"
 import { useReactToPrint } from "react-to-print";
 
 const UserInfo = ({search}) => {
   const [users, setUsers] = useState();
   const [searchUsers, setSearchUsers] = useState([])
   const [page, setPage] = useState(1);
+  const [reFresh, setRefresh] = useState(1);
   const componentRef= useRef();
 
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
@@ -74,6 +74,11 @@ const UserInfo = ({search}) => {
     },
   ];
 
+  if(reFresh){
+    setTimeout(()=>{
+      setRefresh("")
+    }, [1500])
+  }
   // data retraive for all userss
   useEffect(()=>{
     async function getAPi(){
@@ -86,7 +91,7 @@ const UserInfo = ({search}) => {
       setUsers(response?.data?.data);
     }
     getAPi();
-  }, [page]);
+  }, [page, reFresh !== ""]);
 
   // data retraive for search userss
   useEffect(()=>{
@@ -118,6 +123,40 @@ const UserInfo = ({search}) => {
     }
   `
   });
+
+  const handleBlock=async(id)=>{
+    Swal.fire({
+      title: "Do you want to Block this User?",
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Yes",
+      denyButtonText: `No`,
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+        const response = await baseURL.get(`/delete-user/${id}`,{
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          }
+        });
+        if(response?.status === 200){    
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: response?.data?.message,
+            showConfirmButton: false,
+            timer: 1500
+          }).then((result) => {
+            setIsDrawerVisible(false);
+            setuserData(null);
+            setRefresh('done')
+          });
+        }
+      }
+    });
+
+
+  }
 
   return (
     <>
@@ -178,7 +217,7 @@ const UserInfo = ({search}) => {
           </Space>
         }
       >
-        {userData && <DrawerPage handlePrint={handlePrint} componentRef={componentRef} userData={userData} />}
+        {userData && <DrawerPage handleBlock={handleBlock} handlePrint={handlePrint} componentRef={componentRef} userData={userData} />}
       </Drawer>
     </>
   );
