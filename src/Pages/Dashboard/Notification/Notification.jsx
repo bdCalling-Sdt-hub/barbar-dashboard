@@ -3,10 +3,18 @@ import React, {useState, useEffect} from "react";
 import "./Notification.css";
 import { baseURL, url } from "../../../Config";
 import { IoIosArrowBack } from "react-icons/io";
+import moment from "moment";
 
 function Notification() {
   const [data, setData] = useState(null);
   const [page, setPage] = useState(1);
+  const [reFresh, setRefresh] = useState("");
+
+  if(reFresh){
+    setTimeout(()=>{
+      setRefresh('')
+    }, [1500])
+  }
   useEffect(()=>{
     async function getAPi(){
       const response = await baseURL.get(`/admin-notification?page=${page}`,{
@@ -15,13 +23,25 @@ function Notification() {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      console.log(response.data)
       setData(response.data);
     }
     getAPi();
-  }, [page]);
+  }, [page, reFresh !== ""]);
+
   const handlePageChange=(page)=>{
     MdSecurityUpdateGood(page)
+  }
+
+  const handleReactAt=async(id)=>{
+    const response = await baseURL.get(`/admin/read_at/notification?id=${id}`,{
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      }
+    });
+    if(response.status === 200){
+      setRefresh("done")
+    }
   }
   return (
     <div>
@@ -31,19 +51,20 @@ function Notification() {
         </h2>
 
         {data?.data?.map((notification, index) => {
-          console.log(notification);
           return (
             <Col lg={{ span: 24 }}>
               <div
+                onClick={()=>handleReactAt(notification?.id)}
                 className="single-notification"
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  border: "1px solid #535770",
+                  border: `${notification?.read_at === null ? "1px solid #F66D0F" : "1px solid #535770"}`,
                   padding: "20px",
                   borderRadius: "10px",
                   height: "85px",
-                  marginBottom : "30px"
+                  marginBottom : "30px",
+                  cursor: "pointer"
 
                 }}
               >
@@ -52,8 +73,7 @@ function Notification() {
                     style={{
                       height: "70px",
                       width: "70px",
-                      borderRadius: "100%",
-                      border: "2px solid gray",
+                      borderRadius: "8px",
                     }}
                     src={`${url}/${notification?.data?.user_details?.image}`}
                   />
@@ -63,7 +83,7 @@ function Notification() {
                     <span>{notification?.data?.user_details?.name}</span> {notification?.data?.message}
                     {/* Trip No.56. Trip started from Mexico city..... */}
                   </p>
-                  <p style={{ color: "gray", marginTop: "10px" }}>1hr ago</p>
+                  <p style={{ color: "gray", marginTop: "10px" }}>{moment(notification?.data?.created_at).startOf('hour').fromNow()}</p>
                 </div>
               </div>
 

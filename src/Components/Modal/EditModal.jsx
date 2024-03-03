@@ -16,6 +16,8 @@ const EditModal = ({
     const { id, category_name, category_image } = category;
     const [img, setImg] = useState(`${url}/${category_image}`);
     const [name, setName] = useState(category_name);
+
+
     const onChange = (info) => {
         setImageUrl(info.file);
         setImg(URL.createObjectURL(info.file.originFileObj) )
@@ -23,11 +25,10 @@ const EditModal = ({
     
     const handleChange= async(e)=>{
         e.preventDefault();
-
         const formData = new FormData();
-        formData.append('category_name', name);
-        formData.append('category_image', imageUrl.originFileObj);
-
+        formData.append('category_name', name ? name : category_name);
+        formData.append('category_image', imageUrl?.originFileObj ? imageUrl?.originFileObj : `${url}/${category_image}`);
+    
         const response = await baseURL.post(`/update-category/${id}`, formData, {
             headers: {
                 authorization: `Bearer ${token}`
@@ -53,6 +54,11 @@ const EditModal = ({
         setOpenEditModel(false);
         setOpenDeleteModal(true);
     }
+
+    /* const initialFormValues = {
+        category_name: profile?.email,
+        category_image: profile?.fullName,
+    }; */
     return (
         <Modal
             centered
@@ -111,7 +117,7 @@ const EditModal = ({
                                         alt="avatar"
                                         style={{
                                             width: "100%",
-                                            height: "190px",
+                                            height: "100%",
                                             borderRadius: "8px",
                                             
                                         }}

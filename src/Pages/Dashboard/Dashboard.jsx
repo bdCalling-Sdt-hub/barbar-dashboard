@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { MenuOutlined, SettingOutlined } from "@ant-design/icons";
 import { Button, Dropdown, Layout, Menu, Select, theme } from "antd";
-import { Divider } from "antd";
+import { Divider, Badge } from "antd";
 import { GiChessQueen, GiReceiveMoney } from "react-icons/gi";
 import { MdOutlineGroupAdd, MdPayment } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
@@ -21,7 +21,7 @@ const { SubMenu } = Menu;
 import { HiLogout } from "react-icons/hi";
 import { FaRegBell } from "react-icons/fa";
 import { AiOutlineUser } from "react-icons/ai";
-
+import moment from "moment";
 const items = [...Array(5).keys()].map((item, index) => {
   return {
     key: index,
@@ -60,6 +60,22 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(localStorage.lang);
+  const [data, setData] = useState(null);
+  const count= data?.filter((item)=> item?.read_at === null) || 0;
+  console.log(count?.length)
+
+  useEffect(()=>{
+    async function getAPi(){
+      const response = await baseURL.get(`/admin-notification?page=1`,{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      setData(response.data.data);
+    }
+    getAPi();
+  }, []);
   
   const handleLogout=()=>{
     localStorage.removeItem('userId');
@@ -70,6 +86,8 @@ const Dashboard = () => {
     localStorage.removeItem('access_token');
     navigate('signin')
   }
+
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -92,7 +110,7 @@ const Dashboard = () => {
           style={{
             color: "#F66D0F",
             fontWeight: "500",
-            borderBottom: "1px solid #e6e7f4",
+            borderBottom: "1px solid #535770",
             padding: "20px 0px",
             paddingLeft: "20px",
           }}
@@ -100,11 +118,37 @@ const Dashboard = () => {
           Notifications
         </h2>
       </div>
-      {items.map((item) => (
-        <Menu.Item key={item.key} color="white">
-          {item.label}
-        </Menu.Item>
-      ))}
+      {data?.slice(0, 4)?.map((notification, index) => 
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            padding: "20px",
+            height: "85px",
+            borderBottom: "1px solid #535770"
+
+          }}
+        >
+          <div className="user-image" style={{ marginRight: "10px" }}>
+            <img
+              style={{
+                height: "30px",
+                width: "30px",
+                borderRadius: "100%",
+              }}
+              src={`${url}/${notification?.data?.user_details?.image}`}
+            />
+          </div>
+          <div className="">
+            <p style={{color: "white"}}>
+              <span>{notification?.data?.user_details?.name}</span> {notification?.data?.message}
+              {/* Trip No.56. Trip started from Mexico city..... */}
+            </p>
+            <p style={{ color: "gray"}}>{moment(notification?.data?.created_at).startOf('hour').fromNow()}</p>
+          </div>
+        </div>
+      )}
+
       <div
         className=""
         style={{
@@ -252,17 +296,6 @@ const Dashboard = () => {
               <Link to="/earning/subscription">- Subscription</Link>
             </Menu.Item>
           </SubMenu>
-          
-          {/* <Menu.Item
-            key="4"
-            icon={
-              <IoWalletOutline style={{ fontSize: "14px", color: "white" }} />
-            }
-          >
-            <Link to="/wallet" style={{ fontSize: "16px" }}>
-              Wallet
-            </Link>
-          </Menu.Item> */}
 
           <Divider />
 
@@ -389,33 +422,7 @@ const Dashboard = () => {
             className={Styles.notificatonProfileSection}
             style={{ display: "flex", alignItems: "center", lineHeight: 0 }}
           >
-            {/* <div className="" style={{ marginRight: "40px" }}>
-              <Select
-                value={selectedLanguage}
-                style={{ width: 150 }}
-                onChange={handleSelectLanguage}
-              >
-                <Option value="en">
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <img
-                      src="https://cdn.britannica.com/29/22529-004-ED1907BE/Union-Flag-Cross-St-Andrew-of-George.jpg"
-                      alt="English"
-                      style={{ marginRight: 8, width: 16, height: 16 }}
-                    />
-                    English
-                  </div>
-                </Option>
-                <Option value="es">
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <img
-                      src="https://e0.pxfuel.com/wallpapers/630/608/desktop-wallpaper-spain-flag-in-collection.jpg"
-                      style={{ marginRight: 8, width: 16, height: 16 }}
-                    />
-                    Spanish
-                  </div>
-                </Option>
-              </Select>
-            </div> */}
+          
             <div className={Styles.notificaton}>
               <Dropdown
                 overlay={menu}
@@ -424,9 +431,13 @@ const Dashboard = () => {
                   pointAtCenter: true,
                 }}
               >
-                <IoMdNotificationsOutline
-                  style={{ fontSize: "30px", color: "white" }}
+                <Badge count={count?.length}>
+                  <IoMdNotificationsOutline
+                    style={{ fontSize: "30px", cursor: "pointer", color: "white" }}
                 />
+                </Badge>
+                
+                
               </Dropdown>
             </div>
 
