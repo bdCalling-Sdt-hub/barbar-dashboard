@@ -4,7 +4,8 @@ import "./Notification.css";
 import { baseURL, url } from "../../../Config";
 import { IoIosArrowBack } from "react-icons/io";
 import moment from "moment";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import Pusher from 'pusher-js';
 
 function Notification() {
   const [data, setData] = useState(null);
@@ -44,6 +45,31 @@ function Notification() {
       setRefresh("done")
     }
   }
+
+
+  useEffect(() => {
+    var pusher = new Pusher('ed3fa994e71a7b25af7e', {
+      cluster: 'ap2',
+      forceTLS: true
+    });
+  
+    var channel = pusher.subscribe('pusher-app');
+  
+    channel.bind('SendNotification', function(data) {
+      console.log('Received my-event with message:', data.message);
+      alert('Received my-event with message: ' + data.message);
+    });
+  
+    channel.bind('pusher:subscription_succeeded', function() {
+      console.log('Subscribed to pusher-app channel');
+    });
+  
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  }, []);
+
   return (
     <div>
       <Row>
@@ -53,7 +79,7 @@ function Notification() {
 
         {data?.data?.map((notification, index) => {
           return (
-            <Col lg={{ span: 24 }}>
+            <Col key={index} lg={{ span: 24 }}>
               <div
                 onClick={()=>handleReactAt(notification?.id)}
                 className="single-notification"
@@ -65,7 +91,7 @@ function Notification() {
                   borderRadius: "10px",
                   height: "85px",
                   marginBottom : "30px",
-                  cursor: "pointer"
+                  cursor: `${notification?.read_at === null ? "pointer" : "default"}`
 
                 }}
               >

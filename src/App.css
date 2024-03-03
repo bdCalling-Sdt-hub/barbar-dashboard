@@ -93,13 +93,9 @@ main.ant-layout-content.css-dev-only-do-not-override-17a39f8 {
   background: transparent !important;
 }
 
-.ant-menu-light .ant-menu-item-selected a {
-  color: #F66D0F !important;
-}
 
-.ant-menu-light .ant-menu-item-selected .ant-menu-item-icon {
-  color: #F66D0F !important;
-}
+
+
 
 .ant-menu-light {
   background: transparent !important;

@@ -18,7 +18,6 @@ const Signin = () => {
       password
     })
     .then((response) => {
-      console.log(response);
       if (response.status >= 200 && response.status < 300) {
         const token = response.data.access_token;
         
@@ -67,7 +66,7 @@ const Signin = () => {
           onFinish={onFinish}
         >
           <div>
-            <label htmlFor="" className={style.label}>
+            <label style={{display: "block", marginBottom: "10px"}} htmlFor="" className={style.label}>
             Email
             </label>
             <Form.Item
@@ -83,7 +82,7 @@ const Signin = () => {
           </div>
 
           <div>
-            <label htmlFor="" className={style.label}>
+            <label htmlFor="" style={{display: "block", marginBottom: "10px"}} className={style.label}>
           Password
             </label>
             <Form.Item
@@ -95,9 +94,12 @@ const Signin = () => {
                 },
               ]}
             >
-              <Input
+              <Input.Password
                 type="passowrd"
                 placeholder="Enter your password"
+                style={{
+                  color: "black"
+                }}
                 className={style.input}
               />
             </Form.Item>

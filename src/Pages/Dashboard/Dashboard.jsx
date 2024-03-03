@@ -11,7 +11,7 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Outlet } from "react-router-dom";
-import rentiLogo from "../../Images/renti-logo.png";
+import Logo from "../../Images/Group 24.png";
 import Styles from "./Dashboard.module.css";
 import { BsFillBookmarkCheckFill } from "react-icons/bs";
 import {useNavigate} from "react-router-dom"
@@ -22,46 +22,18 @@ import { HiLogout } from "react-icons/hi";
 import { FaRegBell } from "react-icons/fa";
 import { AiOutlineUser } from "react-icons/ai";
 import moment from "moment";
-const items = [...Array(5).keys()].map((item, index) => {
-  return {
-    key: index,
-    label: (
-      <Link to="/notification" style={{}} rel="noreferrer">
-        <div
-          className={Styles.everyNotify}
-          style={{ display: "flex", alignItems: "center" }}
-        >
-          <img
-            style={{
-              backgroundColor: "#d9cffb",
-              borderRadius: "100%",
-              padding: "5px",
-              marginRight: "15px",
-            }}
-            width="30"
-            height="30"
-            src="https://img.icons8.com/3d-fluency/94/person-male--v2.png"
-            alt="person-male--v2"
-          />
-          <div className="" style={{ marginTop: "" }}>
-            <p>
-              <span>Sanchej haro manual </span>started a new trip from mexico.
-            </p>
-            <span style={{ color: "#d2d2d2" }}>1 hr ago</span>
-          </div>
-        </div>
-      </Link>
-    ),
-  };
-});
+import { useLocation } from 'react-router-dom';
 
 const Dashboard = () => {
+  const location = useLocation();
+  const { pathname } = location;
   const {image} = JSON.parse(localStorage.getItem('user'))
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(localStorage.lang);
   const [data, setData] = useState(null);
   const count= data?.filter((item)=> item?.read_at === null) || 0;
+ const pathName= pathname.split('/')[1];
 
   useEffect(()=>{
     async function getAPi(){
@@ -259,9 +231,9 @@ const Dashboard = () => {
           }}
         >
           <img
-            src={rentiLogo}
-            height={collapsed ? "40px" : "152px"}
-            width={collapsed ? "40px" : "120px"}
+            src={Logo}
+            height={collapsed ? "40px" : "144px"}
+            width={collapsed ? "40px" : "144px"}
           />
         </div>
 
@@ -272,9 +244,9 @@ const Dashboard = () => {
         >
           <Menu.Item
             key="1"
-            icon={<RxDashboard style={{ fontSize: "14px", color: "white" }} />}
+            icon={<RxDashboard style={{ fontSize: "14px", color: `${pathName === '' ? "#F66D0F" : "white"}` }} />}
           >
-            <Link to="/" style={{ fontSize: "16px" }}>
+            <Link to="/" style={{ fontSize: "16px", color: `${pathName === '' ? "#F66D0F" : "white"}` }}>
               {t("dashboard")}
             </Link>
           </Menu.Item>
@@ -302,29 +274,29 @@ const Dashboard = () => {
             key="64"
             icon={
               <BsFillBookmarkCheckFill
-                style={{ fontSize: "14px", color: "white" }}
+                style={{ fontSize: "14px",  color: `${pathName === 'appointmentlist' ? "#F66D0F" : "white"}` }}
               />
             }
           >
-            <Link to="/appointmentlist" style={{ fontSize: "16px" }}>
+            <Link to="/appointmentlist" style={{ fontSize: "16px", color: `${pathName === 'appointmentlist' ? "#F66D0F" : "white"}` }}>
               Appointments
             </Link>
           </Menu.Item>
 
           <Menu.Item
             key="6"
-            icon={<IoCutOutline style={{ fontSize: "14px", color: "white" }} />}
+            icon={<IoCutOutline style={{ fontSize: "14px", color: "white", color: `${pathName === 'salonlist' ? "#F66D0F" : "white"}` }} />}
           >
-            <Link to="/salonlist" style={{ fontSize: "16px" }}>
+            <Link to="/salonlist" style={{ fontSize: "16px", color: `${pathName === 'salonlist' ? "#F66D0F" : "white"}` }}>
             Salon List
             </Link>
           </Menu.Item>
 
           <Menu.Item
             key="61"
-            icon={<FaUsers style={{ fontSize: "14px", color: "white" }} />}
+            icon={<FaUsers style={{ fontSize: "14px", color: `${pathName === 'providerList' ? "#F66D0F" : "white"}` }} />}
           >
-            <Link to="/providerList" style={{ fontSize: "16px" }}>
+            <Link to="/providerList" style={{ fontSize: "16px", color: `${pathName === 'providerList' ? "#F66D0F" : "white"}` }}>
               Provider list
             </Link>
           </Menu.Item>
@@ -332,28 +304,29 @@ const Dashboard = () => {
           <Menu.Item
             key="7"
             icon={
-              <MdOutlineGroupAdd style={{ fontSize: "14px", color: "white" }} />
+              <MdOutlineGroupAdd style={{ fontSize: "14px", color: `${pathName === 'provider-request' ? "#F66D0F" : "white"}` }} />
             }
           >
-            <Link to="/provider-request" style={{ fontSize: "16px" }}>
+            <Link to="/provider-request" style={{ fontSize: "16px", color: `${pathName === 'provider-request' ? "#F66D0F" : "white"}` }}>
               Provider Request
             </Link>
           </Menu.Item>
 
           <Menu.Item
             key="57"
-            icon={<GiChessQueen style={{ fontSize: "14px", color: "white" }} />}
+            style={{color: "red"}}
+            icon={<GiChessQueen style={{ fontSize: "14px", color: `${pathName === 'provider-subscription' ? "#F66D0F" : "white"}` }} />}
           >
-            <Link to="/provider-subscription" style={{ fontSize: "16px" }}>
+            <Link to="/provider-subscription" style={{ fontSize: "16px", color: `${pathName === 'provider-subscription' ? "#F66D0F" : "white"}` }}>
               Provider subscription
             </Link>
           </Menu.Item>
 
           <Menu.Item
             key="8"
-            icon={<FaUsers style={{ fontSize: "14px", color: "white" }} />}
+            icon={<FaUsers style={{ fontSize: "14px", color: `${pathName === 'userlist' ? "#F66D0F" : "white"}` }} />}
           >
-            <Link to="/userlist" style={{ fontSize: "16px" }}>
+            <Link to="/userlist" style={{ fontSize: "16px", color: `${pathName === 'userlist' ? "#F66D0F" : "white"}` }}>
               {t("userList")}
             </Link>
           </Menu.Item>
@@ -362,11 +335,11 @@ const Dashboard = () => {
             key="9"
             icon={
               <FaListUl
-                style={{ fontSize: "14px", color: "white" }}
+                style={{ fontSize: "14px", color: `${pathName === 'categories' ? "#F66D0F" : "white"}` }}
               />
             }
           >
-            <Link to="/categories" style={{ fontSize: "16px" }}>
+            <Link to="/categories" style={{ fontSize: "16px", color: `${pathName === 'categories' ? "#F66D0F" : "white"}` }}>
               Categories
             </Link>
           </Menu.Item>
@@ -376,10 +349,10 @@ const Dashboard = () => {
           <Menu.Item
             key="10"
             icon={
-              <SettingOutlined style={{ fontSize: "14px", color: "white" }} />
+              <SettingOutlined style={{ fontSize: "14px", color: `${pathName === 'setting' ? "#F66D0F" : "white"}` }} />
             }
           >
-            <Link to="/setting" style={{ fontSize: "16px" }}>
+            <Link to="/setting" style={{ fontSize: "16px", color: `${pathName === 'setting' ? "#F66D0F" : "white"}` }}>
               {t("setting.title")}
             </Link>
           </Menu.Item>

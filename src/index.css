@@ -90,3 +90,11 @@ body {
   background-color: #F66D0F !important;
   box-shadow: none !important;
 }
+.ant-input-affix-wrapper {
+  background: transparent !important;
+  color: black !important;
+}
+
+.ant-input-affix-wrapper>input.ant-input:focus{
+  color: black !important;
+}
