@@ -39,7 +39,7 @@ const EditModal = ({
             Swal.fire({
                 position: "center",
                 icon: "success",
-                title: "Category Update Successfully",
+                title: "Category Updated Successfully",
                 showConfirmButton: false,
                 timer: 1500
             }).then(()=>{

@@ -18,6 +18,7 @@ function Bookings() {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
+      
       setData(response?.data);
     }
     getAPi();

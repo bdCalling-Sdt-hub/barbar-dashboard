@@ -18,16 +18,15 @@ const Signin = () => {
       password
     })
     .then((response) => {
-      if (response.status >= 200 && response.status < 300) {
+      if (response.status === 200) {
         const token = response.data.access_token;
-        
         localStorage.setItem('userId', response.data.user_id);
         localStorage.setItem('user', JSON.stringify(response.data.user));
         localStorage.setItem('access_token', token);
         Swal.fire({
           position: "center",
           icon: "success",
-          title: "Sign In Successfully",
+          title: "Signed In Successfully",
           showConfirmButton: false,
           timer: 1500
         }).then(() => {
@@ -37,7 +36,13 @@ const Signin = () => {
       }
     })
     .catch((error) => {
-      console.log(error);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timer: 1500
+      })
     });
   };
 
@@ -90,7 +95,7 @@ const Signin = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please enter confirm Password!",
+                  message: "Please enter Password!",
                 },
               ]}
             >

@@ -16,7 +16,7 @@ function Subscription() {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      // console.log(response.data.package_count);
+      console.log(response.data.package_count);
       setData(response.data.package_count);
     }
     getAPi();

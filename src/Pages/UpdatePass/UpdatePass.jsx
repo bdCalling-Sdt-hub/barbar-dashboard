@@ -91,7 +91,7 @@ const UpdatePass = () => {
                 },
               ]}
             >
-              <Input
+              <Input.Password
                 type="text"
                 placeholder="Password"
                 className={style.input}
@@ -112,7 +112,7 @@ const UpdatePass = () => {
                 },
               ]}
             >
-              <Input
+              <Input.Password
                 type="text"
                 placeholder="Confirm password"
                 className={style.input}

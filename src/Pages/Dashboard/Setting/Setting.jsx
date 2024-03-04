@@ -141,22 +141,34 @@ const Setting = () => {
     formData.append("password", values.newPassword);
     formData.append("password_confirmation", values.password);
 
-    const response = await baseURL.post(`/change-password`, formData, {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${localStorage.getItem('access_token')}`,
+    try{
+      const response = await baseURL.post(`/change-password`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      if(response?.status=== 200){
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: response?.data?.message,
+          showConfirmButton: false,
+          timer: 1500
+        }).then(()=>{
+          setOpenChangePassModel(false);
+        })
       }
-    });
-    if(response?.status=== 200){
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Password Update Successfully",
-        showConfirmButton: false,
-        timer: 1500
-      }).then(()=>{
-        setOpenChangePassModel(false);
-      })
+    }catch (error){
+      if(error.response.status === 422){
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: error.response.data.message,
+          showConfirmButton: false,
+          timer: 1500
+        })
+      }
     }
 
   };
@@ -395,7 +407,7 @@ const Setting = () => {
                   },
                 ]}
               >
-                <Input
+                <Input.Password
                   placeholder="Enter Password"
                   type="password"
                   style={style.input}
@@ -414,7 +426,7 @@ const Setting = () => {
                   },
                 ]}
               >
-                <Input
+                <Input.Password
                   type="password"
                   placeholder="Enter password"
                   style={style.input}
@@ -435,7 +447,7 @@ const Setting = () => {
                   },
                 ]}
               >
-                <Input
+                <Input.Password
                   type="password"
                   placeholder="Enter password"
                   style={style.input}
@@ -667,7 +679,7 @@ const Setting = () => {
                   },
                 ]}
               >
-                <Input type="text" placeholder="Password" style={style.input} />
+                <Input.Password type="text" placeholder="Password" style={style.input} />
               </Form.Item>
             </div>
 
@@ -684,7 +696,7 @@ const Setting = () => {
                   },
                 ]}
               >
-                <Input
+                <Input.Password
                   type="text"
                   placeholder="Confirm password"
                   style={style.input}
