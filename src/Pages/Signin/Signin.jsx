@@ -10,40 +10,37 @@ import { baseURL } from "../../Config";
 const Signin = () => {
   const navigate = useNavigate();
 
-  const onFinish = (values) => {
+  const onFinish = async(values) => {
     const email = values.email;
     const password = values.password;
-    axios.post('http://192.168.10.121:8000/api/login', {
+    const response = await baseURL.post(`/login`, {
       email,
       password
-    })
-    .then((response) => {
-      if (response.status === 200) {
-        const token = response.data.access_token;
-        localStorage.setItem('userId', response.data.user_id);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        localStorage.setItem('access_token', token);
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Signed In Successfully",
-          showConfirmButton: false,
-          timer: 1500
-        }).then(() => {
-            navigate("/");
-            window.location.reload();
-        });
-      }
-    })
-    .catch((error) => {
+    });
+    if (response.status === 200) {
+      const token = response.data.access_token;
+      localStorage.setItem('userId', response.data.user_id);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      localStorage.setItem('access_token', token);
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Signed In Successfully",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+          navigate("/");
+          window.location.reload();
+      });
+    }else{
       Swal.fire({
         position: "center",
         icon: "error",
-        title: error.response.data.message,
+        title: response.data.message,
         showConfirmButton: false,
         timer: 1500
       })
-    });
+    }
   };
 
   
