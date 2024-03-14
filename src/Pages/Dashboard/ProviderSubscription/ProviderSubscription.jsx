@@ -70,6 +70,7 @@ function ProviderSubscription() {
           timer: 1500
         }).then(() => {
           setAddPackeageModel(false)
+          setRefresh("done")
         })
       }
 

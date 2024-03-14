@@ -6,7 +6,6 @@ import { Button, Col, Checkbox, Upload, Row, Input, Modal, Form } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 import {useNavigate} from 'react-router-dom';
-import Url from '../../../Components/Appurl';
 import { CiCamera } from "react-icons/ci";
 import { baseURL, url } from "../../../Config";
 

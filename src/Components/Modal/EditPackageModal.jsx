@@ -9,16 +9,17 @@ const EditPackageModal = ({
     setRefresh
 }) => {
     const packageData = JSON.parse(localStorage.getItem('package'));
-    
     const handleUpdate= async(values)=>{
-        const array = values?.package_features.substring(1, values?.package_features?.length - 1).split(',').map(item => item.trim());
+        let array;
+        if( !Array.isArray(values?.package_features)){
+            array = values?.package_features?.substring(1, values?.package_features?.length - 1).split(',').map(item => item?.trim());
+        }
         const value={
             package_name : values?.package_name,
             package_duration: values?.package_duration,
             price: values?.price,
-            package_features: JSON.stringify(array)
+            package_features: array ? JSON.stringify(array) : JSON.stringify(packageData?.package_features)
         }
-        console.log(value)
         const response = await baseURL.post(`/update-package/${packageData?.id}`, value, {
             headers: {
                 authorization: `Bearer ${localStorage.getItem('access_token')}`
@@ -55,7 +56,7 @@ const EditPackageModal = ({
             footer={false}
         >
             <div>
-                <h1 style={{marginBottom: "12px"}}>Edit Category</h1>
+                <h1 style={{marginBottom: "12px"}}>Edit Package</h1>
                 <Form
                     name="normal_login"
                     className="login-form"
@@ -143,7 +144,8 @@ const EditPackageModal = ({
                                 backgroundColor: "#F66D0F",
                                 color: "white",
                                 border: "none",
-                                borderRadius: "8px"
+                                borderRadius: "8px",
+                                cursor: "pointer"
                             }} 
                         >
                             Save
