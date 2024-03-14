@@ -16,31 +16,32 @@ const Signin = () => {
     const response = await baseURL.post(`/login`, {
       email,
       password
-    });
-    if (response.status === 200) {
-      const token = response.data.access_token;
-      localStorage.setItem('userId', response.data.user_id);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      localStorage.setItem('access_token', token);
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Signed In Successfully",
-        showConfirmButton: false,
-        timer: 1500
-      }).then(() => {
-          navigate("/");
-          window.location.reload();
-      });
-    }else{
+    }).then((response) => {
+      if (response.status === 200) {
+        const token = response.data.access_token;
+        localStorage.setItem('userId', response.data.user_id);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        localStorage.setItem('access_token', token);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Signed In Successfully",
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+            navigate("/");
+            window.location.reload();
+        });
+      }
+    }).catch((error) => {
       Swal.fire({
         position: "center",
         icon: "error",
-        title: response.data.message,
+        title: error.response.data.message,
         showConfirmButton: false,
         timer: 1500
       })
-    }
+    });
   };
 
   
