@@ -49,7 +49,7 @@ span.ant-menu-title-content {
 
 /* INPUT */
 .ant-input-affix-wrapper {
-  background: transparent;
+  background: white !important;
   color: white;
 }
 
@@ -61,11 +61,16 @@ span.ant-menu-title-content {
 input.ant-input.ant-input-lg.css-dev-only-do-not-override-17a39f8 {
   background: transparent;
 }
-
+.ant-form-item-control-input{
+  background: transparent !important;
+}
 .ant-input-affix-wrapper>input.ant-input:focus {
   box-shadow: none !important;
   background: transparent;
   color: white;
+}
+.ant-input-affix-wrapper, .ant-input-password{
+  background: transparent !important;
 }
 
 .ant-input-affix-wrapper>input.ant-input::placeholder {
@@ -88,13 +93,9 @@ main.ant-layout-content.css-dev-only-do-not-override-17a39f8 {
   background: transparent !important;
 }
 
-.ant-menu-light .ant-menu-item-selected a {
-  color: #F66D0F !important;
-}
 
-.ant-menu-light .ant-menu-item-selected .ant-menu-item-icon {
-  color: #F66D0F !important;
-}
+
+
 
 .ant-menu-light {
   background: transparent !important;
@@ -246,4 +247,9 @@ header.ant-layout-header.css-17a39f8 {
 
 .ant-pagination .ant-pagination-item a, .ant-pagination .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis, .ant-pagination .ant-pagination-next .ant-pagination-item-link, .ant-pagination .ant-pagination-disabled .ant-pagination-item-link {
   color: black!important;
+}
+
+.ant-pagination .ant-pagination-total-text{
+  position: absolute;
+  left: 15px;
 }

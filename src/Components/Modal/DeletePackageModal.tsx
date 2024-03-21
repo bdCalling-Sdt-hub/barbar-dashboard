@@ -2,34 +2,25 @@ import React, { useState } from 'react'
 import { Button, Modal} from "antd";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { baseURL } from '../../Config';
-import Swal from "sweetalert2"
-const token = localStorage.getItem('access_token');
 
-const EditModal = ({
+const DeletePackageModal = ({
     openDeleteModal, 
     setOpenDeleteModal,
     setRefresh,
     id
 }) => {
-    console.log(id);
     const handleDelete= async()=>{
-        const response = await baseURL.get(`/delete-category/${id}`, {
+        console.log(id);
+        console.log(localStorage.getItem('access_token'));
+        const response = await baseURL.get(`/delete-package/${id}`, {
             headers: {
-                authorization: `Bearer ${token}`
+                authorization: `Bearer ${localStorage.getItem('access_token')}`
             }
         });
+        console.log(response);
         if(response?.status === 200){
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Category Delete Successfully",
-                showConfirmButton: false,
-                timer: 1500
-            }).then(()=>{
-                setOpenDeleteModal(false);
-                setRefresh('done')
-            })
-            
+            setOpenDeleteModal(false);
+            setRefresh('done');
         }
     }
     return (
@@ -110,4 +101,4 @@ const EditModal = ({
     )
 }
 
-export default EditModal
+export default DeletePackageModal

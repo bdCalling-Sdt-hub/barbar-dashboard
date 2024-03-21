@@ -1,39 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Categories.module.css";
 import { FaEdit } from "react-icons/fa";
-import { FaRemoveFormat } from "react-icons/fa";
-import { Button, Col, Checkbox, Upload, Row, Input, Modal, Form } from "antd";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import axios from "axios";
 import {useNavigate} from 'react-router-dom';
-import Url from '../../../Components/Appurl';
-import { CiCamera } from "react-icons/ci";
 import { baseURL, url } from "../../../Config";
-
-import { useSSR } from "react-i18next";
 import EditModal from "../../../Components/Modal/EditModal";
 import CategoryChangeModal from "../../../Components/Modal/CategoryChangeModal";
 import DeleteCategoryModal from "../../../Components/Modal/DeleteCategoryModal";
-
-
-const getBase64 = (img, callback) => {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-};
-
-
-const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
-  }
-  return isJpgOrPng && isLt2M;
-};
 
 
 function Categories() {
@@ -54,6 +26,11 @@ function Categories() {
     }
   },[userId]);
 
+  if(refresh){
+    setTimeout(()=>{
+      setRefresh("")
+    }, [1500])
+  }
     
     useEffect(()=>{
       async function getAPi(){
@@ -70,7 +47,7 @@ function Categories() {
 
   const handleEdit=(value)=>{
     setCategory(value);
-    setOpenEditModel(true)
+    setOpenEditModel(true);
   }
 
   return (
@@ -111,7 +88,7 @@ function Categories() {
 
       {/* edit category Modal */}
       {
-        openEditModel  && <EditModal setRefresh={setRefresh} setOpenDeleteModal={setOpenDeleteModal} category_name={category?.category_name} id={category.id} openEditModel={openEditModel} setOpenEditModel={setOpenEditModel}/>
+        openEditModel  && <EditModal setRefresh={setRefresh} setOpenDeleteModal={setOpenDeleteModal} category={category} category_name={category?.category_name} id={category.id} openEditModel={openEditModel} setOpenEditModel={setOpenEditModel}/>
       }
       
 

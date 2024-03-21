@@ -4,13 +4,15 @@ import logo from "../../Images/Logo.png";
 import style from "./UpdatePass.module.css";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { baseURL } from "../../Config";
 
 const { Title, Paragraph, Text, Link } = Typography;
 
 const UpdatePass = () => {
   const navigate = useNavigate();
   const [err, setErr] = useState("");
-  const onFinish = (values) => {
+  const onFinish = async(values) => {
     const { password, confirmPassword } = values;
 
     if (password.length < 8) {
@@ -25,21 +27,22 @@ const UpdatePass = () => {
       setErr("Please give your changes password");
       return;
     }
-    if (!/(?=.*[!@#$&*])/.test(password)) {
-      setErr("Ensure string has one special case letter.");
-      return;
-    }
-    if (!/(?=.*[A-Z].*[A-Z])/.test(password)) {
-      setErr("Ensure string has two uppercase letters.");
-      return;
-    }
-    if (!/(?=.*[a-z].*[a-z].*[a-z])/.test(password)) {
-      setErr("Ensure string has three lowercase letters.");
-      return;
-    }
-    if (!/(?=.*[0-9].*[0-9])/.test(password)) {
-      setErr("Ensure string has two digits");
-      return;
+    const response = await baseURL.post(`/reset-password`, {password: password, password_confirmation: confirmPassword}, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      }
+    });
+    if(response?.status === 200){
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Password Update Successfully",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(()=>{
+        navigate("/signin")
+      })
     }
   };
 
@@ -88,7 +91,7 @@ const UpdatePass = () => {
                 },
               ]}
             >
-              <Input
+              <Input.Password
                 type="text"
                 placeholder="Password"
                 className={style.input}
@@ -109,7 +112,7 @@ const UpdatePass = () => {
                 },
               ]}
             >
-              <Input
+              <Input.Password
                 type="text"
                 placeholder="Confirm password"
                 className={style.input}
@@ -124,7 +127,7 @@ const UpdatePass = () => {
             <Button
               type="primary"
               htmlType="submit"
-              onClick={() => navigate("/")}
+              // onClick={() => navigate("/")}
               block
               style={{
                 height: "45px",

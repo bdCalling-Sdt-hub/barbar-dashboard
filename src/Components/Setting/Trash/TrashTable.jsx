@@ -1,96 +1,45 @@
 import { Table } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { baseURL } from "../../../Config";
+import moment from "moment";
+import Swal from "sweetalert2";
 
-const data = [
-  {
-    key: "1",
-    userName: "Robert Fox",
-    email: "Ester123@gmail.com",
-    contact: "0919 555 0895",
-    date: "15 May 2020 ",
-    actions: "",
-  },
-  {
-    key: "1",
-    userName: "Robert Fox",
-    email: "Ester123@gmail.com",
-    contact: "0919 555 0895",
-    date: "15 May 2020 ",
-    actions: "",
-  },
-  {
-    key: "1",
-    userName: "Robert Fox",
-    email: "Ester123@gmail.com",
-    contact: "0919 555 0895",
-    date: "15 May 2020 ",
-    actions: "",
-  },
-  {
-    key: "1",
-    userName: "Robert Fox",
-    email: "Ester123@gmail.com",
-    contact: "0919 555 0895",
-    date: "15 May 2020 ",
-    actions: "",
-  },
-  {
-    key: "1",
-    userName: "Robert Fox",
-    email: "Ester123@gmail.com",
-    contact: "0919 555 0895",
-    date: "15 May 2020 ",
-    actions: "",
-  },
-];
+function TrashTable({search}) {
+  const [data, setData] = useState();
+  const [page, setPage] = useState();
+  const [refresh, setRefresh] = useState("");
 
-function TrashTable() {
-  let token = localStorage.getItem("token");
+  const handleRestore=async(id)=>{
+    console.log(id);
+    if(id){
+      const response = await baseURL.get(`/trash-restore/${id}`,{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      }); 
 
-  function formatDateString(inputDateString) {
-    const inputDate = new Date(inputDateString);
-
-    if (isNaN(inputDate)) {
-      return "Invalid Date";
+      console.log(response);
+      if(response?.status === 200){    
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "User Restore",
+              showConfirmButton: false,
+              timer: 1500
+            }).then((result) => {
+              setRefresh('done')
+            });
+          }
+     
     }
-
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    const day = inputDate.getDate();
-    const month = months[inputDate.getMonth()];
-    const year = inputDate.getFullYear();
-
-    let hours = inputDate.getHours();
-    const minutes = inputDate.getMinutes();
-    const ampm = hours >= 12 ? "pm" : "am";
-
-    if (hours > 12) {
-      hours -= 12;
-    }
-
-    return `${day} ${month}, ${year}-${hours}:${
-      minutes < 10 ? "0" : ""
-    }${minutes}${ampm}`;
   }
 
   const columns = [
     {
       title: "USER NAME",
-      dataIndex: "userName",
-      key: "userName",
+      dataIndex: "name",
+      key: "name",
     },
     {
       title: "EMAIL",
@@ -100,13 +49,19 @@ function TrashTable() {
     },
     {
       title: "CONTACT",
-      dataIndex: "contact",
-      key: "contact",
+      dataIndex: "phone_number",
+      key: "phone_number",
+      render: (_, record) => (
+        <p>{record?.phone_number}</p>
+      )
     },
     {
       title: "DATE",
       dataIndex: "date",
       key: "date",
+      render: (_, record) => (
+        <p>{moment(record?.created_at).format('ll')}</p>
+      )
     },
     {
       title: "ACTIONS",
@@ -116,7 +71,7 @@ function TrashTable() {
       render: (_, record) => (
         <div>
           <button
-            // onClick={(e) => handelSignOut(record._id)}
+            onClick={(e) => handleRestore(record?.id)}
             style={{
               background: "#7CC605",
               borderRadius: "5px",
@@ -133,9 +88,52 @@ function TrashTable() {
       ),
     },
   ];
+
+   // data retraive for all Appointmensts
+   useEffect(()=>{
+    async function getAPi(){
+      if(search){
+        const response = await baseURL.get(`/trash-user?search=${search}&page=${page}`,{
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          }
+        });
+        setData(response?.data?.data);
+      } else{
+        const response = await baseURL.get(`/trash-user?page=${page}`,{
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          }
+        });
+        setData(response?.data?.data);
+      }
+      
+    }
+    getAPi();
+  }, [page, refresh !== "", search]);
+
+  const handlePageChange=(page)=>{
+    setPage(page);
+  }
+  
   return (
     <div>
-      <Table columns={columns} dataSource={data} />
+
+
+
+      <Table 
+        columns={columns} 
+        dataSource={data?.data}
+        pagination={{
+          pageSize: data?.per_page,
+          showSizeChanger: false,
+          total: data?.total,
+          current:  data?.current_page,
+          onChange: handlePageChange,
+        }} 
+      />
     </div>
   );
 }

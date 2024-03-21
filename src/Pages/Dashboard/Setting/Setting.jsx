@@ -2,8 +2,11 @@ import { Button, Form, Input, Modal, Switch, Typography } from "antd";
 import React, { useState } from "react";
 import { LiaAngleRightSolid } from "react-icons/lia";
 import { useNavigate } from "react-router-dom";
-
+import Swal from 'sweetalert2';
+import { baseURL } from "../../../Config";
+import { IoMailOpenOutline } from "react-icons/io5";
 const { Paragraph, Title, Text } = Typography;
+import OTPInput from "react-otp-input";
 
 const Setting = () => {
   const navigate = useNavigate();
@@ -11,7 +14,10 @@ const Setting = () => {
   const [openChangePassModel, setOpenChangePassModel] = useState(false);
   const [verify, setVerify] = useState(false);
   const [updatePassword, setUpdatePassword] = useState(false);
-
+  const [openForgotPasswordModal, setOpenForgotPasswordModal] = useState(false);
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [percent, setPercent] = useState();
   const style = {
     formContainer: {
       // background: "white",
@@ -52,7 +58,7 @@ const Setting = () => {
       cursor: "pointer",
     },
     input: {
-      height: "45px",
+      height: "45px"
     },
     otpInput: {
       width: "50px",
@@ -111,38 +117,7 @@ const Setting = () => {
   ];
 
   const [err, setErr] = useState("");
-  const handleUpdated = (values) => {
-    const { password, confirmPassword } = values;
 
-    if (password.length < 8) {
-      setErr("Password must be 8 character");
-      return;
-    }
-    if (password !== confirmPassword) {
-      setErr("Please enter the same password!");
-      return;
-    }
-    if (!password || !confirmPassword) {
-      setErr("Please give your changes password");
-      return;
-    }
-    if (!/(?=.*[!@#$&*])/.test(password)) {
-      setErr("Ensure string has one special case letter.");
-      return;
-    }
-    if (!/(?=.*[A-Z].*[A-Z])/.test(password)) {
-      setErr("Ensure string has two uppercase letters.");
-      return;
-    }
-    if (!/(?=.*[a-z].*[a-z].*[a-z])/.test(password)) {
-      setErr("Ensure string has three lowercase letters.");
-      return;
-    }
-    if (!/(?=.*[0-9].*[0-9])/.test(password)) {
-      setErr("Ensure string has two digits");
-      return;
-    }
-  };
 
   const handleNavigate = (value) => {
     if (value == "booking-percentage") {
@@ -155,21 +130,168 @@ const Setting = () => {
   };
 
   const handleNotification = (e) => {
-    console.log(e);
   };
   const handleSubscription = (e) => {
-    console.log(e);
   };
 
-  const setPercentage = () => {
-    alert("sahinur");
-    setOpenModal(false);
+
+  const handleChangePassword = async(values) => {
+    const formData = new FormData();
+    formData.append("current_password", values.currentPassword);
+    formData.append("password", values.newPassword);
+    formData.append("password_confirmation", values.password);
+
+    try{
+      const response = await baseURL.post(`/change-password`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      if(response?.status=== 200){
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: response?.data?.message,
+          showConfirmButton: false,
+          timer: 1500
+        }).then(()=>{
+          setOpenChangePassModel(false);
+        })
+      }
+    }catch (error){
+      if(error.response.status === 422){
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: error.response.data.message,
+          showConfirmButton: false,
+          timer: 1500
+        })
+      }
+    }
+
   };
 
-  const handleChangePassword = (values) => {
-    console.log("Received values of form: ", values);
-  };
+  const handleForgotPassword=async()=>{
+    localStorage.setItem('email', email);
+    const response = await baseURL.post(`/resendOtp`, {email: email}, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      }
+    });
+    if(response?.status === 200){
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Send Otp Successfully",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(()=>{
+        setVerify(true)
+        setOpenForgotPasswordModal(false)
+      })
+    }
 
+  }
+
+  const sendEmail=async()=>{
+    const response = await baseURL.post(`/resendOtp`, {email: localStorage.getItem('email')}, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      }
+    });
+    if(response?.status === 200){
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Send Otp Successfully",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(()=>{
+        setVerify(true)
+        setOpenForgotPasswordModal(false)
+      })
+    }
+  }
+
+  const handleVerify=async()=>{
+    const response = await baseURL.post(`/verified`, {email: email, otp: otp}, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      }
+    });
+    if(response?.status === 200){
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Verify OTP",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(()=>{
+        setUpdatePassword(true);
+        setVerify(false);
+      })
+    }
+  }
+
+  const handleUpdatePassword=async(values)=>{
+    const formData = new FormData();
+    formData.append("password", values.password);
+    formData.append("password_confirmation", values.confirmPassword);
+
+    const response = await baseURL.post(`/reset-password`, formData, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      }
+    });
+    if(response?.status === 200){
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Password Update Successfully",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(()=>{
+        setUpdatePassword(false);
+      })
+    }
+  }
+
+  const handleBookingPercentage=async()=>{
+    if(percent){
+      const response = await baseURL.post(`/booking-percentage-set`, {percentage: percent}, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      if(response?.status === 200){
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Set Booking Percentage Successfully",
+          showConfirmButton: false,
+          timer: 1500
+        }).then(()=>{
+          setOpenModal(false);
+        })
+      }
+    }else{
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Input Percentage Required",
+        showConfirmButton: false,
+        timer: 1500
+      })
+    }
+    
+  }
   return (
     <div>
       <h2 style={{ marginBottom: "20px", fontWeight: "normal" }}>Settings</h2>
@@ -212,27 +334,21 @@ const Setting = () => {
           width={500}
           footer={[]}
         >
-          <Form
-            name="normal_login"
-            className="login-form"
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={handleChangePassword}
-          >
+          <Form>
             <p>Set your percentage from clients booking.</p>
-            <div style={{background:"#F66D0F",display:"flex",margin:"0 auto", padding:"10px",justifyContent:"center",height:"100px", width:"100px",borderRadius:"100%"}} >
+            <div style={{background:"#F66D0F", marginTop: "20px", display:"flex",margin:"0 auto", padding:"20px",justifyContent:"center",height:"100px", width:"100px",borderRadius:"100%"}} >
               <img   src="https://i.ibb.co/ZzSj8rj/percent-1-traced.png" alt="" />
             </div>
 
             <div>
-              <label htmlFor="" className={style.label}>
+              <label style={{display: "block", marginBottom: "12px"}} htmlFor="" className={style.label}>
                 Set your percentage
               </label>
-              <Form.Item name="currentPassword">
+              <Form.Item style={{marginBottom: "0"}} name="currentPassword">
                 <Input
                   placeholder="Enter Percentage"
                   type="Text"
+                  onChange={(e)=>setPercent(e.target.value)}
                   style={style.input}
                 />
               </Form.Item>
@@ -240,6 +356,7 @@ const Setting = () => {
 
             <Form.Item>
               <Button
+                onClick={handleBookingPercentage}
                 type="primary"
                 htmlType="submit"
                 className="login-form-button"
@@ -249,7 +366,7 @@ const Setting = () => {
                   fontWeight: "400px",
                   fontSize: "18px",
                   background: "#F66D0F",
-                  marginTop: "60px",
+                  marginTop: "30px",
                 }}
               >
                 Set
@@ -257,6 +374,9 @@ const Setting = () => {
             </Form.Item>
           </Form>
         </Modal>
+
+
+
         {/* change password*/}
         <Modal
           title={<p style={{ marginBottom: "30px" }}>Change password</p>}
@@ -287,7 +407,7 @@ const Setting = () => {
                   },
                 ]}
               >
-                <Input
+                <Input.Password
                   placeholder="Enter Password"
                   type="password"
                   style={style.input}
@@ -306,7 +426,7 @@ const Setting = () => {
                   },
                 ]}
               >
-                <Input
+                <Input.Password
                   type="password"
                   placeholder="Enter password"
                   style={style.input}
@@ -318,6 +438,7 @@ const Setting = () => {
                 Re-Type Password
               </label>
               <Form.Item
+                
                 name="password"
                 rules={[
                   {
@@ -326,7 +447,7 @@ const Setting = () => {
                   },
                 ]}
               >
-                <Input
+                <Input.Password
                   type="password"
                   placeholder="Enter password"
                   style={style.input}
@@ -338,7 +459,7 @@ const Setting = () => {
                 type="text"
                 className="login-form-forgot"
                 style={{ color: "#F66D0F" }}
-                onClick={() => (setVerify(true), setOpenChangePassModel(false))}
+                onClick={() => (setOpenChangePassModel(false), setOpenForgotPasswordModal(true))}
               >
                 Forgot password
               </Button>
@@ -363,7 +484,79 @@ const Setting = () => {
             </Form.Item>
           </Form>
         </Modal>
-        {/* Verify Password */}
+        
+        {/* Forgot Password */}
+        <Modal
+          title={
+            <Title
+              level={2}
+              style={{
+                color: "#F66D0F",
+                fontWeight: "normal",
+                marginBottom: "30px",
+                textShadow: "#bfbfbf 2px 2px 4px",
+              }}
+            >
+              Forgot Password
+            </Title>
+          }
+          centered
+          open={openForgotPasswordModal}
+          onCancel={() => {
+            setOpenForgotPasswordModal(false);
+          }}
+          width={500}
+          footer={[]}
+        >
+          <div>
+            <Paragraph style={{ marginBottom: "30px" }}>
+              Please enter your email address for recover your password.
+            </Paragraph>
+            <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+              <div style={{
+                width: "100px",
+                height: "100px",
+                borderRadius: "100%",
+                backgroundColor: "#F66D0F",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}>
+                <IoMailOpenOutline size={65} color="white"/>
+              </div>
+            </div>
+
+            <div>
+              <div style={{marginBottom: "12px"}}>
+                <label htmlFor="">Email</label>
+              </div>
+              <Input
+                onChange={(e)=>setEmail(e.target.value)}
+                  type="text"
+                  placeholder="Enter Email"
+                  style={style.input}
+                />
+            </div>
+
+            <Button
+              block
+              onClick={handleForgotPassword}
+              style={{
+                height: "45px",
+                fontWeight: "400px",
+                fontSize: "18px",
+                background: "#F66D0F",
+                color: "#fff",
+                alignSelf: "bottom",
+                marginTop: "20px"
+              }}
+            >
+              Continue
+            </Button>
+          </div>
+        </Modal>
+
+        {/* Verify OTP */}
         <Modal
           title={
             <Title
@@ -392,36 +585,37 @@ const Setting = () => {
               enter the code here.
             </Paragraph>
 
-            <Input.Group
-              style={{
-                display: "flex",
-                gap: "10px",
-                marginBottom: "10px",
+            <OTPInput
+              value={otp}
+              onChange={setOtp}
+              numInputs={6}
+              inputStyle={{
+                height: "64px",
+                width: "55px",
+                borderRadius: "8px",
+                marginRight: "16px",
+                fontSize: "20px",
+                border: "1px solid #F66D0F",
+                color: "#2B2A2A",
+                outline: "none"
               }}
-            >
-              <Input style={{ width: "50px", height: "70px" }} />
-              <Input style={style.otpInput} />
-              <Input style={style.otpInput} />
-              <Input style={style.otpInput} />
-              <Input style={style.otpInput} />
-              <Input style={style.otpInput} />
-            </Input.Group>
+              renderInput={(props) => <input {...props} />}
+            />
 
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
               <Text>Don't received code?</Text>
 
-              <a
-                className="login-form-forgot"
-                style={{ color: "#F66D0F" }}
-                href=""
+              <div
+                onClick={sendEmail}
+                style={{ color: "#F66D0F", cursor: "pointer" }}
               >
                 Resend
-              </a>
+              </div>
             </div>
 
             <Button
               block
-              onClick={() => (setUpdatePassword(true), setVerify(false))}
+              onClick={handleVerify}
               style={{
                 height: "45px",
                 fontWeight: "400px",
@@ -429,26 +623,28 @@ const Setting = () => {
                 background: "#F66D0F",
                 color: "#fff",
                 alignSelf: "bottom",
-                marginTop: "130px",
+                marginTop: "30px",
               }}
             >
               Continue
             </Button>
           </div>
         </Modal>
+
+
         {/* Update Password */}
         <Modal
           title={
             <Title
               level={2}
               style={{
-                color: "#F66D0F",
+                color: "black",
                 fontWeight: "normal",
                 marginBottom: "30px",
                 textShadow: "#bfbfbf 2px 2px 4px",
               }}
             >
-              Update Password
+              Set New Password
             </Title>
           }
           centered
@@ -465,10 +661,15 @@ const Setting = () => {
             initialValues={{
               remember: true,
             }}
-            onFinish={handleUpdated}
+            onFinish={handleUpdatePassword}
           >
             <div>
+              <p style={{marginBottom: "20px"}}>Your password must be 8-10 characters.</p>
+            </div>
+            <div>
+              <div style={{marginBottom : "12px"}}>
               <label htmlFor="">New Password</label>
+              </div>
               <Form.Item
                 name="password"
                 rules={[
@@ -478,12 +679,14 @@ const Setting = () => {
                   },
                 ]}
               >
-                <Input type="text" placeholder="Password" style={style.input} />
+                <Input.Password type="text" placeholder="Password" style={style.input} />
               </Form.Item>
             </div>
 
             <div>
+            <div style={{marginBottom : "12px"}}>
               <label htmlFor="">Re-type Password</label>
+            </div>
               <Form.Item
                 name="confirmPassword"
                 rules={[
@@ -493,7 +696,7 @@ const Setting = () => {
                   },
                 ]}
               >
-                <Input
+                <Input.Password
                   type="text"
                   placeholder="Confirm password"
                   style={style.input}
@@ -515,7 +718,7 @@ const Setting = () => {
                   fontWeight: "400px",
                   fontSize: "18px",
                   background: "#F66D0F",
-                  marginTop: "100px",
+                  marginTop: "30px",
                 }}
               >
                 Confirm

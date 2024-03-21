@@ -1,62 +1,50 @@
-import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input } from "antd";
-import React from "react";
+import { Button, Form, Input } from "antd";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import logo from "../../Images/Logo.png";
 import style from "./Signin.module.css";
-import {useRef, useEffect, useState} from 'react';
 import axios from "axios";
+import Swal from "sweetalert2";
+import { baseURL } from "../../Config";
 
 const Signin = () => {
-const userRef = useRef();
-const errRef = useRef();
-
-const [user, setUser] = useState('');
-const [pwd, setPwd] = useState('');
-const [errMsg, setErroMsg] = useState();
-// const [success, setSuccess] = useState(false);
-
-// useEffect(()=>{
-//   userRef.current.focus();
-
-// },[])
-
-// useEffect(()=>{
-//   setErroMsg('');
-
-// }, user, pwd)
-
-const onFinish = (values) => {
-  const email = values.email;
-  const password = values.password;
-  axios.post('http://192.168.10.121:8000/api/login', {
-    email,
-    password
-  })
-  .then((response) => {
-    console.log(response);
-    if (response.status >= 200 && response.status < 300) {
-      const token = response.data.access_token;
-      
-      localStorage.setItem('userId', response.data.user_id);
-      localStorage.setItem('access_token', token);
-    }
-  })
-  .catch((error) => {
-    console.log(error);
-    // Handle login error
-  });
-};
-
-
   const navigate = useNavigate();
 
-  const handleForget = () => {
-    navigate("/forget-password");
+  const onFinish = async(values) => {
+    const email = values.email;
+    const password = values.password;
+    const response = await baseURL.post(`/login`, {
+      email,
+      password
+    }).then((response) => {
+      if (response.status === 200) {
+        const token = response.data.access_token;
+        localStorage.setItem('userId', response.data.user_id);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        localStorage.setItem('access_token', token);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Signed In Successfully",
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+            navigate("/");
+            window.location.reload();
+        });
+      }
+    }).catch((error) => {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timer: 1500
+      })
+    });
   };
 
-
-
+  
   return (
     <div className={style.signContainer}>
       <div>
@@ -81,7 +69,7 @@ const onFinish = (values) => {
           onFinish={onFinish}
         >
           <div>
-            <label htmlFor="" className={style.label}>
+            <label style={{display: "block", marginBottom: "10px"}} htmlFor="" className={style.label}>
             Email
             </label>
             <Form.Item
@@ -97,7 +85,7 @@ const onFinish = (values) => {
           </div>
 
           <div>
-            <label htmlFor="" className={style.label}>
+            <label htmlFor="" style={{display: "block", marginBottom: "10px"}} className={style.label}>
           Password
             </label>
             <Form.Item
@@ -105,13 +93,16 @@ const onFinish = (values) => {
               rules={[
                 {
                   required: true,
-                  message: "Please enter confirm Password!",
+                  message: "Please enter Password!",
                 },
               ]}
             >
-              <Input
+              <Input.Password
                 type="passowrd"
                 placeholder="Enter your password"
+                style={{
+                  color: "black"
+                }}
                 className={style.input}
               />
             </Form.Item>
@@ -121,14 +112,12 @@ const onFinish = (values) => {
           {/* <label style={{ color: "red" }}>{err}</label> */}
           <div className={style.rememberAndPass}>
             <div></div>
-            <a
-              className="login-form-forgot"
-              style={{ color: "#F66D0F", fontWeight: "600" }}
-              href=""
-              onClick={handleForget}
+            <p
+              style={{ color: "#F66D0F", fontWeight: "600", cursor: "pointer" }}
+              onClick={()=>navigate("/forget-password")}
             >
               Forgot password?
-            </a>
+            </p>
           </div>
 
           <Form.Item>

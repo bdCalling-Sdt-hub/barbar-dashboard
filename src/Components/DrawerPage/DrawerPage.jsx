@@ -9,19 +9,23 @@ import {
   Select,
   Typography,
   Rate,
+  Modal
 } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import { AiFillStar } from "react-icons/ai";
 import cardImg from "../../Images/Cards.png";
 import img from "../../Images/image 1.png";
 import styles from "./DrawerPage.module.css";
 import { IoStar } from "react-icons/io5";
-
-/* const { Title } = Typography;
-
-const { Option } = Select; */
+import moment from "moment";
+import { baseURL, url } from "../../Config";
+import { HiTrash } from "react-icons/hi2";
+import Swal from "sweetalert2"
 
 const DrawerPage = (props) => {
+  const [open, setOpen] = useState(false);
+  const [id, setID] = useState(false);
+  const { handleApprove, handleCancel, handlePrint, setRefresh, handleBlock, handleBlockProvider } = props;
   const style = {
     cardType: {
       height: "150px",
@@ -48,10 +52,36 @@ const DrawerPage = (props) => {
     },
   };
 
+
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
   };
 
+  const handleReviewDelete=(id)=>{
+    setOpen(true);
+    setID(id);
+  }
+
+  const handleDelete=async()=>{
+    const response = await baseURL.get(`/deleteRating/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      }
+    });
+    if(response?.status === 200){
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Delete Review Successfully",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(()=>{
+        setRefresh("done")
+        setOpen(false)
+      })
+    }
+  }
   return (
     <>
 
@@ -241,7 +271,7 @@ const DrawerPage = (props) => {
 
       {props.earningData && (
         <div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div ref={props?.componentRef} style={{ display: "flex", gap: "15px" }}>
             <div className={styles.appointmentMainContainer}>
               <div>
                 <h3>Appointment Info</h3>
@@ -268,7 +298,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png"
+                        src={`${url}/${props?.bookingData?.user?.image}`}
                         alt=""
                       />
                     </div>
@@ -325,7 +355,7 @@ const DrawerPage = (props) => {
 
       {props.bookingData && (
         <div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div ref={props?.componentRef} style={{ display: "flex", gap: "15px" }}>
             <div className={styles.appointmentMainContainer}>
               <div>
                 <h3>Transaction Information</h3>
@@ -337,10 +367,10 @@ const DrawerPage = (props) => {
                     <p>Payment Amount :</p>
                   </div>
                   <div className={styles.appointmentInfoRight}>
-                    <p>12:00 PM</p>
-                    <p>31 aug 2023</p>
-                    <p>Debit Card</p>
-                    <p>$ 200</p>
+                    <p>{props.bookingData?.name}</p>
+                    <p>{moment(props.bookingData?.created_at).format('LL')}</p>
+                    <p>{props.bookingData?.payment_type}</p>
+                    <p>$ {props.bookingData?.amount}</p>
                   </div>
                 </div>
               </div>
@@ -352,7 +382,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png"
+                        src={`${url}/${props?.bookingData?.user?.image}`}
                         alt=""
                       />
                     </div>
@@ -363,9 +393,9 @@ const DrawerPage = (props) => {
                         <p>Address :</p>
                       </div>
                       <div className={styles.userInfoRight}>
-                        <p>Brooklyn Simmons</p>
-                        <p>(319) 555-0115</p>
-                        <p> Elgin St. Celina</p>
+                        <p>$ {props.bookingData?.user?.address}</p>
+                        <p>$ {props.bookingData?.user?.phone_number}</p>
+                        <p>$ {props.bookingData?.user?.name}</p>
                       </div>
                     </div>
                   </div>
@@ -375,34 +405,28 @@ const DrawerPage = (props) => {
           </div>
           <div
             style={{
-              display: "flex",
-              gap: 20,
+              width: "100%",
               position: "absolute",
-              bottom: 10,
+              bottom: 30,
+              left: 0,
+              paddingLeft: "20px",
+              paddingRight: "20px"
             }}
           >
-            <Button
-              block
+            <button
+              onClick={handlePrint}
               style={{
+                width: "100%",
                 background: "#F66D0F",
                 color: "white",
                 height: 50,
-                width: "220px",
-              }}
-            >
-              Download
-            </Button>
-            <Button
-              block
-              style={{
-                background: "#F66D0F",
-                color: "white",
-                height: 50,
-                width: "220px",
+                cursor: "pointer",
+                border: "none",
+                borderRadius:"8px"
               }}
             >
               Print
-            </Button>
+            </button>
           </div>
         </div>
       )}
@@ -410,7 +434,7 @@ const DrawerPage = (props) => {
 
       {props.providerRequestData && (
         <div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div ref={props?.componentRef} style={{ display: "flex", gap: "15px" }}>
             <div className={styles.appointmentMainContainer}>
               <div>
                 <h3>Provider Information</h3>
@@ -423,9 +447,9 @@ const DrawerPage = (props) => {
                   </div>
                   <div className={styles.appointmentInfoRight}>
                     <p>Hair Force Salon</p>
-                    <p>Jane Cooper</p>
-                    <p>12:00 PM</p>
-                    <p>31 aug 2023</p>
+                    <p>{props.providerRequestData?.name}</p>
+                    <p>{moment(props?.providerRequestData?.created_at).format('LT')}</p>
+                    <p>{moment(props?.providerRequestData?.created_at).format('L')}</p>
                   </div>
                 </div>
               </div>
@@ -440,10 +464,12 @@ const DrawerPage = (props) => {
             }}
           >
             <Button
+              onClick={()=>handleCancel(props.providerRequestData?.id)}
               block
               style={{
-                background: "#F66D0F",
+                border: "1px solid #F66D0F",
                 color: "white",
+                backgroundColor: "transparent",
                 height: 50,
                 width: "220px",
               }}
@@ -452,6 +478,7 @@ const DrawerPage = (props) => {
             </Button>
             <Button
               block
+              onClick={()=>handleApprove(props.providerRequestData?.id)}
               style={{
                 background: "#F66D0F",
                 color: "white",
@@ -468,7 +495,7 @@ const DrawerPage = (props) => {
 
       {props.subscriptionData && (
         <div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div ref={props?.componentRef} style={{ display: "flex", gap: "15px" }}>
             <div className={styles.appointmentMainContainer}>
               <div>
                 <h3>Transaction Information</h3>
@@ -480,10 +507,10 @@ const DrawerPage = (props) => {
                     <p>Payment Amount :</p>
                   </div>
                   <div className={styles.appointmentInfoRight}>
-                    <p>12:00 PM</p>
-                    <p>31 aug 2023</p>
-                    <p>Debit Card</p>
-                    <p>$ 200</p>
+                    <p>{moment(props.subscriptionData?.created_at).format('L')}</p>
+                    <p>{moment(props.subscriptionData?.created_at).format('LT')}</p>
+                    <p>{props.subscriptionData?.payment_type}</p>
+                    <p>${props.subscriptionData?.amount}</p>
                   </div>
                 </div>
               </div>
@@ -495,7 +522,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png"
+                        src={`${url}/${props?.subscriptionData?.user?.image}`}
                         alt=""
                       />
                     </div>
@@ -506,9 +533,9 @@ const DrawerPage = (props) => {
                         <p>Address :</p>
                       </div>
                       <div className={styles.userInfoRight}>
-                        <p>Brooklyn Simmons</p>
-                        <p>(319) 555-0115</p>
-                        <p> Elgin St. Celina</p>
+                        <p>{props.subscriptionData?.user?.name}</p>
+                        <p>{props.subscriptionData?.user?.phone_number}</p>
+                        <p>{props.subscriptionData?.user?.address}</p>
                       </div>
                     </div>
                   </div>
@@ -518,34 +545,28 @@ const DrawerPage = (props) => {
           </div>
           <div
             style={{
-              display: "flex",
-              gap: 20,
+              width: "100%",
               position: "absolute",
-              bottom: 10,
+              bottom: 30,
+              left: 0,
+              paddingLeft: "20px",
+              paddingRight: "20px"
             }}
           >
-            <Button
-              block
+            <button
+              onClick={handlePrint}
               style={{
+                width: "100%",
                 background: "#F66D0F",
                 color: "white",
                 height: 50,
-                width: "220px",
-              }}
-            >
-              Download
-            </Button>
-            <Button
-              block
-              style={{
-                background: "#F66D0F",
-                color: "white",
-                height: 50,
-                width: "220px",
+                cursor: "pointer",
+                border: "none",
+                borderRadius:"8px"
               }}
             >
               Print
-            </Button>
+            </button>
           </div>
         </div>
       )}
@@ -644,8 +665,8 @@ const DrawerPage = (props) => {
       )}
 
       {props.invoiceData && (
-        <div>
-          <div style={{ display: "flex", gap: "15px" }}>
+        <div >
+          <div ref={props?.componentRef} style={{ display: "flex", gap: "15px" }}>
             <div className={styles.appointmentMainContainer}>
               <div>
                 <h3>Appointment Info</h3>
@@ -657,10 +678,14 @@ const DrawerPage = (props) => {
                     <p>Payment Amount :</p>
                   </div>
                   <div className={styles.appointmentInfoRight}>
-                    <p>Completed</p>
-                    <p>06 Sep, 2023- 4:30 PM</p>
-                    <p>Debit Card</p>
-                    <p>$ 200</p>
+                    <p>
+                      {props.invoiceData?.status === 0 && "Pending"}
+                      {props.invoiceData?.status === 2 && "Complete"}
+                      {props.invoiceData?.status === 4 && "Cancel"}
+                    </p>
+                    <p>{moment(props.invoiceData?.created_at).format('LLL')}</p>
+                    <p> {props?.invoiceData?.payment_type ? props?.invoiceData?.payment_type : "Not Found"}</p>
+                    <p>$ {props?.invoiceData?.price}</p>
                   </div>
                 </div>
               </div>
@@ -672,7 +697,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png"
+                        src={`${url}/${props?.invoiceData?.user?.image}`}
                         alt=""
                       />
                     </div>
@@ -683,9 +708,9 @@ const DrawerPage = (props) => {
                         <p>Address :</p>
                       </div>
                       <div className={styles.userInfoRight}>
-                        <p>Brooklyn Simmons</p>
-                        <p>(319) 555-0115</p>
-                        <p>6391 Elgin St. Celina</p>
+                        <p>{props?.invoiceData?.user?.name}</p>
+                        <p>{props?.invoiceData?.user?.phone_number}</p>
+                        <p>{props?.invoiceData?.user?.address}</p>
                       </div>
                     </div>
                   </div>
@@ -699,7 +724,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src="https://i.ibb.co/9h5XjNp/Rectangle-2519-1.png"
+                        src={`${url}/images/${props?.invoiceData?.provider?.cover_photo}`}
                         alt=""
                       />
                     </div>
@@ -710,9 +735,9 @@ const DrawerPage = (props) => {
                         <p>Address :</p>
                       </div>
                       <div className={styles.userInfoRight}>
-                        <p>Robert Fox</p>
-                        <p>(205) 555-0100</p>
-                        <p>New Jersey 45463</p>
+                        <p>{props?.invoiceData?.provider?.business_name}</p>
+                        <p>{props?.invoiceData?.provider?.phone_number ? props?.invoiceData?.provider?.phone_number : "Not Found"}</p>
+                        <p>{props?.invoiceData?.provider?.address ? props?.invoiceData?.provider?.address : "Not Found"}</p>
                       </div>
                     </div>
                   </div>
@@ -722,34 +747,28 @@ const DrawerPage = (props) => {
           </div>
           <div
             style={{
-              display: "flex",
-              gap: 20,
+              width: "100%",
               position: "absolute",
-              bottom: 10,
+              bottom: 30,
+              left: 0,
+              paddingLeft: "20px",
+              paddingRight: "20px"
             }}
           >
-            <Button
-              block
+            <button
+              onClick={handlePrint}
               style={{
+                width: "100%",
                 background: "#F66D0F",
                 color: "white",
                 height: 50,
-                width: "220px",
-              }}
-            >
-              Download
-            </Button>
-            <Button
-              block
-              style={{
-                background: "#F66D0F",
-                color: "white",
-                height: 50,
-                width: "220px",
+                
+                border: "none",
+                borderRadius:"8px"
               }}
             >
               Print
-            </Button>
+            </button>
           </div>
         </div>
       )}
@@ -757,7 +776,7 @@ const DrawerPage = (props) => {
 
       {props.appointmentList && (
         <div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div  ref={props?.componentRef} style={{ display: "flex", gap: "15px" }}>
             <div className={styles.appointmentMainContainer}>
               <div>
                 <h3>Appointment Information</h3>
@@ -771,12 +790,12 @@ const DrawerPage = (props) => {
                     <p>Payment Amount :</p>
                   </div>
                   <div className={styles.appointmentInfoRight}>
-                    <p>Hair Force Salon</p>
+                    <p>{props?.appointmentList?.provider?.business_name}</p>
                     <p>Haircut, Shaving</p>
-                    <p>12:00 PM</p>
-                    <p>31 aug 2023</p>
-                    <p>Debit Card</p>
-                    <p>$ 200</p>
+                    <p>{props?.appointmentList?.time}</p>
+                    <p>{moment(props?.appointmentList?.date).format('ll')}</p>
+                    <p> {props?.appointmentList?.payment_type ? props?.appointmentList?.payment_type : "Not Found"}</p>
+                    <p>$ {props?.appointmentList?.price}</p>
                   </div>
                 </div>
               </div>
@@ -788,7 +807,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png"
+                        src={`${url}/${props?.appointmentList?.user?.image}`}
                         alt=""
                       />
                     </div>
@@ -799,9 +818,9 @@ const DrawerPage = (props) => {
                         <p>Address :</p>
                       </div>
                       <div className={styles.userInfoRight}>
-                        <p>Brooklyn Simmons</p>
-                        <p>(319) 555-0115</p>
-                        <p>6391 Elgin St. Celina</p>
+                        <p>{props?.appointmentList?.user?.name}</p>
+                        <p>{props?.appointmentList?.user?.phone_number}</p>
+                        <p>{props?.appointmentList?.user?.address}</p>
                       </div>
                     </div>
                   </div>
@@ -815,7 +834,7 @@ const DrawerPage = (props) => {
                     <div>
                       {" "}
                       <img
-                        src="https://i.ibb.co/9h5XjNp/Rectangle-2519-1.png"
+                        src={`${url}/images/${props?.appointmentList?.provider?.cover_photo}`}
                         alt=""
                       />
                     </div>
@@ -826,9 +845,9 @@ const DrawerPage = (props) => {
                         <p>Address :</p>
                       </div>
                       <div className={styles.userInfoRight}>
-                        <p>Robert Fox</p>
-                        <p>(205) 555-0100</p>
-                        <p>New Jersey 45463</p>
+                        <p>{props?.appointmentList?.provider?.business_name}</p>
+                        <p>{props?.appointmentList?.provider?.phone_number ? props?.appointmentList?.provider?.phone_number : "(205) 555-0100"}</p>
+                        <p>{props?.appointmentList?.provider?.address}</p>
                       </div>
                     </div>
                   </div>
@@ -836,51 +855,63 @@ const DrawerPage = (props) => {
               </div>
             </div>
           </div>
+
           <div
             style={{
+              width: "100%",
+              position: "absolute",
+              bottom: 30,
               display: "flex",
               gap: 20,
-              position: "absolute",
-              bottom: 10,
+              left: 0,
+              paddingLeft: "20px",
+              paddingRight: "20px"
             }}
           >
-            <Button
-              block
+            <button
+              onClick={()=>handleCancel(props?.appointmentList?.id)}
               style={{
-                background: "#F66D0F",
+                width: "100%",
+                background: "transparent",
                 color: "white",
                 height: 50,
-                width: "220px",
+                cursor: "pointer",
+                borderRadius:"8px",
+                border: "1px solid #F66D0F"
               }}
             >
-              Cancel Appointment
-            </Button>
-            <Button
-              block
+              Cancel Appoinments
+            </button>
+
+            <button
+              onClick={handlePrint}
               style={{
+                width: "100%",
                 background: "#F66D0F",
                 color: "white",
                 height: 50,
-                width: "220px",
+                cursor: "pointer",
+                border: "none",
+                borderRadius:"8px"
               }}
             >
               Print
-            </Button>
+            </button>
           </div>
         </div>
       )}
 
       {props.userData && (
         <div className={styles.userContainer}>
-          <div>
-            <h3>User Info</h3>
+          <div ref={props?.componentRef}>
+            <h3 >User Info</h3>
             <div
               className={styles.userInfo}
-              style={{ display: "flex", justifyContent: "space-between" }}
+              style={{ display: "flex", justifyContent: "space-between", }}
             >
-              <div>
+              <div style={{marginTop : "30px" }}>
                 {" "}
-                <img src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png" alt="" />
+                <img src={`${url}/${props?.userData?.image}`} alt="" />
               </div>
               <div className={styles.infoUserData}>
                 <div className={styles.userInfoLeftUserData}>
@@ -898,16 +929,67 @@ const DrawerPage = (props) => {
               </div>
             </div>
           </div>
+
+          <div
+            style={{
+              width: "100%",
+              position: "absolute",
+              bottom: 30,
+              left: 0,
+              paddingLeft: "20px",
+              paddingRight: "20px",
+              display: "flex",
+              alignItems: "center",
+              gap: "30px"
+            }}
+          >
+
+            <button
+              onClick={()=>handleBlock(props?.userData?.id)}
+              style={{
+                width: "100%",
+                background: "transparent",
+                border: "1px solid #F66D0F",
+                color: "white",
+                height: 50,
+                cursor: "pointer",
+                borderRadius:"8px"
+              }}
+            >
+              Block
+            </button>
+
+
+            <button
+              onClick={handlePrint}
+              style={{
+                width: "100%",
+                background: "#F66D0F",
+                color: "white",
+                height: 50,
+                cursor: "pointer",
+                border: "none",
+                borderRadius:"8px"
+              }}
+            >
+              Print
+            </button>
+          </div>
         </div>
       )}
+
+
       {props.salonData && (
         <div className={styles.userContainer}>
-          <div>
-            <h3>Salon Info</h3>
-            <div className={styles.userInfo} style={{ display: "flex" }}>
+          <div ref={props?.componentRef}>
+            <h3 >Salon Info</h3>
+            <div className={styles.userInfo} style={{ display: "flex", marginTop: "12px" }}>
               <div>
                 {" "}
-                <img src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png" alt="" />
+                <img 
+                  src={`${url}/images/${props?.salonData?.cover_photo}`}
+                  alt="" 
+                />
               </div>
               <div className={styles.infoUserData}>
                 <div className={styles.salonInfoLeftUserData}>
@@ -917,37 +999,65 @@ const DrawerPage = (props) => {
                   <p>Services :</p>
                 </div>
                 <div className={styles.salonInfoRightUserData}>
-                  <p>Apple Green</p>
-                  <p>(+880) 1711 145865</p>
-                  <p>6391 Elgin St. Celina</p>
-                  <p>Haircut, shaving</p>
+                  <p>{props?.salonData?.business_name}</p>
+                  <p> {props?.salonData?.contact_number ? props?.salonData?.contact_number : "(+880) 1711 145865"}</p>
+                  <p>{props?.salonData?.address}</p>
+                  <p>{props?.salonData?.service ? props?.salonData?.service : "Haircut, shaving"}</p>
                 </div>
               </div>
             </div>
           </div>
+
+          <div
+            style={{
+              width: "100%",
+              position: "absolute",
+              bottom: 30,
+              left: 0,
+              paddingLeft: "20px",
+              paddingRight: "20px"
+            }}
+          >
+            <button
+              onClick={handlePrint}
+              style={{
+                width: "100%",
+                background: "#F66D0F",
+                color: "white",
+                height: 50,
+                cursor: "pointer",
+                border: "none",
+                borderRadius:"8px"
+              }}
+            >
+              Print
+            </button>
+          </div>
+
         </div>
       )}
+
       {props.providerData && (
         <div className={styles.userContainer}>
-          <div style={{ marginBottom: "30px" }}>
+          <div ref={props?.componentRef} style={{ marginBottom: "30px" }}>
             <h3>Provider Info</h3>
             <div className={styles.userInfo} style={{ display: "flex" }}>
               <div>
                 {" "}
-                <img src="https://i.ibb.co/x7CMg2K/Rectangle-2519.png" alt="" />
+                <img src={`${url}/images/${props.providerData?.cover_photo}`} alt="" />
               </div>
               <div className={styles.infoUserData}>
                 <div className={styles.salonInfoLeftUserData}>
                   <p>Provider name :</p>
+                  <p>Salon name :</p>
                   <p>Contact no :</p>
                   <p>Address :</p>
-                  <p>Services :</p>
                 </div>
                 <div className={styles.salonInfoRightUserData}>
-                  <p>Apple Green</p>
-                  <p>(+880) 1711 145865</p>
-                  <p>6391 Elgin St. Celina</p>
-                  <p>Haircut, shaving</p>
+                  <p>{props.providerData?.user?.name}</p>
+                  <p>{props.providerData?.business_name}</p>
+                  <p>{props.providerData?.user?.phone_number ? props.providerData?.user?.phone_number : "Not Found"}</p>
+                  <p>{props.providerData?.address}</p>
                 </div>
               </div>
             </div>
@@ -960,7 +1070,7 @@ const DrawerPage = (props) => {
                 marginTop: "50x",
               }}
             >
-              <h3>Current package:</h3> <h3>Gold</h3>
+              <h3>Current package:</h3> <h3>{props.providerData?.package[0]?.package?.package_name}</h3>
             </div>
           </div>
           <div>
@@ -971,8 +1081,8 @@ const DrawerPage = (props) => {
                 gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
               }}
             >
-              {[1, 2, 3, 4, 5].map((item, index) => (
-                <div key={index}>
+              {props?.providerData?.service?.map((item, index) => (
+                <div key={index} >
                   <div
                     style={{
                       padding: "10px",
@@ -986,8 +1096,8 @@ const DrawerPage = (props) => {
                     }}
                   >
                     <img
-                      style={{ width: "155px" }}
-                      src="https://i.ibb.co/xz27ZPN/Rectangle-2059.png"
+                      style={{ width: "155px", height:"105px" }}
+                      src={`${url}/images/${item?.gallary_photo[0]}`}
                       alt=""
                     />
                     <p
@@ -997,7 +1107,7 @@ const DrawerPage = (props) => {
                         color: "#F66D0F",
                       }}
                     >
-                      Spa
+                      {item?.service_name}
                     </p>
                   </div>
                 </div>
@@ -1016,17 +1126,21 @@ const DrawerPage = (props) => {
               bottom: 10,
             }}
           >
-            <Button
-              block
+            <button
+              onClick={()=>handleBlockProvider(props?.providerData?.user_id)}
               style={{
-                background: "#F66D0F",
+                background: "transparent",
                 color: "white",
                 height: 50,
                 width: "370px",
+                border: "1px solid #F66D0F",
+                borderRadius: "8px",
+                fontWeight: 600,
+                cursor: "pointer"
               }}
             >
-              Cancel Appointment
-            </Button>
+              Block
+            </button>
             <Button
               block
               style={{
@@ -1041,9 +1155,10 @@ const DrawerPage = (props) => {
           </div>
         </div>
       )}
+
       {props.reviewsData && (
         <div className={styles.userContainer}>
-          <div style={{ marginBottom: "30px" }}>
+          <div ref={props?.componentRef} style={{ marginBottom: "30px" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
                 <div
@@ -1059,6 +1174,7 @@ const DrawerPage = (props) => {
                     strokeColor={"#F66D0F"}
                   />
                 </div>
+
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "5px" }}
                 >
@@ -1072,7 +1188,9 @@ const DrawerPage = (props) => {
                     strokeColor={"#F66D0F"}
                   />
                 </div>
+
                 <div
+
                   style={{ display: "flex", alignItems: "center", gap: "5px" }}
                 >
                   <p>3</p>
@@ -1085,6 +1203,7 @@ const DrawerPage = (props) => {
                     strokeColor={"#F66D0F"}
                   />
                 </div>
+
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "5px" }}
                 >
@@ -1098,6 +1217,7 @@ const DrawerPage = (props) => {
                     strokeColor={"#F66D0F"}
                   />
                 </div>
+
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "5px" }}
                 >
@@ -1112,12 +1232,13 @@ const DrawerPage = (props) => {
                   />
                 </div>
               </div>
+
               <div style={{ marginTop: "50px" }}>
-                <h1 style={{ fontSize: "36px", textAlign: "right" }}>4.2</h1>
+                <h1 style={{ fontSize: "36px", textAlign: "right" }}>{props.reviewsData?.average_rating.toFixed(2)}</h1>
                 <Rate
                   style={{ color: "#F66D0F" }}
                   disabled
-                  defaultValue={4.5}
+                  defaultValue={props.reviewsData?.total_review}
                 />
                 <p
                   style={{
@@ -1126,144 +1247,125 @@ const DrawerPage = (props) => {
                     marginTop: "5px",
                   }}
                 >
-                  52 Reviews
+                  {props.reviewsData?.total_review} Reviews
                 </p>
               </div>
             </div>
+
             <div>
-              <div style={{ marginTop: "50px" }}>
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <img
-                    style={{ borderRadius: "100%" }}
-                    src="https://i.ibb.co/dLsxtGJ/logo-3.png"
-                    alt=""
-                  />
-                  <div>
-                    <p>Courtney Henry</p>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "5px",
-                      }}
-                    >
-                      <Rate
-                        style={{ color: "#F66D0F" }}
-                        disabled
-                        defaultValue={4.5}
+              {
+                props?.reviewsData?.service_details_with_user?.map((review)=>
+                
+                  <div style={{ marginTop: "50px",  }}>
+                    <div style={{ display: "flex", gap: "10px" }}>
+                      <img
+                        style={{ borderRadius: "100%", width:"50px", height:"50px" }}
+                        src={`${url}/${review?.user?.image}`}
+                        alt=""
                       />
-                      <p>2 mins ago</p>
+                      <div>
+                        <p>{review?.user?.name}</p>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "5px",
+                          }}
+                        >
+                          <Rate
+                            style={{ color: "#F66D0F" }}
+                            disabled
+                            defaultValue={4.5}
+                          />
+                          <p>{moment(review?.created_at).startOf('hour').fromNow()}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <p style={{ padding: "20px 0px" }}>
+                        {review?.review}
+                      </p>
+                      <p
+                        onClick={()=>(handleReviewDelete(review?.id)) }
+                        style={{
+                          color: "#FC4400",
+                          cursor: "pointer",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        Delete Review
+                      </p>
                     </div>
                   </div>
-                </div>
-                <div>
-                  <p style={{ padding: "20px 0px" }}>
-                    Consequat velit qui adipisicing sunt do rependerit ad
-                    laborum tempor ullamco exercitation. Ullamco tempor
-                    adipisicing et voluptate duis sit esse aliqua
-                  </p>
-                  <p
-                    style={{
-                      color: "#FC4400",
-                      cursor: "pointer",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    Delete Review
-                  </p>
-                </div>
-              </div>
-              <hr />
-              <div style={{ marginTop: "50px" }}>
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <img
-                    style={{ borderRadius: "100%" }}
-                    src="https://i.ibb.co/dLsxtGJ/logo-3.png"
-                    alt=""
-                  />
-                  <div>
-                    <p>Courtney Henry</p>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "5px",
-                      }}
-                    >
-                      <Rate
-                        style={{ color: "#F66D0F" }}
-                        disabled
-                        defaultValue={4.5}
-                      />
-                      <p>2 mins ago</p>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <p style={{ padding: "20px 0px" }}>
-                    Consequat velit qui adipisicing sunt do rependerit ad
-                    laborum tempor ullamco exercitation. Ullamco tempor
-                    adipisicing et voluptate duis sit esse aliqua
-                  </p>
-                  <p
-                    style={{
-                      color: "#FC4400",
-                      cursor: "pointer",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    Delete Review
-                  </p>
-                </div>
-              </div>
-              <hr />
-              <div style={{ marginTop: "50px" }}>
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <img
-                    style={{ borderRadius: "100%" }}
-                    src="https://i.ibb.co/dLsxtGJ/logo-3.png"
-                    alt=""
-                  />
-                  <div>
-                    <p>Courtney Henry</p>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "5px",
-                      }}
-                    >
-                      <Rate
-                        style={{ color: "#F66D0F" }}
-                        disabled
-                        defaultValue={4.5}
-                      />
-                      <p>2 mins ago</p>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <p style={{ padding: "20px 0px" }}>
-                    Consequat velit qui adipisicing sunt do rependerit ad
-                    laborum tempor ullamco exercitation. Ullamco tempor
-                    adipisicing et voluptate duis sit esse aliqua
-                  </p>
-                  <p
-                    style={{
-                      color: "#FC4400",
-                      cursor: "pointer",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    Delete Review
-                  </p>
-                </div>
-              </div>
+                )
+
+
+
+              }
+              
         
             </div>
           </div>
         </div>
       )}
+
+      {
+        <Modal
+          title={false}
+          centered
+          open={open}
+          onCancel={() => setOpen(false)}
+          width={510}
+          footer={[]}
+          
+        >
+          <div style={{
+            backgroundColor : "#FC4400",
+            width:"135px",
+            height:"135px",
+            borderRadius:"100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent:"center",
+            margin: "auto"
+          }}>
+            <HiTrash size={68} color="#FFFFFF" />
+          </div>
+          <h4 style={{marginBottom: "30px", fontSize:"24px", marginTop: "30px"}}>You sure want to delete this review?</h4>
+          <div style={{display: "flex", gap: "20px"}}>
+            <button 
+              onClick={handleDelete}
+              style={{
+                width: "100%",
+                height: "52px",
+                backgroundColor: "#F66D0F",
+                color: "white",
+                fontSize: "18px",
+                fontWeight: 600,
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer",
+
+              }}
+            >Yes</button>
+            <button 
+              onClick={()=>setOpen(false)}
+              style={{
+                width: "100%",
+                height: "52px",
+                cursor: "pointer",
+                backgroundColor: "transparent",
+                color: "#F66D0F",
+                fontSize: "18px",
+                fontWeight: 600,
+                borderRadius: "8px",
+                border: "1px solid #F66D0F"
+              }}
+            >No</button>
+          </div>
+        </Modal>
+      }
     </>
   );
 };

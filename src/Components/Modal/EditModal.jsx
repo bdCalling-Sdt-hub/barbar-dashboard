@@ -1,37 +1,52 @@
 import React, { useState } from 'react'
 import { Button, Upload, Modal} from "antd";
 import { CiCamera } from "react-icons/ci";
-import { baseURL } from '../../Config';
+import { baseURL, url } from '../../Config';
+import Swal from "sweetalert2"
 const token = localStorage.getItem('access_token');
 
 const EditModal = ({
     openEditModel, 
     setOpenEditModel,
     setOpenDeleteModal,
-    category_name,
-    id
+    setRefresh,
+    category
 }) => {
     const [imageUrl, setImageUrl] = useState();
+    const { id, category_name, category_image } = category;
+    const [img, setImg] = useState(`${url}/${category_image}`);
     const [name, setName] = useState(category_name);
-    const onChange = ({ fileList }) => {
-        setImageUrl(fileList[0].originFileObj);
+
+
+    const onChange = (info) => {
+        setImageUrl(info.file);
+        setImg(URL.createObjectURL(info.file.originFileObj) )
     };
     
     const handleChange= async(e)=>{
         e.preventDefault();
-
-        const value={
-            category_name : name,
-            category_image: imageUrl
-        }
-        const response = await baseURL.post(`/update-category/${id}`, value, {
+        const formData = new FormData();
+        formData.append('category_name', name ? name : category_name);
+        formData.append('category_image', imageUrl?.originFileObj ? imageUrl?.originFileObj : `${url}/${category_image}`);
+    
+        const response = await baseURL.post(`/update-category/${id}`, formData, {
             headers: {
                 authorization: `Bearer ${token}`
             }
         });
+        console.log(response);
         if(response?.status === 200){
-            setOpenEditModel(false);
-            setRefresh('done')
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Category Updated Successfully",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(()=>{
+                setOpenEditModel(false);
+                setRefresh('done')
+            })
+            
         }
     }
 
@@ -39,6 +54,11 @@ const EditModal = ({
         setOpenEditModel(false);
         setOpenDeleteModal(true);
     }
+
+    /* const initialFormValues = {
+        category_name: profile?.email,
+        category_image: profile?.fullName,
+    }; */
     return (
         <Modal
             centered
@@ -87,17 +107,19 @@ const EditModal = ({
                             showUploadList={false}
                             action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
                             onChange={onChange}
-                            
                         >
                             {
-                                imageUrl
+                                img
                                 ? 
                                 (
                                     <img
-                                        src={imageUrl}
+                                        src={img}
                                         alt="avatar"
                                         style={{
-                                        width: "100%",
+                                            width: "100%",
+                                            height: "100%",
+                                            borderRadius: "8px",
+                                            
                                         }}
                                     />
                                 ) 

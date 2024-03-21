@@ -1,10 +1,10 @@
 import { Button, Drawer, Space, Table, Typography } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineEye, AiOutlinePrinter } from "react-icons/ai";
 import { CloseOutlined } from "@ant-design/icons";
 import DrawerPage from "../../DrawerPage/DrawerPage";
-
-
+import { baseURL } from "../../../Config";
+import moment from "moment"
 const { Title, Text } = Typography;
 
 const data = [
@@ -50,7 +50,10 @@ const data = [
   },
 ];
 
-function ReviewsTable() {
+function ReviewsTable({search}) {
+  const [data, setData] = useState()
+  const [page, setPage] = useState()
+  const [reFresh, setRefresh] = useState("")
     const [isDrawerVisible, setIsDrawerVisible] = useState(false);
     const [reviewsData, setReviewsData] = useState(null);
   
@@ -58,73 +61,49 @@ function ReviewsTable() {
       setIsDrawerVisible(true);
       setReviewsData(record);
     };
-  
+  if(reFresh){
+    setTimeout(()=>{
+      setRefresh("")
+    }, [1500])
+  }
     const closeDrawer = () => {
       setIsDrawerVisible(false);
       setReviewsData(null);
     };
-  let token = localStorage.getItem("token");
-
-  function formatDateString(inputDateString) {
-    const inputDate = new Date(inputDateString);
-
-    if (isNaN(inputDate)) {
-      return "Invalid Date";
-    }
-
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    const day = inputDate.getDate();
-    const month = months[inputDate.getMonth()];
-    const year = inputDate.getFullYear();
-
-    let hours = inputDate.getHours();
-    const minutes = inputDate.getMinutes();
-    const ampm = hours >= 12 ? "pm" : "am";
-
-    if (hours > 12) {
-      hours -= 12;
-    }
-
-    return `${day} ${month}, ${year}-${hours}:${
-      minutes < 10 ? "0" : ""
-    }${minutes}${ampm}`;
-  }
 
   const columns = [
     {
-      title: "USER NAME",
-      dataIndex: "userName",
-      key: "userName",
+      title: "PROVIDER NAME",
+      dataIndex: "business_name",
+      key: "business_name",
+      render: (_, record) => (
+        <p>{record?.salon?.business_name}</p>
+      )
     },
     {
       title: "EMAIL",
       dataIndex: "email",
       key: "email",
       responsive: ["md"],
+      render: (_, record) => (
+        <p>{record?.salon?.user?.email}</p>
+      )
     },
     {
       title: "CONTACT",
       dataIndex: "contact",
       key: "contact",
+      render: (_, record) => (
+        <p>{record?.salon?.user?.phone_number}</p>
+      )
     },
     {
       title: "DATE",
       dataIndex: "date",
       key: "date",
+      render: (_, record) => (
+        <p>{moment(record?.salon?.user?.created_at).format('L')}</p>
+      )
     },
     {
       title: "ACTIONS",
@@ -132,13 +111,6 @@ function ReviewsTable() {
       key: "actions",
       responsive: ["lg"],
       render: (_, record) => (
-        <div style={{}}>
-          <Button
-            type="text"
-            style={{ marginRight: "10px", paddingBottom: "35px" }}
-          >
-            <AiOutlinePrinter style={{ fontSize: "30px", color: "white" }} />
-          </Button>
           <Button
               onClick={() => showDrawer(record)}
             type="text"
@@ -146,20 +118,59 @@ function ReviewsTable() {
           >
             <AiOutlineEye style={{ fontSize: "30px", color: "white" }} />
           </Button>
-        </div>
       ),
     },
   ];
+
+  // data retraive for all Appointmensts
+  useEffect(()=>{
+    async function getAPi(){
+      const response = await baseURL.get(`/review?name=${search}&page=${page}`,{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      setData(response?.data);
+    }
+    getAPi();
+  }, [page, search, reFresh !== ""]);
+  
+  const handlePageChange=(page)=>{
+    setPage(page);
+  }
+
+
   return (
     <div>
-      <Table columns={columns} dataSource={data} />
+      <Table 
+        columns={columns} 
+        dataSource={data?.providers_data}
+        pagination={{
+          pageSize: data?.per_page,
+          showSizeChanger: false,
+          total: data?.total,
+          current:  data?.current_page,
+          showTotal: (total, range) => (
+            <span style={{
+              color:"#F66D0F",
+              fontSize: "18px",
+              fontWeight: "600",
+              textAlign: "left"
+            }}>
+              {`SHOWING ${range[0]}-${range[1]} of ${total} items`}
+            </span>
+          ),
+          onChange: handlePageChange,
+        }} 
+      />
 
       <Drawer
         title={
           <div>
             <Typography>
               <Title level={5} strong>
-              Provider name- Jane Cooper
+              Provider name- {reviewsData?.salon?.business_name}
               </Title>
               <Text>See all reviews of this provider</Text>
             </Typography>
@@ -189,7 +200,7 @@ function ReviewsTable() {
           </Space>
         }
       >
-        {reviewsData && <DrawerPage reviewsData={reviewsData} />}
+        {reviewsData && <DrawerPage setRefresh={setRefresh} reviewsData={reviewsData} />}
       </Drawer>
     </div>
   );

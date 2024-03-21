@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button, Upload, Modal} from "antd";
 import { CiCamera } from "react-icons/ci";
 import { baseURL } from '../../Config';
+import Swal from "sweetalert2"
 const token = localStorage.getItem('access_token');
 
 const CategoryChangeModal = ({
@@ -9,27 +10,37 @@ const CategoryChangeModal = ({
     setOpenChangeModel,
     setRefresh
 }) => {
-    const [imageUrl, setImageUrl] = useState();
+    const [imageUrl, setImageUrl] = useState()
+    const [img, setImg] = useState();
     const [name, setName] = useState("");
-    const onChange = ({ fileList }) => {
-        setImageUrl(fileList[0].originFileObj);
+
+    const onChange = (info) => {
+        setImageUrl(info.file);
+        setImg(URL.createObjectURL(info.file.originFileObj) )
     };
     
     const handleChange= async(e)=>{
         e.preventDefault();
-
-        const value={
-            category_name : name,
-            category_image: imageUrl
-        }
-        const response = await baseURL.post(`/add-category`, value, {
+        const formData = new FormData();
+        formData.append('category_name', name);
+        formData.append('category_image', imageUrl.originFileObj);
+        const response = await baseURL.post(`/add-category`, formData, {
             headers: {
                 authorization: `Bearer ${token}`
             }
         });
         if(response?.status === 200){
-            setOpenChangeModel(false);
-            setRefresh('done')
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Category Added Successfully",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(()=>{
+                setOpenChangeModel(false);
+                setRefresh('done')
+            })
+            
         }
       }
     return (
@@ -86,10 +97,12 @@ const CategoryChangeModal = ({
                                 ? 
                                 (
                                     <img
-                                        src={imageUrl}
+                                        src={img}
                                         alt="avatar"
                                         style={{
-                                        width: "100%",
+                                            width: "100%",
+                                            height: "190px",
+                                            borderRadius: "8px"
                                         }}
                                     />
                                 ) 

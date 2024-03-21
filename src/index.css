@@ -51,3 +51,50 @@ body {
   width: 100% !important;
   height: 190px !important;
 }
+.swal2-confirm {
+  background-color: #00A36C !important;
+}
+.swal2-cancel {
+  background-color: #ff0000 !important;
+}
+
+
+.ant-pagination-prev, .ant-pagination-next {
+  /* background-color: #1890ff; */
+  color: white !important;
+  border-color: transparent !important;
+}
+
+/* Optionally, you can customize the size of the arrows */
+.ant-pagination-prev-icon, .ant-pagination-next-icon {
+  font-size: 18px; /* Arrow size */
+}
+.ant-pagination .ant-pagination-next .ant-pagination-item-link, .ant-pagination .ant-pagination-disabled .ant-pagination-item-link{
+  color: white !important;
+  border-color: none !important;
+}
+.ant-pagination .ant-pagination-item a{
+  background-color: #F66D0F  !important; /* Background color */
+  color: white !important;
+  border-radius: 8px !important;
+}
+.ant-pagination .ant-pagination-item-active {
+  border-color: transparent !important; /* Remove border color */
+}
+
+.ant-pagination .ant-pagination-item-active{
+  border-color: none !important;
+}
+
+:where(.css-dev-only-do-not-override-17a39f8).ant-badge .ant-badge-count{
+  background-color: #F66D0F !important;
+  box-shadow: none !important;
+}
+.ant-input-affix-wrapper {
+  background: transparent !important;
+  color: black !important;
+}
+
+.ant-input-affix-wrapper>input.ant-input:focus{
+  color: black !important;
+}

@@ -1,19 +1,20 @@
 import { Button, Drawer, Space, Table, Typography } from "antd";
-import React, { useEffect, useState } from "react";
-import { AiOutlinePrinter, AiOutlineEye } from "react-icons/ai";
-import { LiaSaveSolid } from "react-icons/lia";
+import React, { useEffect, useRef, useState } from "react";
+import { AiOutlineEye } from "react-icons/ai";
 import DrawerPage from "../../../Components/DrawerPage/DrawerPage";
 const { Title, Text } = Typography;
 import { CloseOutlined } from "@ant-design/icons";
 import { baseURL } from "../../../Config";
 import moment from "moment";
-const token = localStorage.getItem('access_token');
+import Swal from "sweetalert2"
+import { useReactToPrint } from "react-to-print";
 
 const UserInfo = ({search}) => {
   const [users, setUsers] = useState();
   const [searchUsers, setSearchUsers] = useState([])
-  const [page, setPage] = useState(1); // Current page number
-  const pageSize = 12;
+  const [page, setPage] = useState(1);
+  const [reFresh, setRefresh] = useState(1);
+  const componentRef= useRef();
 
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [userData, setuserData] = useState(null);
@@ -62,13 +63,6 @@ const UserInfo = ({search}) => {
       key: "printView",
       responsive: ["lg"],
       render: (_, record) => (
-        <div style={{}}>
-          <Button
-            type="text"
-            style={{ marginRight: "10px", paddingBottom: "35px" }}
-          >
-            <AiOutlinePrinter style={{ fontSize: "30px", color: "white" }} />
-          </Button>
           <Button
             onClick={() => showDrawer(record)}
             type="text"
@@ -76,11 +70,15 @@ const UserInfo = ({search}) => {
           >
             <AiOutlineEye style={{ fontSize: "30px", color: "white" }} />
           </Button>
-        </div>
       ),
     },
   ];
 
+  if(reFresh){
+    setTimeout(()=>{
+      setRefresh("")
+    }, [1500])
+  }
   // data retraive for all userss
   useEffect(()=>{
     async function getAPi(){
@@ -90,10 +88,10 @@ const UserInfo = ({search}) => {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      setUsers(response?.data);
+      setUsers(response?.data?.data);
     }
     getAPi();
-  }, [page]);
+  }, [page, reFresh !== ""]);
 
   // data retraive for search userss
   useEffect(()=>{
@@ -104,8 +102,7 @@ const UserInfo = ({search}) => {
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
         }
       });
-      console.log(response?.data?.data);
-      setSearchUsers(response?.data);
+      setUsers(response?.data?.data);
     }
     getAPi();
   }, [search]);
@@ -115,16 +112,72 @@ const UserInfo = ({search}) => {
     setPage(page);
   };
 
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    pageStyle: `
+    @media print {
+      body {
+        font-size: 12px;
+        display: "flex",
+      }
+    }
+  `
+  });
+
+  const handleBlock=async(id)=>{
+    Swal.fire({
+      title: "Do you want to Block this User?",
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Yes",
+      denyButtonText: `No`,
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+        const response = await baseURL.get(`/delete-user/${id}`,{
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          }
+        });
+        if(response?.status === 200){    
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: response?.data?.message,
+            showConfirmButton: false,
+            timer: 1500
+          }).then((result) => {
+            setIsDrawerVisible(false);
+            setuserData(null);
+            setRefresh('done')
+          });
+        }
+      }
+    });
+
+
+  }
+
   return (
     <>
       <Table
         columns={columns}
-        dataSource={searchUsers?.data ? searchUsers?.data : users?.data?.data}
+        dataSource={users?.data}
         pagination={{
-          pageSize: searchUsers?.per_page ? searchUsers?.per_page : users?.per_page,
+          pageSize: users?.per_page,
           showSizeChanger: false,
-          total: searchUsers?.total ? searchUsers?.total :  users?.total,
-          current: searchUsers?.current_page ? searchUsers?.current_page : users?.current_page,
+          total: users?.total,
+          current: users?.current_page,
+          showTotal: (total, range) => (
+            <span style={{
+              color:"#F66D0F",
+              fontSize: "18px",
+              fontWeight: "600",
+              textAlign: "left"
+            }}>
+              {`SHOWING ${range[0]}-${range[1]} of ${total} items`}
+            </span>
+          ),
           onChange: handlePageChange,
         }}
       />
@@ -164,7 +217,7 @@ const UserInfo = ({search}) => {
           </Space>
         }
       >
-        {userData && <DrawerPage userData={userData} />}
+        {userData && <DrawerPage handleBlock={handleBlock} handlePrint={handlePrint} componentRef={componentRef} userData={userData} />}
       </Drawer>
     </>
   );

@@ -1,97 +1,42 @@
 import { Table } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { baseURL } from "../../../Config";
+import moment from "moment";
+import Swal from "sweetalert2";
 
-const data = [
-  {
-    key: "1",
-    browser: "Chrome",
-    operatingSystem: "Windows 10",
-    createdAt: "22/05/2021",
-    actions: "",
-  },
-  {
-    key: "2",
-    browser: "Chrome",
-    operatingSystem: "Windows 10",
-    createdAt: "22/05/2021",
-    actions: "",
-  },
-  {
-    key: "3",
-    browser: "Chrome",
-    operatingSystem: "Windows 10",
-    createdAt: "22/05/2021",
-    actions: "",
-  },
- 
-];
 
 const LoginActivityTable = () => {
-  let token = localStorage.getItem("token");
-
-  function formatDateString(inputDateString) {
-    const inputDate = new Date(inputDateString);
-
-    if (isNaN(inputDate)) {
-      return "Invalid Date";
-    }
-
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    const day = inputDate.getDate();
-    const month = months[inputDate.getMonth()];
-    const year = inputDate.getFullYear();
-
-    let hours = inputDate.getHours();
-    const minutes = inputDate.getMinutes();
-    const ampm = hours >= 12 ? "pm" : "am";
-
-    if (hours > 12) {
-      hours -= 12;
-    }
-
-    return `${day} ${month}, ${year}-${hours}:${
-      minutes < 10 ? "0" : ""
-    }${minutes}${ampm}`;
-  }
-
-  // const handelSignOut = (id) => {
-  //   Swal.fire({
-  //     title: "Do you want to Sign Out this device?",
-  //     showDenyButton: true,
-  //     showCancelButton: false,
-  //     confirmButtonText: "Yes",
-  //     denyButtonText: `No`,
-  //   }).then((result) => {
-  //     /* Read more about isConfirmed, isDenied below */
-  //     if (result.isConfirmed) {
-  //       baseAxios.delete(`/api/activities/${id}`, {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           authorization: `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       // page reload here
-  //       window.location.reload();
-  //     } else if (result.isDenied) {
-  //       Swal.fire("Ok", "", "info");
-  //     }
-  //   });
-  // };
+  const [data, setData] = useState();
+  const [refresh, setRefresh] = useState("")
+  const handelSignOut = (id) => {
+    Swal.fire({
+      title: "Do you want to Sign Out this device?",
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Yes",
+      denyButtonText: `No`,
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+        const response = await baseURL.get(`/sign-out-login/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+        if(response?.status === 200){    
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Sign Out Device",
+            showConfirmButton: false,
+            timer: 1500
+          }).then((result) => {
+            setRefresh('done')
+          });
+        }
+      }
+    });
+  };
 
   const columns = [
     {
@@ -101,19 +46,20 @@ const LoginActivityTable = () => {
     },
     {
       title: "DEVICE",
-      dataIndex: "operatingSystem",
-      key: "operatingSystem",
+      dataIndex: "device_name",
+      key: "device_name",
       responsive: ["md"],
+      render: (_, record) => (
+        <p>{record?.device_name}</p>
+      )
     },
     {
       title: "TIME",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      // render: (_, record) => (
-      //   <div >
-      //     {formatDateString(record.createdAt)}
-      //   </div>
-      // ),
+      dataIndex: "login_time",
+      key: "login_time",
+      render: (_, record) => (
+        <p>{moment(record?.login_time).format('lll')}</p>
+      ),
     },
     {
       title: "ACTIONS",
@@ -123,7 +69,7 @@ const LoginActivityTable = () => {
       render: (_, record) => (
         <div >
           <button
-            // onClick={(e) => handelSignOut(record._id)}
+            onClick={(e) => handelSignOut(record.id)}
             style={{
               background: "linear-gradient(180deg, #FF2340 0%, #AC0016 100%)",
               borderRadius: "5px",
@@ -140,11 +86,33 @@ const LoginActivityTable = () => {
     },
   ];
 
+  // data retraive for all Appointmensts
+  useEffect(()=>{
+    async function getAPi(){
+      const response = await baseURL.get(`/login-activity`,{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      setData(response?.data?.data);
+    }
+    getAPi();
+  }, [refresh !== ""]);
+
+  
+  if(refresh){
+    setTimeout(() => {
+      setRefresh('')
+    }, 1500);
+  }
+
   return (
     <div>
       <Table
         columns={columns}
         dataSource={data}
+        pagination={false}
       />
     </div>
   );

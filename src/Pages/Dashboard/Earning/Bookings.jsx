@@ -1,13 +1,29 @@
 import { Col, Row } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import { LiaHandHoldingUsdSolid } from "react-icons/lia";
 import style from "./Earning.module.css";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import BookingsHistoryTable from "./BookingsHistoryTable";
+import { baseURL } from "../../../Config";
 
 function Bookings() {
-  const location = useLocation();
+  const [data, setData] = useState();
+
+  useEffect(()=>{
+    async function getAPi(){
+      const response = await baseURL.get('/booking-complete',{
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+      });
+      
+      setData(response?.data);
+    }
+    getAPi();
+  }, []);
+  
 
   return (
     <div style={{ padding: "0px 50px" }}>
@@ -29,7 +45,7 @@ function Bookings() {
             className={style.card}
           >
             <div>
-              <h2 className={style.cardTitle}> 110</h2>
+              <h2 className={style.cardTitle}>{data?.total_booking}</h2>
               <div className={style.statusTitle}>
                 <svg
                   width="28"
@@ -41,42 +57,42 @@ function Bookings() {
                   <path
                     d="M9.33325 2.3335V5.8335"
                     stroke="white"
-                    stroke-width="1.5"
+                    strokeWidth="1.5"
                     stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M18.6667 2.3335V5.8335"
                     stroke="white"
-                    stroke-width="1.5"
+                    strokeWidth="1.5"
                     stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M8.16675 15.1665H17.5001"
                     stroke="white"
-                    stroke-width="1.5"
+                    strokeWidth="1.5"
                     stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M8.16675 19.8335H14.0001"
                     stroke="white"
-                    stroke-width="1.5"
+                    strokeWidth="1.5"
                     stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M18.6667 4.0835C22.5517 4.2935 24.5 5.77516 24.5 11.2585V18.4685C24.5 23.2752 23.3333 25.6785 17.5 25.6785H10.5C4.66667 25.6785 3.5 23.2752 3.5 18.4685V11.2585C3.5 5.77516 5.44833 4.30516 9.33333 4.0835H18.6667Z"
                     stroke="white"
-                    stroke-width="1.5"
+                    strokeWidth="1.5"
                     stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
 
@@ -93,7 +109,7 @@ function Bookings() {
             className={style.card}
           >
             <div>
-              <h2 className={style.cardTitle}>260</h2>
+              <h2 className={style.cardTitle}>{data?.booking_completed}</h2>
               <div className={style.statusTitle}>
                 <svg
                   width="26"
@@ -133,7 +149,7 @@ function Bookings() {
             className={style.card}
           >
             <div>
-              <h2 className={style.cardTitle}>1120</h2>
+              <h2 className={style.cardTitle}>{data?.booking_cancel}</h2>
               <div className={style.statusTitle}>
                 <svg
                   width="28"
