@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { MenuOutlined, SettingOutlined } from "@ant-design/icons";
-import { Button, Dropdown, Layout, Menu} from "antd";
+import { Button, Dropdown, Layout, Menu } from "antd";
 import { Divider, Badge } from "antd";
 import { GiChessQueen, GiReceiveMoney } from "react-icons/gi";
 import { MdOutlineGroupAdd } from "react-icons/md";
@@ -385,7 +385,7 @@ const Dashboard = () => {
           
             <div className={Styles.notificaton}>
               <Dropdown
-                menu={menu}
+                overlay={menu}
                 placement="bottomRight"
                 arrow={{
                   pointAtCenter: true,
