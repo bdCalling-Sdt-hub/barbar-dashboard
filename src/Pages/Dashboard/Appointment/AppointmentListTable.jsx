@@ -269,6 +269,9 @@ function AppointmentListTable({search}) {
         open={isDrawerVisible}
         width={550}
         closable={false}
+        style={{
+          background: "#364153"
+        }}
         extra={
           <Space 
           >
@@ -283,7 +286,7 @@ function AppointmentListTable({search}) {
               }}
               onClick={closeDrawer}
             >
-              <CloseOutlined color="black" />
+              <CloseOutlined color="white" />
             </button>
           </Space>
         }

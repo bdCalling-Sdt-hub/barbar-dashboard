@@ -43,7 +43,7 @@ function ProviderSubscription() {
           packages?.map((item, index)=>
             <div style={{height: "405px"}} key={index} className={styles.packageCard} >
               <div >
-                <h3>{item?.package_name}</h3>
+                <h3 style={{color: "white"}}>{item?.package_name}</h3>
               </div>
 
               <div className={styles.packageDetails}>

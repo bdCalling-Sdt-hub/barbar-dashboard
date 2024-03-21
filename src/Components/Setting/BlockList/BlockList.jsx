@@ -105,7 +105,7 @@ function BlockList() {
             <div>
               <div className={styles.info}>
                 <h3 style={{ color: "#F66D0F" }}>{item?.business_name}</h3>
-                <p>{item?.user?.email}</p>
+                <p style={{color: "white"}}>{item?.user?.email}</p>
               </div>
               <div style={{width : "100%"}} className={styles.buttonContainer}>
                 <button onClick={()=>handleApprove(item?.id)} style={{
@@ -156,6 +156,9 @@ function BlockList() {
         open={isDrawerVisible}
         width={500}
         closable={false}
+        style={{
+          background: "#364153"
+        }}
         extra={
           <Space>
             <button
@@ -170,7 +173,7 @@ function BlockList() {
               }}
               onClick={closeDrawer}
             >
-              <CloseOutlined color="black" />
+              <CloseOutlined color="white" />
             </button>
           </Space>
         }

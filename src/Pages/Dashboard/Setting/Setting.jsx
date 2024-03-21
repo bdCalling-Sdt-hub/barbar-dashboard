@@ -39,6 +39,7 @@ const Setting = () => {
       height: "45px",
       marginTop: "10px",
       backgroundColor: "#364153",
+      color: "white",
       boxShadow: "0 2px 0 rgba(0, 0, 0, 0.02)",
       borderRadius: "6px",
       padding: "4px 15px",
@@ -51,6 +52,7 @@ const Setting = () => {
       height: "45px",
       marginTop: "10px",
       backgroundColor: "#364153",
+      color:"white",
       boxShadow: "0 2px 0 rgba(0, 0, 0, 0.02)",
       borderRadius: "6px",
       padding: "4px 15px",
@@ -320,7 +322,7 @@ const Setting = () => {
             onClick={() => handleNavigate(item.link)}
             style={style.option}
           >
-            <span>{item.title}</span>
+            <span >{item.title}</span>
             <LiaAngleRightSolid fontSize={20} />
           </div>
         ))}

@@ -72,7 +72,7 @@ function Categories() {
               <div className={styles.singleCatagories}>
                 <img width={100} height={100} src={`${url}/${item?.category_image}`} alt="image" />
                   <div className={styles.editIcon}>
-                    <FaEdit  />
+                    <FaEdit color="white" />
                   </div>
                   
                 <p>{item?.category_name}</p>

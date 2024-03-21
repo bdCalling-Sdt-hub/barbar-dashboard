@@ -189,11 +189,17 @@ const ProviderInfo = ({search}) => {
             </Typography>
           </div>
         }
+        style={{
+          background: "#364153"
+        }}
         placement="right"
         onClose={closeDrawer}
         open={isDrawerVisible}
         width={850}
         closable={false}
+        style={{
+          background: "#364153"
+        }}
         extra={
           <Space>
             <button
@@ -208,7 +214,7 @@ const ProviderInfo = ({search}) => {
               }}
               onClick={closeDrawer}
             >
-              <CloseOutlined color="black" />
+              <CloseOutlined color="white" />
             </button>
           </Space>
         }

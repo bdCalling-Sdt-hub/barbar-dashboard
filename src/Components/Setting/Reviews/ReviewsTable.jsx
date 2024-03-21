@@ -181,6 +181,9 @@ function ReviewsTable({search}) {
         open={isDrawerVisible}
         width={800}
         closable={false}
+        style={{
+          background: "#364153"
+        }}
         extra={
           <Space>
           <button
@@ -195,7 +198,7 @@ function ReviewsTable({search}) {
               }}
               onClick={closeDrawer}
             >
-              <CloseOutlined color="black" />
+              <CloseOutlined color="white" />
             </button>
           </Space>
         }

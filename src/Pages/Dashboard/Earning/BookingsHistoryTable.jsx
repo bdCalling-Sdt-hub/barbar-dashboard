@@ -142,7 +142,7 @@ const BookingsHistoryTable = () => {
               <Text>See all details about this transaction</Text>
             </Typography>
             <Button type="text" onClick={closeDrawer}>
-              <IoMdClose fontSize={25} />
+              <IoMdClose color="white" fontSize={25} />
             </Button>
           </div>
         }
@@ -151,6 +151,9 @@ const BookingsHistoryTable = () => {
         onClose={closeDrawer}
         open={isDrawerVisible}
         width={500}
+        style={{
+          background: "#364153"
+        }}
       >
         {bookingData && <DrawerPage componentRef={componentRef} handlePrint={handlePrint} bookingData={bookingData} />}
       </Drawer>

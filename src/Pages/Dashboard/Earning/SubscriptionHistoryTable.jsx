@@ -164,10 +164,13 @@ const SubscriptionHistoryTable = () => {
               <Text>See all details about this transaction</Text>
             </Typography>
             <Button type="text" onClick={closeDrawer}>
-              <IoMdClose fontSize={25} />
+              <IoMdClose color="white"  fontSize={25} />
             </Button>
           </div>
         }
+        style={{
+          background: "#364153"
+        }}
         closable={false}
         placement="right"
         onClose={closeDrawer}

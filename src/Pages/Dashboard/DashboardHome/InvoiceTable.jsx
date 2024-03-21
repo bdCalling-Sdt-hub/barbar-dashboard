@@ -193,6 +193,9 @@ const InvoiceTable = () => {
         open={isDrawerVisible}
         width={550}
         closable={false}
+        style={{
+          background: "#364153"
+        }}
         extra={
           <Space>
             <button
@@ -207,7 +210,7 @@ const InvoiceTable = () => {
               }}
               onClick={closeDrawer}
             >
-              <CloseOutlined color="black" />
+              <CloseOutlined color="white" />
             </button>
           </Space>
         }

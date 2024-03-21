@@ -156,6 +156,9 @@ const SalonInfo = ({search}) => {
             </Typography>
           </div>
         }
+        style={{
+          background: "#364153"
+        }}
         placement="right"
         onClose={closeDrawer}
         open={isDrawerVisible}
@@ -175,7 +178,7 @@ const SalonInfo = ({search}) => {
               }}
               onClick={closeDrawer}
             >
-              <CloseOutlined color="black" />
+              <CloseOutlined color="white" />
             </button>
           </Space>
         }

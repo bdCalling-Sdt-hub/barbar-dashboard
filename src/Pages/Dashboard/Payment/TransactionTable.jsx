@@ -205,6 +205,9 @@ function TransactionTable() {
             </Typography>
           </div>
         }
+        style={{
+          background: "#364153"
+        }}
         placement="right"
         onClose={closeDrawer}
         open={isDrawerVisible}
@@ -224,7 +227,7 @@ function TransactionTable() {
               }}
               onClick={closeDrawer}
             >
-              <CloseOutlined color="black" />
+              <CloseOutlined color="white" />
             </button>
           </Space>
         }

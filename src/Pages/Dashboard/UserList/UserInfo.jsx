@@ -193,11 +193,17 @@ const UserInfo = ({search}) => {
             </Typography>
           </div>
         }
+        style={{
+          background: "#364153"
+        }}
         placement="right"
         onClose={closeDrawer}
         open={isDrawerVisible}
         width={500}
         closable={false}
+        style={{
+          background: "#364153"
+        }}
         extra={
           <Space>
           <button
@@ -212,7 +218,7 @@ const UserInfo = ({search}) => {
               }}
               onClick={closeDrawer}
             >
-              <CloseOutlined color="black" />
+              <CloseOutlined color="white" />
             </button>
           </Space>
         }

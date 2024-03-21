@@ -159,6 +159,9 @@ const BarbarInfo = () => {
         open={isDrawerVisible}
         width={500}
         closable={false}
+        style={{
+          background: "#364153"
+        }}
         extra={
           <Space>
             <button
@@ -173,7 +176,7 @@ const BarbarInfo = () => {
               }}
               onClick={closeDrawer}
             >
-              <CloseOutlined color="black" />
+              <CloseOutlined color="white" />
             </button>
           </Space>
         }

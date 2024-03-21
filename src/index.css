@@ -98,3 +98,7 @@ body {
 .ant-input-affix-wrapper>input.ant-input:focus{
   color: black !important;
 }
+
+.ant-menu-light .ant-menu-submenu-title{
+  color: white !important;
+}
