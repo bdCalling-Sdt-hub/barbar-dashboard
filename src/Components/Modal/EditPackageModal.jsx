@@ -63,6 +63,7 @@ const EditPackageModal = ({
                     initialValues={initialFormValues}
                     onFinish={handleUpdate}
                 >
+                    <label >Package name</label>
                     <Form.Item  
                                 name="package_name"
                             >
@@ -80,7 +81,8 @@ const EditPackageModal = ({
                                     }}
                                 />
                     </Form.Item>   
-
+                    
+                    <label >Package Duration</label>
                     <Form.Item
                                 name="package_duration"
                             >
@@ -98,7 +100,8 @@ const EditPackageModal = ({
                                     }}
                                 />
                     </Form.Item>
-
+                    
+                    <label >Package Price</label>
                     <Form.Item 
                                 name="price"
                             >  
@@ -116,7 +119,8 @@ const EditPackageModal = ({
                                     }}
                                 />
                     </Form.Item>
-
+                    
+                    <label >Package Features</label>
                     <Form.Item
                                 name="package_features"
                             >    

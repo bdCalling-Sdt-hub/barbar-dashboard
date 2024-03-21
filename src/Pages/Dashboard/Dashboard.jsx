@@ -58,21 +58,8 @@ const Dashboard = () => {
     navigate('signin')
   }
 
+  
 
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-  const [t, i18n] = useTranslation("global");
-
-  const handleSelectLanguage = (value) => {
-    setSelectedLanguage(value);
-    i18n.changeLanguage(selectedLanguage);
-    localStorage.setItem("lang", value);
-  };
-
-  useEffect(() => {
-    i18n.changeLanguage(selectedLanguage);
-  }, [selectedLanguage, i18n]);
 
   const menu = (
     <Menu>
@@ -230,11 +217,15 @@ const Dashboard = () => {
             marginBottom: "30px",
           }}
         >
-          <img
-            src={Logo}
-            height={collapsed ? "40px" : "144px"}
-            width={collapsed ? "40px" : "144px"}
-          />
+          <Link
+            to={"/"}
+          >
+            <img
+              src={Logo}
+              height={collapsed ? "40px" : "144px"}
+              width={collapsed ? "40px" : "144px"}
+            />
+          </Link>
         </div>
 
         <Menu
@@ -247,7 +238,7 @@ const Dashboard = () => {
             icon={<RxDashboard style={{ fontSize: "14px", color: `${pathName === '' ? "#F66D0F" : "white"}` }} />}
           >
             <Link to="/" style={{ fontSize: "16px", color: `${pathName === '' ? "#F66D0F" : "white"}` }}>
-              {t("dashboard")}
+              {"Dashboard"}
             </Link>
           </Menu.Item>
 
@@ -327,7 +318,7 @@ const Dashboard = () => {
             icon={<FaUsers style={{ fontSize: "14px", color: `${pathName === 'userlist' ? "#F66D0F" : "white"}` }} />}
           >
             <Link to="/userlist" style={{ fontSize: "16px", color: `${pathName === 'userlist' ? "#F66D0F" : "white"}` }}>
-              {t("userList")}
+              {"User List"}
             </Link>
           </Menu.Item>
 
@@ -353,7 +344,7 @@ const Dashboard = () => {
             }
           >
             <Link to="/setting" style={{ fontSize: "16px", color: `${pathName === 'setting' ? "#F66D0F" : "white"}` }}>
-              {t("setting.title")}
+              {"Settings"}
             </Link>
           </Menu.Item>
 
@@ -367,7 +358,7 @@ const Dashboard = () => {
             height: "80px",
             zIndex: 1,
             padding: 0,
-            background: colorBgContainer,
+            background: "#364153",
             display: "flex",
             justifyContent: "space-between",
             paddingRight: "60px",
@@ -387,7 +378,6 @@ const Dashboard = () => {
                 color: "white",
               }}
             />
-            {/* <h2>{t("header.title")}</h2> */}
           </div>
 
           <div
@@ -397,7 +387,7 @@ const Dashboard = () => {
           
             <div className={Styles.notificaton}>
               <Dropdown
-                overlay={menu}
+                menu={menu}
                 placement="bottomRight"
                 arrow={{
                   pointAtCenter: true,

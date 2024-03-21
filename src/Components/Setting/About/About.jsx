@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
-import JoditEditor from 'jodit-react';
-import { Button, Col, Row } from 'antd';
+import JoditEditor from "jodit-react";
+import { Button } from 'antd';
 import Swal from "sweetalert2";
 import "./About.css"
 import { baseURL } from '../../../Config';
@@ -18,7 +18,7 @@ const About = () => {
   }
 
   const handleUpdate = async() => {
-    const response = await baseURL.post(`/update-website-pages/3`, {page_description:content}, {
+    const response = await baseURL.post(`/update-website-pages/6`, {page_description:content}, {
       headers: {
         "Content-Type": "application/json",
         authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -28,7 +28,7 @@ const About = () => {
       Swal.fire({
         position: "center",
         icon: "success",
-        title: "Update Successfully",
+        title: "About Us Updated Successfully",
         showConfirmButton: false,
         timer: 1500
       }).then(() => {
@@ -40,7 +40,7 @@ const About = () => {
   
   useEffect(()=>{
     async function getAPi(){
-      const response = await baseURL.get(`/show-single-pages/3`,{
+      const response = await baseURL.get(`/show-single-pages/6`,{
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -56,32 +56,31 @@ const About = () => {
     setContent(data?.page_description);
   }, [data]);
 
-  const config = {
-    autofocus : true ,
-    cursorAfterAutofocus: 'end',
-    style: {
-      color: 'black'
-    },
-  };
+  
   return (
-    <div >
-      
-      <Row>
-        <Col lg={{ span: 24 }}>
-
-          <JoditEditor
-            config={config}
-            ref={editor}
-            value={content}
-            onChange={newContent => { setContent(newContent) }}
-          />
-
-          <Button onClick={handleUpdate} block style={{ marginTop: "30px", backgroundColor: "#F66D0F", color: "#fff", height: "50px" }}>save</Button>
-
-        </Col>
-         
-      </Row>
-
+    <div>
+      <div style={{color:"black"}}>
+        <JoditEditor
+          ref={editor}
+          value={content}
+          onChange={(newContent) => {
+            setContent(newContent);
+          }}
+        />
+      </div>
+      <Button
+        onClick={handleUpdate}
+        htmlType='submit'
+        block 
+        style={{ 
+          marginTop: "30px", 
+          backgroundColor: "#F66D0F", 
+          color: "#fff", 
+          height: "50px" 
+        }}
+      >
+        Save
+      </Button>
     </div>
   );
 };

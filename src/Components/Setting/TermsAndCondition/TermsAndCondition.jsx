@@ -13,7 +13,7 @@ const TermsAndCondition = () => {
 
 
   const handleUpdate = async() => {
-    const response = await baseURL.post(`/update-website-pages/1`, {page_description:content}, {
+    const response = await baseURL.post(`/update-website-pages/8`, {page_description:content}, {
       headers: {
         "Content-Type": "application/json",
         authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -23,7 +23,7 @@ const TermsAndCondition = () => {
       Swal.fire({
         position: "center",
         icon: "success",
-        title: "Update Successfully",
+        title: "Terms & Conditions Updated Successfully",
         showConfirmButton: false,
         timer: 1500
       }).then(() => {
@@ -41,7 +41,7 @@ const TermsAndCondition = () => {
 
   useEffect(()=>{
     async function getAPi(){
-      const response = await baseURL.get(`/show-single-pages/1`,{
+      const response = await baseURL.get(`/show-single-pages/8`,{
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -56,34 +56,31 @@ const TermsAndCondition = () => {
     setContent(data?.page_description);
   }, [data]);
 
-  const config = {
-    autofocus : true ,
-    cursorAfterAutofocus: 'end',
-    style: {
-      color: 'black', // Set initial font color to red
-    },
-  };
-
 
   return (
     <div>
-      
-      <Row>
-        <Col lg={{ span: 24 }}>
-
-          <JoditEditor
-            config={config}
-            ref={editor}
-            value={content}
-
-            onChange={newContent => { setContent(newContent) }}
-          />
-
-          <Button onClick={handleUpdate} block style={{ marginTop: "30px", backgroundColor: "#F66D0F", color: "#fff", height: "50px" }}>save</Button>
-
-        </Col>
-         
-      </Row>
+      <div style={{color:"black"}}>
+        <JoditEditor
+          ref={editor}
+          value={content}
+          onChange={(newContent) => {
+            setContent(newContent);
+          }}
+        />
+      </div>
+      <Button
+        onClick={handleUpdate}
+        htmlType='submit'
+        block 
+        style={{ 
+          marginTop: "30px", 
+          backgroundColor: "#F66D0F", 
+          color: "#fff", 
+          height: "50px" 
+        }}
+      >
+        Save
+      </Button>
     </div>
   );
 };

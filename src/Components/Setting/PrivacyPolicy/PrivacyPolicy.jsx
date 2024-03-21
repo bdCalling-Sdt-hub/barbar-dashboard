@@ -16,7 +16,7 @@ const PrivacyPolicy = () => {
     },[1500])
   }
   const handleUpdate = async() => {
-    const response = await baseURL.post(`/update-website-pages/2`, {page_description:content}, {
+    const response = await baseURL.post(`/update-website-pages/7`, {page_description:content}, {
       headers: {
         "Content-Type": "application/json",
         authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -26,7 +26,7 @@ const PrivacyPolicy = () => {
       Swal.fire({
         position: "center",
         icon: "success",
-        title: "Update Successfully",
+        title: "Privact Policy Updated Successfully",
         showConfirmButton: false,
         timer: 1500
       }).then(() => {
@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
   
   useEffect(()=>{
     async function getAPi(){
-      const response = await baseURL.get(`/show-single-pages/2`,{
+      const response = await baseURL.get(`/show-single-pages/7`,{
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -52,34 +52,30 @@ const PrivacyPolicy = () => {
   useEffect(()=>{
     setContent(data?.page_description);
   }, [data]);
-
-  const config = {
-    autofocus : true ,
-    cursorAfterAutofocus: 'end',
-    style: {
-      color: 'black', // Set initial font color to red
-    },
-  };
-
   return (
     <div>
-      
-      <Row>
-        <Col lg={{ span: 24 }}>
-
-          <JoditEditor
-            config={config}
-            ref={editor}
-            value={content}
-
-            onChange={newContent => { setContent(newContent) }}
-          />
-
-          <Button onClick={handleUpdate} block style={{ marginTop: "30px", backgroundColor: "#F66D0F", color: "#fff", height: "50px" }}>save</Button>
-
-        </Col>
-         
-      </Row>
+      <div style={{color:"black"}}>
+        <JoditEditor
+          ref={editor}
+          value={content}
+          onChange={(newContent) => {
+            setContent(newContent);
+          }}
+        />
+      </div>
+      <Button
+        onClick={handleUpdate}
+        htmlType='submit'
+        block 
+        style={{ 
+          marginTop: "30px", 
+          backgroundColor: "#F66D0F", 
+          color: "#fff", 
+          height: "50px" 
+        }}
+      >
+        Save
+      </Button>
     </div>
   );
 };

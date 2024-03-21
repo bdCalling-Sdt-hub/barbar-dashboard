@@ -464,6 +464,7 @@ const DrawerPage = (props) => {
             }}
           >
             <Button
+              onClick={()=>handleCancel(props.providerRequestData?.id)}
               block
               style={{
                 border: "1px solid #F66D0F",

@@ -4,7 +4,7 @@ import { Button, Drawer, Space, Table, Typography, Pagination } from "antd";
 import DrawerPage from "../../../Components/DrawerPage/DrawerPage";
 import { CloseOutlined } from "@ant-design/icons";
 const { Title, Text } = Typography;
-import { baseURL } from "../../../Config";
+import { baseURL, url } from "../../../Config";
 import Swal from "sweetalert2";
 
 function ProviderRequestInfo({search}) {
@@ -55,6 +55,7 @@ function ProviderRequestInfo({search}) {
             authorization: `Bearer ${localStorage.getItem('access_token')}`,
           }
         });
+        
         setSearchProviderRequest(response?.data);
       }
     }
@@ -111,7 +112,7 @@ function ProviderRequestInfo({search}) {
               authorization: `Bearer ${localStorage.getItem('access_token')}`,
             }
           });
-          console.log(response);
+          
           if(response.status === 200){
             Swal.fire({
               position: "center",
@@ -121,6 +122,8 @@ function ProviderRequestInfo({search}) {
               timer: 1500
             }).then((result) => {
               setRefresh('done')
+              setIsDrawerVisible(false);
+              setProviderRequestData(null);
             });
           }
         }
@@ -133,11 +136,16 @@ function ProviderRequestInfo({search}) {
         {providerRequest?.data?.map((item) => (
           <div className={styles.cardContainer}>
             <div>
-              <img
-                style={{ borderRadius: "100%" }}
-                src={"https://i.ibb.co/x6bYtBv/Photo-1.png"}
-                alt=""
-              />
+              {
+                item?.cover_photo&&
+                <img
+
+                  style={{ width: "142px", height: "142px", borderRadius: "100%" }}
+                  src={`${url}/images/${item?.cover_photo}`}
+                  alt=""
+                />
+              }
+              
             </div>
             <div>
               <div className={styles.info}>
@@ -200,7 +208,7 @@ function ProviderRequestInfo({search}) {
         }
       >
         {providerRequestData && (
-          <DrawerPage handleApprove={handleApprove} providerRequestData={providerRequestData} />
+          <DrawerPage handleCancel={handleCancel} handleApprove={handleApprove} providerRequestData={providerRequestData} />
         )}
       </Drawer>
     </>
