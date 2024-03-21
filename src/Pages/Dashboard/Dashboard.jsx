@@ -1,15 +1,14 @@
 /* eslint-disable no-unused-vars */
 import { MenuOutlined, SettingOutlined } from "@ant-design/icons";
-import { Button, Dropdown, Layout, Menu, Select, theme } from "antd";
+import { Button, Dropdown, Layout, Menu} from "antd";
 import { Divider, Badge } from "antd";
 import { GiChessQueen, GiReceiveMoney } from "react-icons/gi";
-import { MdOutlineGroupAdd, MdPayment } from "react-icons/md";
+import { MdOutlineGroupAdd } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
 import { FaListUl, FaUsers } from "react-icons/fa";
 import { IoCutOutline } from "react-icons/io5";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Link, Outlet } from "react-router-dom";
 import Logo from "../../Images/Group 24.png";
 import Styles from "./Dashboard.module.css";
@@ -30,7 +29,6 @@ const Dashboard = () => {
   const {image} = JSON.parse(localStorage.getItem('user'))
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState(localStorage.lang);
   const [data, setData] = useState(null);
   const count= data?.filter((item)=> item?.read_at === null) || 0;
  const pathName= pathname.split('/')[1];
