@@ -42,7 +42,7 @@ const SettingPage = () => {
         {text === "personal information" && <PersonalInfo />}
         {text === "login activity" && <LoginActivity />}
         {text === "privacy policy" && <PrivacyPolicy />}
-        {text === "terms condition" && <TermsAndCondition />}
+        {text === "terms & condition" && <TermsAndCondition />}
         {text === "about us" && <About />}
         {text === "block list" && <BlockList />}
         {text === "reviews" && <Reviews />}

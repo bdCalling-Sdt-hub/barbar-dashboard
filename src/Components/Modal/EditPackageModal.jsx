@@ -12,7 +12,7 @@ const EditPackageModal = ({
     const handleUpdate= async(values)=>{
         let array;
         if( !Array.isArray(values?.package_features)){
-            array = values?.package_features?.substring(1, values?.package_features?.length - 1).split(',').map(item => item?.trim());
+            array = values?.package_features.split(',').map(item => item.trim());
         }
         const value={
             package_name : values?.package_name,
@@ -32,10 +32,10 @@ const EditPackageModal = ({
                 title: response?.data?.message,
                 showConfirmButton: false,
                 timer: 1500
-              }).then(() => {
+            }).then(() => {
                 setPackeageUpdateModel(false);
                 setRefresh('done');
-              })
+            })
             
         }
     }
@@ -63,7 +63,7 @@ const EditPackageModal = ({
                     initialValues={initialFormValues}
                     onFinish={handleUpdate}
                 >
-                    <label >Package name</label>
+                    <label >Package Name</label>
                     <Form.Item  
                                 name="package_name"
                             >

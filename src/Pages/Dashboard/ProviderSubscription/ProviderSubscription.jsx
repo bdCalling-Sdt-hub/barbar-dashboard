@@ -36,7 +36,7 @@ function ProviderSubscription() {
   }
   return (
     <div >
-      <h2>Packages</h2>
+      <h2 style={{color: "white"}}>Packages</h2>
       <div className={styles.packagesContainer} >
 
         {

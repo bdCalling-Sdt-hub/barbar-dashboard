@@ -109,7 +109,7 @@ const Setting = () => {
     {
       key: "8",
       title: "Terms and Condition",
-      link: "terms-condition",
+      link: "terms-&-condition",
     },
     {
       key: "9",
