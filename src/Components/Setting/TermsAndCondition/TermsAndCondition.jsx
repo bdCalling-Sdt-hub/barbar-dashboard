@@ -13,7 +13,7 @@ const TermsAndCondition = () => {
 
 
   const handleUpdate = async() => {
-    const response = await baseURL.post(`/update-website-pages/8`, {page_description:content}, {
+    const response = await baseURL.post(`/update-website-pages/3`, {page_description:content}, {
       headers: {
         "Content-Type": "application/json",
         authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -41,7 +41,7 @@ const TermsAndCondition = () => {
 
   useEffect(()=>{
     async function getAPi(){
-      const response = await baseURL.get(`/show-single-pages/8`,{
+      const response = await baseURL.get(`/show-single-pages/3`,{
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${localStorage.getItem('access_token')}`,
