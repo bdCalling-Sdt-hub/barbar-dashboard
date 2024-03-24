@@ -150,7 +150,7 @@ function ProviderRequestInfo({search}) {
             <div>
               <div className={styles.info}>
                 <h3 style={{ color: "#F66D0F" }}>{item?.business_name}</h3>
-                <p>{item?.user?.email}</p>
+                <p style={{ color: "white" }}>{item?.user?.email}</p>
               </div>
               <div className={styles.buttonContainer}>
                 <button onClick={()=>handleCancel(item?.id)} className={styles.btn}>Cancel</button>{" "}
