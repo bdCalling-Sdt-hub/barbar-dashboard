@@ -33,8 +33,7 @@ const EditModal = ({
             headers: {
                 authorization: `Bearer ${token}`
             }
-        });
-        console.log(response);
+        })
         if(response?.status === 200){
             Swal.fire({
                 position: "center",

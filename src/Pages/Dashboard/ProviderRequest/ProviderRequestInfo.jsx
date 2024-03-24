@@ -117,7 +117,7 @@ function ProviderRequestInfo({search}) {
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Cancel Provider Request",
+              title: "Blocked Provider Request",
               showConfirmButton: false,
               timer: 1500
             }).then((result) => {
@@ -153,7 +153,7 @@ function ProviderRequestInfo({search}) {
                 <p style={{ color: "white" }}>{item?.user?.email}</p>
               </div>
               <div className={styles.buttonContainer}>
-                <button onClick={()=>handleCancel(item?.id)} className={styles.btn}>Cancel</button>{" "}
+                <button onClick={()=>handleCancel(item?.id)} className={styles.btn}>Block</button>{" "}
                 <button onClick={()=>showDrawer(item)} className={styles.btn1}>
                   Approve
                 </button>

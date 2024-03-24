@@ -75,7 +75,7 @@ function Categories() {
                     <FaEdit color="white" />
                   </div>
                   
-                <p>{item?.category_name}</p>
+                <p style={{color: "white"}}>{item?.category_name}</p>
               </div>
             </div>
         ))}

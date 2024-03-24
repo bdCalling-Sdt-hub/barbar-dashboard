@@ -13,6 +13,7 @@ const CategoryChangeModal = ({
     const [imageUrl, setImageUrl] = useState()
     const [img, setImg] = useState();
     const [name, setName] = useState("");
+    const [error, setError] = useState("")
 
     const onChange = (info) => {
         setImageUrl(info.file);
@@ -24,24 +25,30 @@ const CategoryChangeModal = ({
         const formData = new FormData();
         formData.append('category_name', name);
         formData.append('category_image', imageUrl.originFileObj);
-        const response = await baseURL.post(`/add-category`, formData, {
+        await baseURL.post(`/add-category`, formData, {
             headers: {
                 authorization: `Bearer ${token}`
             }
+        }).then(response => {
+            if(response?.status === 200){
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Category Added Successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(()=>{
+                    setOpenChangeModel(false);
+                    setRefresh('done')
+                    setError("")
+                })
+                
+            }
+        })
+        .catch(error => {
+            setError(error?.response?.data?.category_name[0]);
         });
-        if(response?.status === 200){
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Category Added Successfully",
-                showConfirmButton: false,
-                timer: 1500
-            }).then(()=>{
-                setOpenChangeModel(false);
-                setRefresh('done')
-            })
-            
-        }
+        
       }
     return (
         <Modal
@@ -77,6 +84,10 @@ const CategoryChangeModal = ({
                                 name="category_name"
                                 onChange={(e)=>setName(e.target.value)}
                             />
+                            {
+                                error &&
+                                <label style={{marginBottom : "12px", display: "block", color: "red"}}>{error}</label>
+                            }
                         </div>
                     </div>
 
