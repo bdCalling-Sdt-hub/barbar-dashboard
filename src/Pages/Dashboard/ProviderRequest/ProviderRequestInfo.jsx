@@ -191,9 +191,6 @@ function ProviderRequestInfo({search}) {
         open={isDrawerVisible}
         width={500}
         closable={false}
-        style={{
-          background: "#364153"
-        }}
         extra={
           <Space>
             <button
