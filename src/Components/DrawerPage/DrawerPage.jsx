@@ -1159,98 +1159,41 @@ const DrawerPage = (props) => {
 
       {props.reviewsData && (
         <div className={styles.userContainer}>
-          <div ref={props?.componentRef} style={{ marginBottom: "30px" }}>
+          {
+            props?.reviewsData?.total_review ?
+            <div ref={props?.componentRef}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <div>
+              {/* total_review */}
+              <div >
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "5px" }}
+                  style={{display: "flex", alignItems: "center", gap: "12px"}}
                 >
-                  <p>5</p>
-                  <IoStar color="#F66D0F" />
-                  <Progress
-                    percent={50}
-                    // size={["100%", 20]}
-                    style={{ width: "300px", marginTop: "7px" }}
-                    showInfo={false}
-                    strokeColor={"#F66D0F"}
-                  />
+                  <h1>Avarage Rating:-</h1>
+                  <h1 style={{ fontSize: "36px", textAlign: "right" }}>{props.reviewsData?.average_rating.toFixed(2)}</h1>
                 </div>
+                
+                  <Rate
+                    style={{ color: "#F66D0F" }}
+                    disabled
+                    defaultValue={props.reviewsData?.total_review}
+                  />
 
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "5px" }}
+                  style={{display: "flex", marginTop: "10px", alignItems: "center", gap: "12px"}}
                 >
-                  <p>4</p>
-                  <IoStar color="#F66D0F" />
-                  <Progress
-                    percent={40}
-                    // size={["100%", 20]}
-                    style={{ width: "300px", marginTop: "7px" }}
-                    showInfo={false}
-                    strokeColor={"#F66D0F"}
-                  />
-                </div>
-
-                <div
-
-                  style={{ display: "flex", alignItems: "center", gap: "5px" }}
-                >
-                  <p>3</p>
-                  <IoStar color="#F66D0F" />
-                  <Progress
-                    percent={30}
-                    // size={["100%", 20]}
-                    style={{ width: "300px", marginTop: "7px" }}
-                    showInfo={false}
-                    strokeColor={"#F66D0F"}
-                  />
-                </div>
-
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: "5px" }}
-                >
-                  <p>2</p>
-                  <IoStar color="#F66D0F" />
-                  <Progress
-                    percent={20}
-                    // size={["100%", 20]}
-                    style={{ width: "300px", marginTop: "7px" }}
-                    showInfo={false}
-                    strokeColor={"#F66D0F"}
-                  />
-                </div>
-
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: "5px" }}
-                >
-                  <p>1</p>
-                  <IoStar color="#F66D0F" />
-                  <Progress
-                    percent={10}
-                    // size={["100%", 20]}
-                    style={{ width: "300px", marginTop: "7px" }}
-                    showInfo={false}
-                    strokeColor={"#F66D0F"}
-                  />
+                  <p>Total Review:- </p>
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      textAlign: "right",
+                    }}
+                  >
+                    {props.reviewsData?.total_review} Reviews
+                  </p>
                 </div>
               </div>
 
-              <div style={{ marginTop: "50px" }}>
-                <h1 style={{ fontSize: "36px", textAlign: "right" }}>{props.reviewsData?.average_rating.toFixed(2)}</h1>
-                <Rate
-                  style={{ color: "#F66D0F" }}
-                  disabled
-                  defaultValue={props.reviewsData?.total_review}
-                />
-                <p
-                  style={{
-                    fontSize: "14px",
-                    textAlign: "right",
-                    marginTop: "5px",
-                  }}
-                >
-                  {props.reviewsData?.total_review} Reviews
-                </p>
-              </div>
+              
             </div>
 
             <div>
@@ -1307,7 +1250,12 @@ const DrawerPage = (props) => {
               
         
             </div>
-          </div>
+            </div>
+            :
+            <p>No Review Found</p>
+
+          }
+          
         </div>
       )}
 

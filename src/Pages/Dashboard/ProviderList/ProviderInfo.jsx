@@ -197,9 +197,6 @@ const ProviderInfo = ({search}) => {
         open={isDrawerVisible}
         width={850}
         closable={false}
-        style={{
-          background: "#364153"
-        }}
         extra={
           <Space>
             <button
